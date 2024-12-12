@@ -24,7 +24,7 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
 
         <div className="relative">
         <img
-          className="w-12 h-12 object-cover rounded-full relative"
+          className="w-14 h-14 object-cover rounded-full relative"
           src={discordPNG}
           alt="Discord Icon"
         />
