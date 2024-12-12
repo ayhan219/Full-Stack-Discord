@@ -53,8 +53,6 @@ const Menu = () => {
            <MenuFriends />
            <MenuFriends />
            <MenuFriends />
-
-           
         </div>
       </div>
     </div>
