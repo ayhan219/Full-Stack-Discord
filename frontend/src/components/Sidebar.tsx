@@ -22,15 +22,18 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
           }`}
         ></div>
 
+        <div className="relative">
         <img
-          className="w-12 h-12 object-cover rounded-full"
+          className="w-12 h-12 object-cover rounded-full relative"
           src={discordPNG}
           alt="Discord Icon"
         />
-
-        <div className="absolute bottom-0 right-3 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center">
+         <div className="absolute bottom-0 right-0 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center">
           <p className="text-white text-xs font-bold">7</p>
         </div>
+        </div>
+
+       
       </div>
       <div className="w-full h-auto flex justify-center">
         <div className="w-[60%] h-[0.15rem] bg-[#35363C]"></div>
