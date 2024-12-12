@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+
+import Menu from '../components/Menu'
 
 const Home = () => {
-
-  
   return (
-    <div>
-
+    <div className=''>
     </div>
   )
 }
