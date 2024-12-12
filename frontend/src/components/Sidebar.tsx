@@ -9,7 +9,7 @@ type SidebarInterface = {
 
 const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
   return (
-    <div className="w-20 h-screen bg-[#1E1F22] flex flex-col  pt-4 space-y-4">
+    <div className="w-[5%] h-screen bg-[#1E1F22] flex flex-col  pt-4 space-y-4">
       <div
         className={`relative flex items-center justify-center cursor-pointer ${
           activeChannel === "home" ? "group" : ""
