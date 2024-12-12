@@ -31,7 +31,7 @@ const Menu = () => {
         <div className="w-full h-12 text-gray-400 font-bold flex  gap-2 cursor-pointer">
           <div className="flex w-[70%] justify-evenly items-center">
           <FaEnvelope className="text-3xl" />
-          <h2 className="w-20 text-base ">Message Request</h2>
+          <h2 className="w-20 text-base font-semibold ">Message Request</h2>
           </div>
         </div>
 
