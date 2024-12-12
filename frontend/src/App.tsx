@@ -8,17 +8,19 @@ import Menu from './components/Menu';
 function App() {
   const [activeChannel,setActiveChannel] = useState<string>("home");
   const [openMenu,setOpenMenu] = useState<boolean>(true);
+  const [openTopBar,setOpenTopBar] = useState<boolean>(true);
+
  return(
   <BrowserRouter>
+  {/* <div className='flex'>
+  
+  </div> */}
   <div className='flex'>
   <Sidebar setActiveChannel={setActiveChannel} activeChannel={activeChannel} />
-  {
-    openMenu ?  <Menu /> : ""
-  }
-  </div>
   <Routes>
     <Route path='/' element={<Home />} />
   </Routes>
+  </div>
   </BrowserRouter>
   )
 }
