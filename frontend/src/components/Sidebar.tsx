@@ -1,5 +1,6 @@
 import discordPNG from "../assets/pngegg.png";
 import Server from "./Server";
+import { GoPlus } from "react-icons/go";
 
 type SidebarInterface = {
   setActiveChannel: (activeChannel: string) => void;
@@ -43,6 +44,13 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
        <Server />
        <Server />
        <Server />
+       <div className="w-full h-16 flex items-center justify-center relative">
+        <div className="w-16 h-16 rounded-full bg-[#3f4049] flex justify-center items-center cursor-pointer">
+          <div className=" text-green-500 font-bold text-4xl">
+          <GoPlus />
+          </div>
+        </div>
+           </div>
       </div>
     </div>
   );
