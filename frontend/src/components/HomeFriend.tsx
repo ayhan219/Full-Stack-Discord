@@ -3,7 +3,7 @@ import { IoChatbubble } from "react-icons/io5";
 
 const HomeFriend = () => {
   return (
-    <div className="w-full h-auto text-gray-400 font-semibold flex p-2 items-center border-t border-gray-600 justify-between hover:bg-gray-500 cursor-pointer hover:rounded-lg ">
+    <div className="w-full h-auto text-gray-400 font-semibold flex p-2 px-5 items-center border-t border-gray-600 justify-between hover:bg-gray-500 cursor-pointer hover:rounded-lg ">
       <div className="flex justify-center items-center gap-5">
       <div className="relative">
         <img
