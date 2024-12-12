@@ -2,7 +2,7 @@ import React from "react";
 
 const MenuFriends = () => {
   return (
-    <div className="w-full h-14 flex items-center px-8 gap-3 cursor-pointer hover:bg-gray-400 ease-in-out duration-100 text-gray-400 hover:text-gray-800 hover:rounded-lg ">
+    <div className="w-full h-14 flex items-center px-6 gap-3 cursor-pointer hover:bg-gray-400 ease-in-out duration-100 text-gray-400 hover:text-gray-800 hover:rounded-lg ">
       <div className="relative">
         <img
           className="w-11 h-11 rounded-full"

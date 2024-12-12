@@ -10,7 +10,7 @@ const Menu = () => {
     <div className="w-[20%] h-screen bg-[#2B2D31] flex flex-col">
       <div className="w-full h-16 flex justify-center items-center">
         <input
-          className="bg-[#1E1F22] w-[80%] h-9 outline-none text-white text-sm pl-2 rounded-lg"
+          className="bg-[#1E1F22] w-[85%] h-9 outline-none text-white text-sm pl-2 rounded-lg"
           placeholder="Find or start a conversation"
           type="text"
         />
@@ -45,7 +45,7 @@ const Menu = () => {
         </div>
       </div>
       <div className="w-full h-auto">
-        <div className="w-full text-gray-400 text-sm font-semibold flex justify-between px-8 py-6 ">
+        <div className="w-full text-gray-400 text-sm font-semibold flex justify-between px-5 py-6 ">
         <h3>DIRECT MESSAGES</h3>
         <GoPlus className=" text-xl cursor-pointer" />
         </div>
