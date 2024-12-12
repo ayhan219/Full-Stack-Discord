@@ -5,9 +5,10 @@ import Sidebar from './components/Sidebar'
 
 
 function App() {
+  const [activeChannel,setActiveChannel] = useState<string>("home");
  return(
   <BrowserRouter>
-  <Sidebar />
+  <Sidebar setActiveChannel={setActiveChannel} activeChannel={activeChannel} />
   <Routes>
     <Route path='/' element={<Home />} />
   </Routes>
