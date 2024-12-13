@@ -17,7 +17,7 @@ const ChannelMember = () => {
       </div>
 
       {/* Username */}
-      <h3 className="text-base font-medium">Ayhan</h3>
+      <h3 className="text-base font-medium text-gray-400">Ayhan</h3>
     </div>
   );
 };
