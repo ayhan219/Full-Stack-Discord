@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import discordPNG from "../assets/pngegg.png";
 import Server from "./Server";
 import { GoPlus } from "react-icons/go";
@@ -23,11 +24,13 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
         ></div>
 
         <div className="relative">
-        <img
+       <Link to={"/"}>
+       <img
           className="w-14 h-14 object-cover rounded-full relative"
           src={discordPNG}
           alt="Discord Icon"
         />
+       </Link>
          <div className="absolute bottom-0 right-0 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center">
           <p className="text-white text-xs font-bold">7</p>
         </div>
@@ -43,10 +46,7 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
       <div className="w-full h-auto flex flex-col gap-3">
        <Server />
        <Server />
-       <Server />
-       <Server />
-       <Server />
-       <Server />
+      
        <div className="w-full h-16 flex items-center justify-center relative">
         <div className="w-16 h-16 rounded-full bg-[#3f4049] flex justify-center items-center cursor-pointer">
           <div className=" text-green-500 font-bold text-4xl">
