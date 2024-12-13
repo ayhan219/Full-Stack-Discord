@@ -2,7 +2,7 @@ import HomeFriend from "../components/HomeFriend";
 import Menu from "../components/Menu";
 import TopBar from "../components/TopBar";
 import { IoMdSearch } from "react-icons/io";
-import "../index.css"
+import "../index.css";
 
 const Home = () => {
   return (
@@ -34,7 +34,6 @@ const Home = () => {
               <HomeFriend />
               <HomeFriend />
               <HomeFriend />
-              
             </div>
           </div>
         </div>
