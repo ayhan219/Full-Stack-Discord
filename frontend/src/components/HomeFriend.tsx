@@ -1,4 +1,4 @@
-import React from "react";
+
 import { IoChatbubble } from "react-icons/io5";
 
 const HomeFriend = () => {
