@@ -4,12 +4,12 @@ import Home from './pages/Home'
 import Sidebar from './components/Sidebar'
 import Menu from './components/Menu';
 import Channel from './pages/Channel';
+import Signup from './pages/Signup';
 
 
 function App() {
   const [activeChannel,setActiveChannel] = useState<string>("home");
-  const [openMenu,setOpenMenu] = useState<boolean>(true);
-  const [openTopBar,setOpenTopBar] = useState<boolean>(true);
+  const [user,setUser] = useState<boolean>(false);
 
  return(
   <BrowserRouter>
@@ -17,10 +17,13 @@ function App() {
   
   </div> */}
   <div className='flex'>
-  <Sidebar setActiveChannel={setActiveChannel} activeChannel={activeChannel} />
+  {
+    user && <Sidebar setActiveChannel={setActiveChannel} activeChannel={activeChannel} />
+  }
   <Routes>
     <Route path='/' element={<Home />} />
     <Route path='/channel' element={<Channel />} />
+    <Route path='/signup' element={<Signup />} />
   </Routes>
   </div>
   </BrowserRouter>
