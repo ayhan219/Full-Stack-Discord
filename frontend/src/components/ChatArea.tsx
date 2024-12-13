@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { FaHashtag } from "react-icons/fa6";
 import ChatComplement from './ChatComplement';
 
@@ -17,7 +17,7 @@ const ChatArea = () => {
        <ChatComplement />
        <ChatComplement />
        <ChatComplement />
-       
+
       </div>
 
       {/* Message Input */}

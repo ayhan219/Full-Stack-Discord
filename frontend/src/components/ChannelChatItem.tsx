@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { FaHashtag } from "react-icons/fa6";
 
 const ChannelChatItem = () => {

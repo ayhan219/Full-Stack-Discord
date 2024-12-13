@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { MdSettingsVoice } from "react-icons/md";
 
 const ChannelVoiceItem = () => {
