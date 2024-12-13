@@ -1,9 +1,11 @@
 import React from 'react'
+import ChannelMenu from '../components/ChannelMenu'
 
 const Channel = () => {
   return (
-    <div>
-     channel 
+    <div className="w-full flex bg-[#313338]">
+     <ChannelMenu />
+     
     </div>
   )
 }
