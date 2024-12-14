@@ -4,6 +4,8 @@ import { FaEnvelope } from "react-icons/fa";
 import { FaShop } from "react-icons/fa6";
 import { GoPlus } from "react-icons/go";
 import MenuFriends from "./MenuFriends";
+import BottomProfile from "./BottomProfile";
+
 
 const Menu = () => {
   return (
@@ -54,7 +56,11 @@ const Menu = () => {
            <MenuFriends />
            <MenuFriends />
         </div>
+
+        
       </div>
+
+      <BottomProfile />
     </div>
   );
 };
