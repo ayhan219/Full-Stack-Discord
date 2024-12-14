@@ -1,6 +1,33 @@
+import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
+import axios from "axios"
+import { useUserContext } from "../context/UserContext";
 
 const Login = () => {
+
+  const [email,setEmail] = useState<string>("");
+  const [password,setPassword] = useState<string>("");
+
+  const {setUser} = useUserContext();
+
+
+  const handleLogin = async()=>{
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/login",{
+        email,
+        password
+      },{
+        withCredentials:true
+        
+      })
+      setUser(response.data.user)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
   return (
     <div
       className="w-full h-screen bg-cover bg-center flex justify-center items-center"
@@ -17,6 +44,8 @@ const Login = () => {
               <input
                 className="w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white "
                 type="email"
+                onChange={(e)=>setEmail(e.target.value)}
+                value={email}
               />
             </div>
           </div>
@@ -27,12 +56,14 @@ const Login = () => {
               <input
                 className="w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white "
                 type="password"
+                onChange={(e)=>setPassword(e.target.value)}
+                value={password}
               />
             </div>
           </div>
 
           <div className="w-full h-auto flex justify-center py-4">
-            <button className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300">
+            <button onClick={()=>handleLogin()} className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300">
               Sign Up
             </button>
           </div>
