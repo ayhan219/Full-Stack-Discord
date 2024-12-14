@@ -1,10 +1,24 @@
 const express = require("express");
 const app = express();
+const mongoose = require("mongoose")
 const dotenv = require("dotenv");
+const cors = require("cors");
 dotenv.config();
 
 
-app.listen(process.env.PORT,()=>{
+app.use(cors());
+app.use(express.json());
+
+
+const connectToDB = async()=>{
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("connected to DB");
+    
+}
+
+
+app.listen(process.env.PORT,async()=>{
+    await connectToDB();
     console.log(`server listening on port ${process.env.PORT}`);
     
 })
