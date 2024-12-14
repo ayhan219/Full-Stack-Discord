@@ -2,22 +2,14 @@ import  { useState } from 'react'
 import { GoPlus } from "react-icons/go";
 import ChannelChatItem from './ChannelChatItem';
 import ChannelVoiceItem from './ChannelVoiceItem';
-import { FaMicrophone } from "react-icons/fa";
-import { PiMicrophoneSlashFill } from "react-icons/pi";
-import { FaHeadphones } from "react-icons/fa";
-import { IoMdSettings } from "react-icons/io";
-import { TbHeadphonesOff } from "react-icons/tb";
 import BottomProfile from './BottomProfile';
 
 
 
 const ChannelMenu = () => {
 
-  const [turnMicOff,setTurnMicOff] = useState<boolean>(false);
-  const [turnHeadOff,setTurnHeadOff] = useState<boolean>(false);
-
   return (
-    <div className="w-[20%] h-screen bg-[#2B2D31] flex flex-col">
+    <div className="w-[15%] h-screen bg-[#2B2D31] flex flex-col">
       <div className='w-full h-16 flex items-center border-b border-gray-800'>
         <div className='font-bold text-[#D6D9DC] text-xl py-3 px-5'>
         Channel Name

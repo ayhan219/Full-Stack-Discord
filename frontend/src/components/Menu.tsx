@@ -9,7 +9,7 @@ import BottomProfile from "./BottomProfile";
 
 const Menu = () => {
   return (
-    <div className="w-[20%] h-screen bg-[#2B2D31] flex flex-col">
+    <div className="w-[15%] h-screen bg-[#2B2D31] flex flex-col">
       <div className="w-full h-16 flex justify-center items-center">
         <input
           className="bg-[#1E1F22] w-[85%] h-9 outline-none text-white text-sm pl-2 rounded-lg"
