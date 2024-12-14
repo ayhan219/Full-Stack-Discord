@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../model/User")
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 
 
@@ -33,6 +34,12 @@ const signup = async(req,res)=>{
 
 }
 
+
+const login = async(req,res)=>{
+
+}
+
 module.exports ={
-    signup
+    signup,
+    login
 }
