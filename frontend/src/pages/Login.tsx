@@ -2,11 +2,14 @@ import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
 import axios from "axios"
 import { useUserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
   const [email,setEmail] = useState<string>("");
   const [password,setPassword] = useState<string>("");
+
+  const navigate = useNavigate();
 
   const {setUser} = useUserContext();
 
@@ -20,7 +23,13 @@ const Login = () => {
         withCredentials:true
         
       })
-      setUser(response.data.user)
+      console.log(response.data);
+      setUser(response.data)
+      
+      if(response.status===200){
+        navigate("/");
+      }
+      
       
     } catch (error) {
       console.log(error);
