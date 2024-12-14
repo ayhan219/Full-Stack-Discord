@@ -1,4 +1,5 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
+import axios from "axios";
+import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
 
 type User = {
   email: string;
@@ -22,6 +23,24 @@ type UserProviderProps = {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+ 
+  const getCurrentUser = async()=>{
+    try {
+      const response = await axios.get("http://localhost:5000/api/auth/getcurrent",{
+        withCredentials:true
+      })
+      console.log(response.data);
+      setUser(response.data)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  useEffect(()=>{
+    getCurrentUser();
+  },[])
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
