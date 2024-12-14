@@ -36,6 +36,36 @@ const signup = async(req,res)=>{
 
 
 const login = async(req,res)=>{
+    const {email,password} = req.body;
+
+    if(!email && !password){
+        return res.status(400).json({message:"provide all area"})
+    }
+    try {
+        
+        const findUser = await User.findOne({email});
+        if(!findUser){
+            return res.status(400).json({message:"user not found"})
+        }
+        const isPasswordMatch = await bcrypt.compare(password,findUser.password);
+        if(!isPasswordMatch){
+            return res.status(400).json({message:"password doesn't match"})
+        }
+
+        const token = jwt.sign({
+            email: findUser.email,
+            displayName:findUser.displayName,
+            username: findUser.username,
+        },
+        process.env.JWT_SECRET,{
+            expiresIn:"1h"
+        }
+    );
+    
+    return res.status(200).json({message:"login successfull",token})
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
 
 }
 
