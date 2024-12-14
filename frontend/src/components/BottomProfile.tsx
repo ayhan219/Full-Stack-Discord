@@ -9,9 +9,12 @@ const BottomProfile = () => {
 
     const [turnMicOff,setTurnMicOff] = useState<boolean>(false);
     const [turnHeadOff,setTurnHeadOff] = useState<boolean>(false);
+    const [openSettings,setOpenSettings] = useState<boolean>(false);
+
+
     
   return (
-    <div className='w-full h-16 bg-[#232428] mt-auto p-3 '>
+    <div className='w-full h-16 bg-[#232428] mt-auto p-3 relative'>
         <div className='w-full h-full flex '>
          <div className='flex w-full gap-3'>
          <div className='w-[20%] h-full flex justify-center'>
@@ -30,9 +33,13 @@ const BottomProfile = () => {
               !turnHeadOff ? <FaHeadphones  onClick={()=>setTurnHeadOff(!turnHeadOff)} className='cursor-pointer' /> :
               <TbHeadphonesOff onClick={()=>setTurnHeadOff(!turnHeadOff)} className='cursor-pointer text-red-600' />
             }
-            <IoMdSettings className='cursor-pointer' />
+            <IoMdSettings onClick={()=>setOpenSettings(!openSettings)} className='cursor-pointer' />
           </div>
         </div>
+        {
+          openSettings && 
+          <div className="absolute w-full h-24 bg-black bottom-16 right-0">opened</div>
+        }
       </div>
   )
 }

@@ -8,7 +8,7 @@ const Home = () => {
   return (
     <div className="w-full h-screen flex bg-[#313338]">
       <Menu />
-      <div className="flex flex-col ">
+      <div className="w-full flex flex-col ">
         <TopBar />
         <div className="w-[80%] border-r  border-x-gray-600 h-[88%]">
           <div className="w-full h-12 flex  items-center  relative ">
@@ -21,7 +21,7 @@ const Home = () => {
               <IoMdSearch className="absolute text-2xl text-gray-400 right-6 bottom-1 mr-1" />
             </div>
           </div>
-          <div className="w-full h-full">
+          
             <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
               <h3>ONLINE - 2</h3>
             </div>
@@ -34,7 +34,7 @@ const Home = () => {
               <HomeFriend />
               <HomeFriend />
               <HomeFriend />
-            </div>
+          
           </div>
         </div>
       </div>
