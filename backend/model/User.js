@@ -23,13 +23,15 @@ const UserSchema = new mongoose.Schema({
     ownChannel: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Channel" 
+            ref: "Channel",
+            default:null 
         }
     ],
     friends:[
         {
             type:mongoose.Schema.Types.ObjectId,
-            ref:"User"
+            ref:"User",
+            default:null
         }
     ]
 
