@@ -6,8 +6,8 @@ const Channel = () => {
   return (
     <div className="w-full flex bg-[#313338]">
       <ChannelMenu />
-      {/* <ChatArea />
-      <ChatRightArea /> */}
+      <ChatArea />
+      <ChatRightArea />
     </div>
   );
 };
