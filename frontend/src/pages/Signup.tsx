@@ -1,25 +1,26 @@
 import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
 
-  const [displayName,setDisplayName] = useState<string>("");
-  const [isDisplayNameValid,setIsDisplayNameValid] = useState<boolean>(true);
+  const [displayName, setDisplayName] = useState<string>("");
+  const [isDisplayNameValid, setIsDisplayNameValid] = useState<boolean>(true);
 
-  const [username,setUsername] = useState<string>("");
-  const [isUsernameValid,setIsUsernameValid] = useState<boolean>(true);
+  const [username, setUsername] = useState<string>("");
+  const [isUsernameValid, setIsUsernameValid] = useState<boolean>(true);
 
   const [password, setPassword] = useState<string>("");
   const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
 
-  const [rePassword,setRePassword] = useState<string>("");
-  const [isPasswordMatching,setIsPasswordMatching] = useState<boolean>(false);
+  const [rePassword, setRePassword] = useState<string>("");
+  const [isPasswordMatching, setIsPasswordMatching] = useState<boolean>(false);
 
   const [isTermsChecked, setIsTermsChecked] = useState<boolean>(false);
-
-
 
   const handleEmail = (emailInput: string) => {
     setEmail(emailInput);
@@ -34,12 +35,12 @@ const Signup = () => {
     setIsDisplayNameValid(hasValidInput);
   };
 
-  const handleUsername = (usernameInput:string)=>{
+  const handleUsername = (usernameInput: string) => {
     setUsername(usernameInput);
-    const hasValidInput1 = username.length >=6;
+    const hasValidInput1 = username.length >= 6;
     const hasValidInput2 = /\d/.test(usernameInput);
     setIsUsernameValid(hasValidInput1 && hasValidInput2);
-  }
+  };
 
   const handlePassword = (passwordInput: string) => {
     setPassword(passwordInput);
@@ -50,29 +51,48 @@ const Signup = () => {
     setIsPasswordValid(hasValidPassword);
   };
 
-  const handleRePassword = (rePasswordInput:string)=>{
+  const handleRePassword = (rePasswordInput: string) => {
     setRePassword(rePasswordInput);
-    if(rePasswordInput === password){
-        setIsPasswordMatching(true);
+    if (rePasswordInput === password) {
+      setIsPasswordMatching(true);
+    } else {
+      setIsPasswordMatching(false);
     }
-    else{
-        setIsPasswordMatching(false);
-    }
-  }
-  
-
-  const handleCheckboxChange = () => {
-    setIsTermsChecked(!isTermsChecked); 
   };
 
+  const handleCheckboxChange = () => {
+    setIsTermsChecked(!isTermsChecked);
+  };
 
-  const handleSubmit = ()=>{
-    if(isEmailValid && isDisplayNameValid && isUsernameValid && isPasswordValid && isPasswordMatching && isTermsChecked ){
-        alert("submit successfull!")
-    }else{
-        alert("error")
+  const handleSubmit = async () => {
+    if (
+      isEmailValid &&
+      isDisplayNameValid &&
+      isUsernameValid &&
+      isPasswordValid &&
+      isPasswordMatching &&
+      isTermsChecked
+    ) {
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/auth/signup",
+          {
+            email,
+            displayName,
+            username,
+            password,
+          }
+        );
+        if(response.status===200){
+          navigate("/login")
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      alert("error");
     }
-  }
+  };
 
   return (
     <div
@@ -89,9 +109,11 @@ const Signup = () => {
             <label className="px-7 text-sm">EMAIL</label>
             <div className="w-full h-auto flex items-center justify-center">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${!isEmailValid && email!=="" &&  "border border-red-600"} `}
+                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
+                  !isEmailValid && email !== "" && "border border-red-600"
+                } `}
                 type="email"
-                onChange={(e)=>handleEmail(e.target.value)}
+                onChange={(e) => handleEmail(e.target.value)}
                 value={email}
               />
             </div>
@@ -101,9 +123,13 @@ const Signup = () => {
             <label className="px-7 text-sm">DISPLAY NAME</label>
             <div className="w-full h-auto flex items-center justify-center">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${!isDisplayNameValid && displayName!=="" && "border border-red-600"}`}
+                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
+                  !isDisplayNameValid &&
+                  displayName !== "" &&
+                  "border border-red-600"
+                }`}
                 type="text"
-                onChange={(e)=>handleDisplayName(e.target.value)}
+                onChange={(e) => handleDisplayName(e.target.value)}
                 value={displayName}
               />
             </div>
@@ -113,9 +139,11 @@ const Signup = () => {
             <label className="px-7 text-sm">USERNAME</label>
             <div className="w-full h-auto flex items-center justify-center">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${!isUsernameValid && username !=="" && "border border-red-600"}`}
+                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
+                  !isUsernameValid && username !== "" && "border border-red-600"
+                }`}
                 type="text"
-                onChange={(e)=>handleUsername(e.target.value)}
+                onChange={(e) => handleUsername(e.target.value)}
                 value={username}
               />
             </div>
@@ -125,9 +153,11 @@ const Signup = () => {
             <label className="px-7 text-sm">PASSWORD</label>
             <div className="w-full h-auto flex items-center justify-center">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${!isPasswordValid && password!=="" && "border border-red-600"}`}
+                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
+                  !isPasswordValid && password !== "" && "border border-red-600"
+                }`}
                 type="password"
-                onChange={(e)=>handlePassword(e.target.value)}
+                onChange={(e) => handlePassword(e.target.value)}
                 value={password}
               />
             </div>
@@ -137,11 +167,14 @@ const Signup = () => {
             <label className="px-7 text-sm">CONFIRM PASSWORD</label>
             <div className="w-full h-auto flex items-center justify-center">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${!isPasswordMatching && rePassword!=="" && "border border-red-600"} `}
+                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
+                  !isPasswordMatching &&
+                  rePassword !== "" &&
+                  "border border-red-600"
+                } `}
                 type="password"
-                onChange={(e)=>handleRePassword(e.target.value)}
+                onChange={(e) => handleRePassword(e.target.value)}
                 value={rePassword}
-                
               />
             </div>
           </div>
@@ -151,8 +184,8 @@ const Signup = () => {
                 type="checkbox"
                 className="hidden peer"
                 id="discord-checkbox"
-                checked={isTermsChecked} 
-                onChange={handleCheckboxChange} 
+                checked={isTermsChecked}
+                onChange={handleCheckboxChange}
               />
               <span
                 className="w-6 h-6 border-2 border-gray-500 rounded-sm flex items-center justify-center 
@@ -187,7 +220,10 @@ const Signup = () => {
           </div>
 
           <div className="w-full h-auto flex justify-center py-4">
-            <button onClick={()=>handleSubmit()} className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300">
+            <button
+              onClick={() => handleSubmit()}
+              className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300"
+            >
               Sign Up
             </button>
           </div>
