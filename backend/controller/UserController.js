@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const signup = async(req,res)=>{
     const {email,displayName,username,password} = req.body;
     try {
-        if(!email && !displayName && !username && !password){
+        if(!email || !displayName || !username || !password){
             return res.status(400).json({message:"provide all area"})
         }
 
@@ -38,7 +38,7 @@ const signup = async(req,res)=>{
 const login = async(req,res)=>{
     const {email,password} = req.body;
 
-    if(!email && !password){
+    if(!email || !password){
         return res.status(400).json({message:"provide all area"})
     }
     try {
@@ -61,8 +61,19 @@ const login = async(req,res)=>{
             expiresIn:"1h"
         }
     );
+    if (!process.env.JWT_SECRET) {
+        return res.status(500).json({ message: "JWT_SECRET is not configured" });
+    }
+
+    res.cookie("token",token,{
+        httpOnly:true,
+        secure:true,
+        maxAge:3600000
+    })
     
-    return res.status(200).json({message:"login successfull",token})
+    return res.status(200).json({
+        message: "Login successful",
+      });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
     }
