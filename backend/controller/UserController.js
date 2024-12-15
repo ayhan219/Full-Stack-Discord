@@ -53,6 +53,7 @@ const login = async(req,res)=>{
         }
 
         const token = jwt.sign({
+            userId:findUser._id,
             email: findUser.email,
             displayName:findUser.displayName,
             username: findUser.username,
@@ -85,7 +86,7 @@ const login = async(req,res)=>{
 }
 
 const getCurrentUser = async(req,res)=>{
-    const user = req.user;
+    const user = req.user; 
     
     try {
       if(!user){

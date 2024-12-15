@@ -4,15 +4,46 @@ import Server from "./Server";
 import { GoPlus } from "react-icons/go";
 import { useUserContext } from "../context/UserContext";
 import CreateChannel from "./CreateChannel";
+import { useEffect, useState } from "react";
+import axios from "axios"
 
 type SidebarInterface = {
   setActiveChannel: (activeChannel: string) => void;
   activeChannel: string;
 };
 
+interface Channel {
+_id:string,
+channelName:string,
+
+}
+
 const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
 
+  const [channels,setChannels] = useState<Channel[]>([]);
+  const {user} = useUserContext();
+
   const {openCreateChannel,setOpenCreateChannel} = useUserContext();
+
+  const getChannelInfo = async()=>{
+    
+    try {
+      const response = await axios.get("http://localhost:5000/api/channel/getchannel",{
+        params:{
+          userId:user?.userId
+        }
+      })
+      setChannels(response.data.channels)
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  useEffect(()=>{
+    getChannelInfo();
+  },[])
 
   return (
     <div className="w-[6%] h-screen bg-[#1E1F22] flex flex-col  pt-4 gap-3">
@@ -49,8 +80,11 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
 
       {/* server area */}
       <div className="w-full h-auto flex flex-col gap-3">
-       <Server />
-       <Server />
+       {
+        channels.map((item,index)=>(
+          <Server key={index} item={item} index={index} />
+        ))
+       }
       
        <div className="w-full h-16 flex items-center justify-center relative">
         <div onClick={()=>setOpenCreateChannel(!openCreateChannel)} className="w-16 h-16 rounded-full bg-[#3f4049] flex justify-center items-center cursor-pointer">

@@ -37,13 +37,16 @@ const createChannel = async(req,res)=>{
 }
 
 const getChannel = async(req,res)=>{
-    const {userId} = req.body;
+    const {userId} = req.query;
 
     if(!userId){
         return res.status(400).json({message:"no user id"})
     }
     try {
-        const findUser = await User.findById(userId).populate("joinedChannel");
+        const findUser = await User.findById(userId).populate({
+            path: "joinedChannel",
+            select: "_id channelName", 
+          });
         if(!findUser){
             return res.status(400).json({message:"user not found"})
         }
