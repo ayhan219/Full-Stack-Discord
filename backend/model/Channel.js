@@ -13,7 +13,14 @@ const ChannelSchema = new mongoose.Schema({
     voiceChannel:{
         type:String,
         default:null
-    }
+    },
+    channelUsers:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
+            default:null
+        }
+    ]
 })
 
 module.exports = mongoose.model("Channel",ChannelSchema);
