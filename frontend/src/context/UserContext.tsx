@@ -9,6 +9,7 @@ import React, {
 
 
 type User = {
+  userId:string;
   email: string;
   displayName: string;
   username: string;
