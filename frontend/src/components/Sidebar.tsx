@@ -24,7 +24,7 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
         ></div>
 
         <div className="relative">
-       <Link to={"/"}>
+       <Link to={"/home"}>
        <img
           className="w-14 h-14 object-cover rounded-full relative"
           src={discordPNG}

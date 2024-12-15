@@ -27,7 +27,7 @@ const Login = () => {
       setUser(response.data)
       
       if(response.status===200){
-        navigate("/");
+        navigate("/home");
       }
       
       
