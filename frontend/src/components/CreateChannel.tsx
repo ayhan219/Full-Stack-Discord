@@ -1,12 +1,27 @@
 import { IoCloseCircle } from "react-icons/io5";
 import { useUserContext } from "../context/UserContext";
+import axios from "axios";
+import { useState } from "react";
 
 const CreateChannel = () => {
-  const { setOpenCreateChannel, openCreateChannel } = useUserContext();
+  const { setOpenCreateChannel, openCreateChannel,user } = useUserContext();
+  const [channelName,setChannelName] = useState<string>("");
 
-  const handleCreateChannel = () => {
-    // Channel creation logic here
-    alert("Server created successfully!");
+
+  const handleCreateChannel = async() => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/channel/createchannel",{
+        channelName,
+        userId:user?.userId
+      })
+      if(response.status===201){
+        window.location.reload();
+      }
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
   };
 
   return (
@@ -30,20 +45,13 @@ const CreateChannel = () => {
             <input
               id="serverName"
               type="text"
+              onChange={(e)=>setChannelName(e.target.value)}
+              value={channelName}
               className="w-full px-4 py-2 rounded-lg bg-[#23272a] text-white border border-[#202225] focus:ring-2 focus:ring-blue-500 outline-none"
               placeholder="Enter the server name"
             />
           </div>
-          <div>
-            <label className="block text-gray-300 mb-2" htmlFor="serverDescription">
-              Server Description
-            </label>
-            <textarea
-              id="serverDescription"
-              className="w-full px-4 py-2 rounded-lg bg-[#23272a] text-white border border-[#202225] focus:ring-2 focus:ring-blue-500 outline-none"
-              placeholder="Enter a description for the server"
-            />
-          </div>
+          
         </div>
 
         {/* Buttons */}
