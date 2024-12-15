@@ -27,6 +27,13 @@ const UserSchema = new mongoose.Schema({
             default:null 
         }
     ],
+    joinedChannel:[
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Channel",
+            default:null  
+        }
+    ],
     friends:[
         {
             type:mongoose.Schema.Types.ObjectId,
