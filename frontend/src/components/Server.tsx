@@ -12,7 +12,7 @@ interface ServerProps {
 
 const Server = ({ item, index }: ServerProps) => {
 
-  const{setGetChannelId} = useUserContext();
+  const{getSingleChannel} = useUserContext();
  
   const initials = item.channelName
     .split(" ")
@@ -20,11 +20,13 @@ const Server = ({ item, index }: ServerProps) => {
     .join("")
     .substring(0, 2)
     .toUpperCase();
+
+
     
 
   return (
     <div  className="w-full h-16 flex items-center justify-center relative">
-      <Link onClick={()=>setGetChannelId(item._id)} to={"/channel"} className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer">
+      <Link onClick={()=>getSingleChannel(item._id)} to={"/channel"} className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer">
         <p className="text-black font-bold text-lg">{initials}</p>
       </Link>
 
