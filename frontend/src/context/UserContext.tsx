@@ -1,5 +1,12 @@
 import axios from "axios";
-import React, { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import { useNavigate } from "react-router-dom";
 
 type User = {
   email: string;
@@ -7,12 +14,10 @@ type User = {
   username: string;
 };
 
-
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
 }
-
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -20,27 +25,28 @@ type UserProviderProps = {
   children: ReactNode;
 };
 
-
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
- 
-  const getCurrentUser = async()=>{
+
+  const getCurrentUser = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/getcurrent",{
-        withCredentials:true
-      })
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/getcurrent",
+        {
+          withCredentials: true,
+        }
+      );
       console.log(response.data);
-      setUser(response.data)
-      
+     
+      setUser(response.data);
     } catch (error) {
       console.log(error);
-      
     }
-  }
+  };
 
-  useEffect(()=>{
+  useEffect(() => {
     getCurrentUser();
-  },[])
+  }, []);
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
@@ -48,7 +54,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     </UserContext.Provider>
   );
 };
-
 
 export const useUserContext = (): UserContextType => {
   const context = useContext(UserContext);
