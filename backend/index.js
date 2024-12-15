@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const dotenv = require("dotenv");
 const cors = require("cors");
 const UserRoutes = require("./router/UserRouter");
+const ChannelRoutes = require("./router/ChannelRouter")
 const cookieParser = require("cookie-parser")
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 app.use("/api/auth",UserRoutes);
+app.use("/api/channel",ChannelRoutes)
 
 
 const connectToDB = async()=>{
