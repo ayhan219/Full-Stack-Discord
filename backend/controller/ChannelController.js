@@ -60,7 +60,27 @@ const getChannel = async(req,res)=>{
     }
 }
 
+const getChannelSingle = async(req,res)=>{
+    const {channelId} = req.query;
+
+    if(!channelId){
+        return res.status(400).json({message:"no channel id"})
+    }
+    try {
+        const findChannel = await Channel.findById(channelId);
+        if(!findChannel){
+            return res.status(400).json({message:"channel not found"})
+        }
+
+        return res.status(200).json(findChannel)
+        
+    } catch (error) {
+        return res.status(500).json({message:"server error"})
+    }
+}
+
 module.exports ={
 createChannel,
-getChannel
+getChannel,
+getChannelSingle
 }
