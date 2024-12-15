@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import discordPNG from "../assets/pngegg.png";
 import Server from "./Server";
 import { GoPlus } from "react-icons/go";
+import { useUserContext } from "../context/UserContext";
+import CreateChannel from "./CreateChannel";
 
 type SidebarInterface = {
   setActiveChannel: (activeChannel: string) => void;
@@ -9,8 +11,11 @@ type SidebarInterface = {
 };
 
 const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
+
+  const {openCreateChannel,setOpenCreateChannel} = useUserContext();
+
   return (
-    <div className="w-[6%] h-screen bg-[#1E1F22] flex flex-col  pt-4 space-y-4">
+    <div className="w-[6%] h-screen bg-[#1E1F22] flex flex-col  pt-4 gap-3">
       <div
         className={`relative flex items-center justify-center cursor-pointer ${
           activeChannel === "home" ? "group" : ""
@@ -48,13 +53,17 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
        <Server />
       
        <div className="w-full h-16 flex items-center justify-center relative">
-        <div className="w-16 h-16 rounded-full bg-[#3f4049] flex justify-center items-center cursor-pointer">
+        <div onClick={()=>setOpenCreateChannel(!openCreateChannel)} className="w-16 h-16 rounded-full bg-[#3f4049] flex justify-center items-center cursor-pointer">
           <div className=" text-green-500 font-bold text-4xl">
           <GoPlus />
           </div>
         </div>
            </div>
       </div>
+      {
+        openCreateChannel && 
+        <CreateChannel />
+      }
     </div>
   );
 };

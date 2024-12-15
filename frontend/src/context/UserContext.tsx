@@ -22,6 +22,10 @@ interface UserContextType {
 
   turnHeadOff:boolean;
   setTurnHeadOff:(turnHeadOff:boolean)=>void;
+
+  openCreateChannel:boolean;
+  setOpenCreateChannel:(openCreateChannel:boolean)=>void;
+  
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -34,6 +38,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [turnMicOff, setTurnMicOff] = useState<boolean>(false);
   const [turnHeadOff, setTurnHeadOff] = useState<boolean>(false);
+  const [openCreateChannel,setOpenCreateChannel] = useState<boolean>(false);
 
   const getCurrentUser = async () => {
     try {
@@ -56,7 +61,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff }}>
+    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel}}>
       {children}
     </UserContext.Provider>
   );
