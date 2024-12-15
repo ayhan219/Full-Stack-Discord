@@ -72,9 +72,11 @@ const login = async(req,res)=>{
     })
     
     return res.status(200).json({
+        userId: findUser._id,
         email:findUser.email,
         displayName:findUser.displayName,
         username:findUser.username
+
     });
     } catch (error) {
         res.status(500).json({ message: "Server error", error: error.message });
