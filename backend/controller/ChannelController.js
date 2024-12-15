@@ -22,6 +22,7 @@ const createChannel = async(req,res)=>{
             channelName:channelName
         })
         findUser.ownChannel.push(newChannel._id);
+        findUser.joinedChannel.push(newChannel._id);
         await findUser.save();
         await newChannel.save();
 
@@ -35,6 +36,28 @@ const createChannel = async(req,res)=>{
     }
 }
 
+const getChannel = async(req,res)=>{
+    const {userId} = req.body;
+
+    if(!userId){
+        return res.status(400).json({message:"no user id"})
+    }
+    try {
+        const findUser = await User.findById(userId).populate("joinedChannel");
+        if(!findUser){
+            return res.status(400).json({message:"user not found"})
+        }
+        return res.status(200).json({
+            message: "Channels retrieved successfully",
+            channels: findUser.joinedChannel,
+          });
+        
+    } catch (error) {
+        return res.status(500).json({message:"server error"})
+    }
+}
+
 module.exports ={
-createChannel
+createChannel,
+getChannel
 }
