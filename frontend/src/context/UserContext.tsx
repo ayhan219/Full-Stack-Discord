@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 type User = {
   email: string;
@@ -17,6 +17,11 @@ type User = {
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
+  turnMicOff:boolean;
+  setTurnMicOff:(turnMicOff:boolean)=>void;
+
+  turnHeadOff:boolean;
+  setTurnHeadOff:(turnHeadOff:boolean)=>void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -27,6 +32,8 @@ type UserProviderProps = {
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [turnMicOff, setTurnMicOff] = useState<boolean>(false);
+  const [turnHeadOff, setTurnHeadOff] = useState<boolean>(false);
 
   const getCurrentUser = async () => {
     try {
@@ -49,7 +56,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser }}>
+    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff }}>
       {children}
     </UserContext.Provider>
   );

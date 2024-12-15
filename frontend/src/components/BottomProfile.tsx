@@ -10,8 +10,9 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
 const BottomProfile = () => {
-  const [turnMicOff, setTurnMicOff] = useState<boolean>(false);
-  const [turnHeadOff, setTurnHeadOff] = useState<boolean>(false);
+
+  const {turnMicOff,setTurnMicOff,turnHeadOff,setTurnHeadOff} = useUserContext();
+  
   const [openSettings, setOpenSettings] = useState<boolean>(false);
   const {setUser} = useUserContext();
 
