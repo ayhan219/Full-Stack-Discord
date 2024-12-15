@@ -26,7 +26,17 @@ interface UserContextType {
 
   openCreateChannel:boolean;
   setOpenCreateChannel:(openCreateChannel:boolean)=>void;
+
+  getChannelId:string;
+  setGetChannelId:(getChannelId:string)=>void;
   
+  getSingleChannel:()=>void
+  
+}
+
+interface SingleChannel {
+  _id:string,
+  channelName:string,
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -40,6 +50,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [turnMicOff, setTurnMicOff] = useState<boolean>(false);
   const [turnHeadOff, setTurnHeadOff] = useState<boolean>(false);
   const [openCreateChannel,setOpenCreateChannel] = useState<boolean>(false);
+  const [singleChannel,setSingleChannel] = useState<SingleChannel[]>([]);
+  const [getChannelId,setGetChannelId] = useState<string>(""); 
+
 
   const getCurrentUser = async () => {
     try {
@@ -61,8 +74,24 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     getCurrentUser();
   }, []);
 
+  const getSingleChannel = async()=>{
+    try {
+      const response = await axios.get("http://localhost:5000/api/channel/getsinglechannel",{
+        params:{
+          channelId:getChannelId
+        }
+      })
+      console.log(response);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+
   return (
-    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel}}>
+    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getChannelId,setGetChannelId,getSingleChannel}}>
       {children}
     </UserContext.Provider>
   );
