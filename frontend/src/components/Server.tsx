@@ -11,7 +11,7 @@ interface ServerProps {
   index: number;
 }
 
-const Server = ({ item, index }: ServerProps) => {
+const Server = ({ item}: ServerProps) => {
 
   const{getSingleChannel} = useUserContext();
  

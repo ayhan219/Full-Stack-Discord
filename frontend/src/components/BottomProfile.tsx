@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
 const BottomProfile = () => {
+  const {user} = useUserContext();
 
   const {turnMicOff,setTurnMicOff,turnHeadOff,setTurnHeadOff} = useUserContext();
   
@@ -48,7 +49,9 @@ const BottomProfile = () => {
             />
           </div>
           <div className="text-white w-auto max-w-12 flex items-center">
-            <p>Ayhan</p>
+            <p>
+              {user?.username}
+            </p>
           </div>
         </div>
         <div className="flex  text-white text-xl gap-3 items-center">
