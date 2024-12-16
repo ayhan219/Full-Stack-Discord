@@ -6,6 +6,7 @@ const Channel = require("../model/Channel")
 
 const createChannel = async(req,res)=>{
     const {userId,channelName} = req.body;
+    
 
     if(!userId){
         return res.status(200).json({message:"user not authenticated"})
@@ -21,8 +22,11 @@ const createChannel = async(req,res)=>{
         const newChannel = new Channel({
             channelName:channelName
         })
+
+        newChannel.channelUsers.push(findUser.username);
         findUser.ownChannel.push(newChannel._id);
         findUser.joinedChannel.push(newChannel._id);
+
         await findUser.save();
         await newChannel.save();
 
@@ -32,7 +36,10 @@ const createChannel = async(req,res)=>{
           });
 
     } catch (error) {
+        console.log();
         return res.status(500).json({message:"server error"})
+        
+        
     }
 }
 
