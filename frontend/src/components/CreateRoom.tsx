@@ -4,11 +4,15 @@ import axios from "axios";
 import { useState } from "react";
 
 
+
+
+
+
 const CreateRoom = () => {
 
     const {openCreateRoom,setOpenCreateRoom} = useUserContext();
     const [chatRoomName,setChatRoomName] = useState<string>("");
-    const {user,singleChannel} = useUserContext();
+    const {user,singleChannel,setSingleChannel} = useUserContext();
 
     const handleAddChatRoom = async()=>{
         try {
@@ -17,8 +21,9 @@ const CreateRoom = () => {
             userId:user?.userId,
             chatRoomName:chatRoomName
           })
-          console.log(response.data);
-          
+          if (response.status === 200) {
+            window.location.reload();
+          }
         } catch (error) {
           console.log(error);
           

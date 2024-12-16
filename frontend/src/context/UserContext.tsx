@@ -31,6 +31,7 @@ interface UserContextType {
   setOpenCreateRoom:(openCreateRoom:boolean)=>void;
 
   singleChannel:SingleChannel | null;
+  setSingleChannel:(singleChannel:SingleChannel | null)=>void;
   
   getSingleChannel:(id:string)=>void
   
@@ -101,7 +102,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
 
   return (
-    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getSingleChannel,singleChannel,openCreateRoom,setOpenCreateRoom}}>
+    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getSingleChannel,setSingleChannel,singleChannel,openCreateRoom,setOpenCreateRoom}}>
       {children}
     </UserContext.Provider>
   );
