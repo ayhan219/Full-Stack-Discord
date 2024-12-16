@@ -89,18 +89,14 @@ const getChannelSingle = async(req,res)=>{
 const createChatRoom = async (req, res) => {
     const { channelId, userId, chatRoomName } = req.body;
 
-    
-    // Alan doğrulama
     if (!channelId || !userId || !chatRoomName) {
         return res.status(400).json({ message: "Please provide all required fields." });
     }
 
     try {
-        // Kanal ve kullanıcıyı bul
         const findChannel = await Channel.findById(channelId);
         const findUser = await User.findById(userId);
 
-        // Kanal ve kullanıcı doğrulama
         if (!findChannel) {
             return res.status(404).json({ message: "Channel not found." });
         }
@@ -108,28 +104,21 @@ const createChatRoom = async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
-        // Kullanıcı admin mi?
         const isUserOwner = findUser.ownChannel.includes(channelId);
         if (!isUserOwner) {
             return res.status(403).json({ message: "Only channel admin can add rooms." });
         }
 
-        // Oda adı benzersiz mi?
-        const isRoomExist = findChannel.chatChannel.some(room => room.roomName === chatRoomName);
-        if (isRoomExist) {
-            return res.status(400).json({ message: "Chat room with this name already exists." });
-        }
+        
 
-        // Yeni oda ekle
         findChannel.chatChannel.push({
             roomName: chatRoomName,
-            messages: [], // Yeni oda başlangıçta boş mesajlar içerir
+            messages: [], 
         });
 
-        // Değişiklikleri kaydet
         await findChannel.save();
 
-        res.status(201).json({ message: "Chat room created successfully." });
+        res.status(200).json({ message: "Chat room created successfully." });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error." });
