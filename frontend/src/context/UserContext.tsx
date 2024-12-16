@@ -26,8 +26,11 @@ interface UserContextType {
 
   openCreateChannel:boolean;
   setOpenCreateChannel:(openCreateChannel:boolean)=>void;
+
+  singleChannel:SingleChannel | null;
   
   getSingleChannel:(id:string)=>void
+  
   
 }
 
@@ -47,7 +50,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [turnMicOff, setTurnMicOff] = useState<boolean>(false);
   const [turnHeadOff, setTurnHeadOff] = useState<boolean>(false);
   const [openCreateChannel,setOpenCreateChannel] = useState<boolean>(false);
-  const [singleChannel,setSingleChannel] = useState<SingleChannel[]>([]);
+  const [singleChannel,setSingleChannel] = useState<SingleChannel | null>(null);
 
 
   const getCurrentUser = async () => {
@@ -78,6 +81,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
       })
       setSingleChannel(response.data)
+      console.log(response.data);
+      
       
     } catch (error) {
       console.log(error);
@@ -87,7 +92,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
 
   return (
-    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getSingleChannel}}>
+    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getSingleChannel,singleChannel}}>
       {children}
     </UserContext.Provider>
   );

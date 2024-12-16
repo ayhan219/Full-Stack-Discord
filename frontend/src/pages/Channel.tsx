@@ -3,6 +3,7 @@ import ChannelMenu from "../components/ChannelMenu";
 import ChatArea from "../components/ChatArea";
 import ChatRightArea from "../components/ChatRightArea";
 import axios from "axios";
+import { useUserContext } from "../context/UserContext";
 
 interface SingleChannel {
   _id:string,
@@ -11,7 +12,6 @@ interface SingleChannel {
 
 const Channel = () => {
 
-  
 
   
   

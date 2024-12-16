@@ -3,16 +3,20 @@ import { GoPlus } from "react-icons/go";
 import ChannelChatItem from './ChannelChatItem';
 import ChannelVoiceItem from './ChannelVoiceItem';
 import BottomProfile from './BottomProfile';
+import { useUserContext } from '../context/UserContext';
+
 
 
 
 const ChannelMenu = () => {
 
+  const {singleChannel} = useUserContext();
+
   return (
     <div className="w-[15%] h-screen bg-[#2B2D31] flex flex-col">
       <div className='w-full h-16 flex items-center border-b border-gray-800'>
         <div className='font-bold text-[#D6D9DC] text-xl py-3 px-5'>
-        Channel Name
+        {singleChannel?.channelName}
         </div>
       </div>
       <div className='w-full h-auto'>
