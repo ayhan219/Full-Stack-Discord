@@ -4,8 +4,15 @@ import "../index.css";
 import { useUserContext } from "../context/UserContext";
 import { useState } from "react";
 
+
+
+
+
 const ChatArea = () => {
   const {singleChannel} = useUserContext();
+
+
+  
   
   return (
     <div  className="w-[70%] h-screen bg-[#313338] flex flex-col  ">
