@@ -1,8 +1,12 @@
 import { FaHashtag } from "react-icons/fa6";
 import ChatComplement from "./ChatComplement";
 import "../index.css";
+import { useUserContext } from "../context/UserContext";
+import { useState } from "react";
 
 const ChatArea = () => {
+  const {singleChannel} = useUserContext();
+  
   return (
     <div className="w-[70%] h-screen bg-[#313338] flex flex-col  ">
       {/* Channel Header */}
@@ -12,19 +16,7 @@ const ChatArea = () => {
       </div>
 
       {/* Chat Area */}
-      <div className="w-full h-full flex flex-col gap-6 overflow-hidden overflow-y-auto custom-scrollbar   p-5">
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
-        <ChatComplement />
+      <div className="w-full h-full flex flex-col gap-6 overflow-hidden overflow-y-auto custom-scrollbar p-5">
         <ChatComplement />
         <ChatComplement />
         <ChatComplement />

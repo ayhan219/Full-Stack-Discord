@@ -6,11 +6,29 @@ const ChannelSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    chatChannel:[
+    chatChannel: [
         {
-            type:String,
-            default:null
-        }
+            roomName: {
+                type: String, 
+                required: true,
+            },
+            messages: [
+                {
+                    sender: {
+                        type: String, 
+                        required: true,
+                    },
+                    content: {
+                        type: String, 
+                        required: true,
+                    },
+                    timestamp: {
+                        type: Date, 
+                        default: Date.now,
+                    },
+                },
+            ],
+        },
     ],
     voiceChannel:[
         {
