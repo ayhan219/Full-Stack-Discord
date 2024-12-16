@@ -86,8 +86,41 @@ const getChannelSingle = async(req,res)=>{
     }
 }
 
+const createChatRoom = async(req,res)=>{
+const {channelId,userId,chatRoomName} = req.body;
+
+  if(!channelId | !userId){
+    return res.status(400).json({message:"provide all area"})
+  }
+
+  try {
+    const findChannel = await Channel.findById(channelId);
+    const findUser = await User.findById(userId);
+
+    if(!findChannel){
+        return res.status(400).json({message:"channel not found"})
+    }
+    if(!findUser){
+        return res.status(400).json({message:"user not found"})
+    }
+
+    const isUserOwner = findUser.ownChannel.includes(channelId);
+    if(!isUserOwner){
+        return res.status(400).json({message:"only channel admin can add channel"})
+    }
+    findChannel.chatChannel.push(chatRoomName);
+    await findChannel.save();
+
+    res.status(200).json({message:"room created"})
+
+  } catch (error) {
+    return res.status(500).json({message:"server error"})
+  }
+}
+
 module.exports ={
 createChannel,
 getChannel,
-getChannelSingle
+getChannelSingle,
+createChatRoom
 }
