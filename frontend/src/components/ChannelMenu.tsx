@@ -28,7 +28,7 @@ const ChannelMenu = () => {
         <div className='w-full h-auto flex flex-col gap-5'>
         {
           singleChannel?.chatChannel.map((item,index)=>(
-            <ChannelChatItem key={index} />
+            <ChannelChatItem key={index} chatName={item} />
           ))
         }
         </div>
