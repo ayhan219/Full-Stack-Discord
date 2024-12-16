@@ -27,8 +27,8 @@ const ChannelMenu = () => {
 
         <div className='w-full h-auto flex flex-col gap-5'>
         {
-          singleChannel?.chatChannel.map((item)=>(
-            <ChannelChatItem />
+          singleChannel?.chatChannel.map((item,index)=>(
+            <ChannelChatItem key={index} />
           ))
         }
         </div>
@@ -40,8 +40,8 @@ const ChannelMenu = () => {
 
         <div className='w-full h-auto flex flex-col gap-3'>
            {
-            singleChannel?.voiceChannel.map((item)=>(
-              <ChannelVoiceItem />
+            singleChannel?.voiceChannel.map((item,index)=>(
+              <ChannelVoiceItem  key={index} />
             ))
            }
           
