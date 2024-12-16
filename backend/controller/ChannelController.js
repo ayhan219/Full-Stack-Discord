@@ -118,9 +118,14 @@ const {channelId,userId,chatRoomName} = req.body;
   }
 }
 
+const createVoiceRoom = async(req,res)=>{
+
+}
+
 module.exports ={
 createChannel,
 getChannel,
 getChannelSingle,
-createChatRoom
+createChatRoom,
+createVoiceRoom
 }
