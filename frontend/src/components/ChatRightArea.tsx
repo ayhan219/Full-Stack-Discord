@@ -6,7 +6,7 @@ const ChatRightArea = () => {
 
   const {singleChannel} = useUserContext();
   return (
-    <div className='w-[15%] h-full bg-[#2B2D31]'>
+    <div className='w-[270px] h-full bg-[#2B2D31]'>
         <div className='w-full h-10 text-gray-400 p-4 text-xl font-semibold'>
             <h3>Members - {singleChannel?.channelUsers.length}</h3>
         </div>
