@@ -37,6 +37,8 @@ interface UserContextType {
 interface SingleChannel {
   _id:string,
   channelName:string,
+  chatChannel:[],
+  voiceChannel:[],
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -89,6 +91,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       
     }
   }
+
+
 
 
   return (

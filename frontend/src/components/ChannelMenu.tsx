@@ -26,10 +26,11 @@ const ChannelMenu = () => {
         </div>
 
         <div className='w-full h-auto flex flex-col gap-5'>
-        <ChannelChatItem />
-        <ChannelChatItem />
-        <ChannelChatItem />
-        <ChannelChatItem />
+        {
+          singleChannel?.chatChannel.map((item)=>(
+            <ChannelChatItem />
+          ))
+        }
         </div>
         
         <div className='w-full text-gray-400 flex items-center justify-between p-5 font-bold mt-5'>
@@ -38,10 +39,11 @@ const ChannelMenu = () => {
         </div>
 
         <div className='w-full h-auto flex flex-col gap-3'>
-           <ChannelVoiceItem />
-           <ChannelVoiceItem />
-           <ChannelVoiceItem />
-           <ChannelVoiceItem />
+           {
+            singleChannel?.voiceChannel.map((item)=>(
+              <ChannelVoiceItem />
+            ))
+           }
           
         </div>
       </div>

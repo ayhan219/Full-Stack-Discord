@@ -1,6 +1,7 @@
 import { IoMdArrowDropright } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
+import { useEffect } from "react";
 
 interface ServerProps {
   item: {
@@ -21,6 +22,10 @@ const Server = ({ item, index }: ServerProps) => {
     .substring(0, 2)
     .toUpperCase();
 
+
+    useEffect(()=>{
+      getSingleChannel(item._id)
+    },[])
 
     
 
