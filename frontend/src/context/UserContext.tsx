@@ -27,6 +27,9 @@ interface UserContextType {
   openCreateChannel:boolean;
   setOpenCreateChannel:(openCreateChannel:boolean)=>void;
 
+  openCreateRoom:boolean;
+  setOpenCreateRoom:(openCreateRoom:boolean)=>void;
+
   singleChannel:SingleChannel | null;
   
   getSingleChannel:(id:string)=>void
@@ -54,6 +57,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [turnHeadOff, setTurnHeadOff] = useState<boolean>(false);
   const [openCreateChannel,setOpenCreateChannel] = useState<boolean>(false);
   const [singleChannel,setSingleChannel] = useState<SingleChannel | null>(null);
+  const [openCreateRoom,setOpenCreateRoom] = useState<boolean>(false);
 
 
   const getCurrentUser = async () => {
@@ -97,7 +101,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
 
   return (
-    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getSingleChannel,singleChannel}}>
+    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getSingleChannel,singleChannel,openCreateRoom,setOpenCreateRoom}}>
       {children}
     </UserContext.Provider>
   );
