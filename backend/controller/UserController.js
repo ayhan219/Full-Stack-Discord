@@ -104,9 +104,14 @@ const getCurrentUser = async(req,res)=>{
     return res.status(200).json({ message: "logout successfull" });
   }
 
+  const createChatChannel = async(req,res)=>{
+    
+  }
+
 module.exports ={
     signup,
     login,
     getCurrentUser,
-    logout
+    logout,
+    createChatChannel
 }
