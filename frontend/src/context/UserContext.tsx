@@ -39,6 +39,7 @@ interface SingleChannel {
   channelName:string,
   chatChannel:[],
   voiceChannel:[],
+  channelUsers:[],
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
