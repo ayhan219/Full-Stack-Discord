@@ -7,9 +7,8 @@ import React, {
   useState,
 } from "react";
 
-
 type User = {
-  userId:string;
+  userId: string;
   email: string;
   displayName: string;
   username: string;
@@ -18,32 +17,33 @@ type User = {
 interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
-  turnMicOff:boolean;
-  setTurnMicOff:(turnMicOff:boolean)=>void;
+  turnMicOff: boolean;
+  setTurnMicOff: (turnMicOff: boolean) => void;
 
-  turnHeadOff:boolean;
-  setTurnHeadOff:(turnHeadOff:boolean)=>void;
+  turnHeadOff: boolean;
+  setTurnHeadOff: (turnHeadOff: boolean) => void;
 
-  openCreateChannel:boolean;
-  setOpenCreateChannel:(openCreateChannel:boolean)=>void;
+  openCreateChannel: boolean;
+  setOpenCreateChannel: (openCreateChannel: boolean) => void;
 
-  openCreateRoom:boolean;
-  setOpenCreateRoom:(openCreateRoom:boolean)=>void;
+  openCreateRoom: boolean;
+  setOpenCreateRoom: (openCreateRoom: boolean) => void;
 
-  singleChannel:SingleChannel | null;
-  setSingleChannel:(singleChannel:SingleChannel | null)=>void;
-  
-  getSingleChannel:(id:string)=>void
-  
-  
+  openCreateVoiceRoom: boolean;
+  setOpenCreateVoiceRoom: (openCreateVoiceRoom: boolean) => void;
+
+  singleChannel: SingleChannel | null;
+  setSingleChannel: (singleChannel: SingleChannel | null) => void;
+
+  getSingleChannel: (id: string) => void;
 }
 
 interface SingleChannel {
-  _id:string,
-  channelName:string,
-  chatChannel:[],
-  voiceChannel:[],
-  channelUsers:[],
+  _id: string;
+  channelName: string;
+  chatChannel: [];
+  voiceChannel: [];
+  channelUsers: [];
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -56,10 +56,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [turnMicOff, setTurnMicOff] = useState<boolean>(false);
   const [turnHeadOff, setTurnHeadOff] = useState<boolean>(false);
-  const [openCreateChannel,setOpenCreateChannel] = useState<boolean>(false);
-  const [singleChannel,setSingleChannel] = useState<SingleChannel | null>(null);
-  const [openCreateRoom,setOpenCreateRoom] = useState<boolean>(false);
-
+  const [openCreateChannel, setOpenCreateChannel] = useState<boolean>(false);
+  const [singleChannel, setSingleChannel] = useState<SingleChannel | null>(
+    null
+  );
+  const [openCreateRoom, setOpenCreateRoom] = useState<boolean>(false);
+  const [openCreateVoiceRoom, setOpenCreateVoiceRoom] =
+    useState<boolean>(false);
 
   const getCurrentUser = async () => {
     try {
@@ -70,7 +73,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
       );
       console.log(response.data);
-     
+
       setUser(response.data);
     } catch (error) {
       console.log(error);
@@ -81,28 +84,43 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     getCurrentUser();
   }, []);
 
-  const getSingleChannel = async(id:string)=>{
+  const getSingleChannel = async (id: string) => {
     try {
-      const response = await axios.get("http://localhost:5000/api/channel/getchannelsingle",{
-        params:{
-          channelId:id
+      const response = await axios.get(
+        "http://localhost:5000/api/channel/getchannelsingle",
+        {
+          params: {
+            channelId: id,
+          },
         }
-      })
-      setSingleChannel(response.data)
+      );
+      setSingleChannel(response.data);
       console.log(response.data);
-      
-      
     } catch (error) {
       console.log(error);
-      
     }
-  }
-
-
-
+  };
 
   return (
-    <UserContext.Provider value={{ user, setUser,setTurnMicOff,turnMicOff,setTurnHeadOff,turnHeadOff,openCreateChannel,setOpenCreateChannel,getSingleChannel,setSingleChannel,singleChannel,openCreateRoom,setOpenCreateRoom}}>
+    <UserContext.Provider
+      value={{
+        user,
+        setUser,
+        setTurnMicOff,
+        turnMicOff,
+        setTurnHeadOff,
+        turnHeadOff,
+        openCreateChannel,
+        setOpenCreateChannel,
+        getSingleChannel,
+        setSingleChannel,
+        singleChannel,
+        openCreateRoom,
+        setOpenCreateRoom,
+        openCreateVoiceRoom,
+        setOpenCreateVoiceRoom
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

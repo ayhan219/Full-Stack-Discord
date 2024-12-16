@@ -7,13 +7,14 @@ import { useUserContext } from '../context/UserContext';
 import axios from "axios";
 import { useState } from "react";
 import CreateRoom from "./CreateRoom";
+import CreateVoiceRoom from "./CreateVoiceRoom";
 
 
 
 
 const ChannelMenu = () => {
 
-  const {singleChannel,setOpenCreateRoom,openCreateRoom} = useUserContext();
+  const {singleChannel,setOpenCreateRoom,openCreateRoom,setOpenCreateVoiceRoom,openCreateVoiceRoom} = useUserContext();
 
   return (
     <div className="w-[15%] h-screen bg-[#2B2D31] flex flex-col">
@@ -38,13 +39,13 @@ const ChannelMenu = () => {
         
         <div className='w-full text-gray-400 flex items-center justify-between p-5 font-bold mt-5'>
             <p className='hover:text-gray-200 cursor-pointer'>Voice Channel</p>
-            <GoPlus  className='hover:text-gray-200 cursor-pointer'/>
+            <GoPlus onClick={()=>setOpenCreateVoiceRoom(!openCreateVoiceRoom)}  className='hover:text-gray-200 cursor-pointer'/>
         </div>
 
         <div className='w-full h-auto flex flex-col gap-3'>
            {
             singleChannel?.voiceChannel.map((item,index)=>(
-              <ChannelVoiceItem  key={index} />
+              <ChannelVoiceItem  key={index} voiceName={item} />
             ))
            }
           
@@ -54,6 +55,10 @@ const ChannelMenu = () => {
       {
         openCreateRoom && 
         <CreateRoom />
+      }
+      {
+        openCreateVoiceRoom &&
+        <CreateVoiceRoom />
       }
     </div>
   )
