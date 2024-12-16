@@ -37,11 +37,15 @@ interface UserContextType {
 
   getSingleChannel: (id: string) => void;
 }
+interface ChatChannel {
+  roomName: string;  
+  messages: string[]; 
+}
 
 interface SingleChannel {
   _id: string;
   channelName: string;
-  chatChannel: [];
+  chatChannel: ChatChannel[];
   voiceChannel: [];
   channelUsers: [];
 }
@@ -118,7 +122,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         openCreateRoom,
         setOpenCreateRoom,
         openCreateVoiceRoom,
-        setOpenCreateVoiceRoom
+        setOpenCreateVoiceRoom,
       }}
     >
       {children}

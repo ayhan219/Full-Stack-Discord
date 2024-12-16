@@ -29,6 +29,7 @@ const ChannelSchema = new mongoose.Schema({
                 },
             ],
         },
+       
     ],
     voiceChannel:[
         {

@@ -8,7 +8,7 @@ const ChatArea = () => {
   const {singleChannel} = useUserContext();
   
   return (
-    <div className="w-[70%] h-screen bg-[#313338] flex flex-col  ">
+    <div  className="w-[70%] h-screen bg-[#313338] flex flex-col  ">
       {/* Channel Header */}
       <div className="w-full h-14 bg-[#313338] text-white text-base font-semibold flex gap-3 items-center px-5 border-b border-gray-700">
         <FaHashtag className="text-2xl text-gray-400" />
