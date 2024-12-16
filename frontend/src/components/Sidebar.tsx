@@ -46,7 +46,7 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
   },[])
 
   return (
-    <div className="w-[6%] h-screen bg-[#1E1F22] flex flex-col  pt-4 gap-3">
+    <div className="w-[80px] h-screen bg-[#1E1F22] flex flex-col  pt-4 gap-3">
       <div
         className={`relative flex items-center justify-center cursor-pointer ${
           activeChannel === "home" ? "group" : ""

@@ -8,9 +8,9 @@ const Home = () => {
   return (
     <div className="w-full h-screen flex bg-[#313338]">
       <Menu />
-      <div className="w-[80%] flex flex-col ">
+      <div className="w-[70%] flex flex-col ">
         <TopBar />
-        <div className="w-[80%] border-r  border-x-gray-600 h-[88%]">
+        <div className="w-full border-r  border-x-gray-600 h-[88%]">
           <div className="w-full h-12 flex  items-center  relative ">
             <div className="w-full h-[70%] relative flex justify-center">
               <input
@@ -37,6 +37,9 @@ const Home = () => {
           
           </div>
         </div>
+      </div>
+      <div className="w-[270px]">
+
       </div>
     </div>
   );
