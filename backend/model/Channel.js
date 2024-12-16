@@ -6,14 +6,18 @@ const ChannelSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    chatChannel:{
-        type:String,
-        default:null
-    },
-    voiceChannel:{
-        type:String,
-        default:null
-    },
+    chatChannel:[
+        {
+            type:String,
+            default:null
+        }
+    ],
+    voiceChannel:[
+        {
+            type:String,
+            default:null
+        }
+    ],
     channelUsers:[
         {
             type:mongoose.Schema.Types.ObjectId,
