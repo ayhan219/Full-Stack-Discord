@@ -1,6 +1,10 @@
+import { useUserContext } from "../context/UserContext";
 
+type ChannelMemberProps ={
+  name:string
+}
 
-const ChannelMember = () => {
+const ChannelMember = ({name}: ChannelMemberProps) => {
   return (
     <div className="flex items-center gap-4 p-2 px-4 rounded-md hover:bg-gray-700 hover:text-white cursor-pointer transition-all">
       {/* Avatar Container */}
@@ -17,7 +21,7 @@ const ChannelMember = () => {
       </div>
 
       {/* Username */}
-      <h3 className="text-base font-medium text-gray-400">Ayhan</h3>
+      <h3 className="text-base font-medium text-gray-400">{name}</h3>
     </div>
   );
 };

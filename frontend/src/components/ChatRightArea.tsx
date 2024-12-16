@@ -13,7 +13,7 @@ const ChatRightArea = () => {
         <div className='w-full h-auto pt-3'>
             {
               singleChannel?.channelUsers.map((item,index)=>(
-                <ChannelMember key={index} />
+                <ChannelMember key={index} name={item} />
               ))
             }
 
