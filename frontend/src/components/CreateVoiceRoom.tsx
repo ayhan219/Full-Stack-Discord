@@ -6,13 +6,26 @@ import { useState } from "react";
 
 
 
+interface ChatChannel {
+  roomName: string;
+  messages: string[];
+}
+
+interface SingleChannel {
+  _id: string;
+  channelName: string;
+  chatChannel: ChatChannel[];
+  voiceChannel: string[];
+  channelUsers: [];
+}
+
 
 
 const CreateVoiceRoom = () => {
 
     const {openCreateVoiceRoom,setOpenCreateVoiceRoom} = useUserContext();
     const [voiceRoomName,setVoiceRoomName] = useState<string>("");
-    const {user,singleChannel} = useUserContext();
+    const {user,singleChannel,setSingleChannel} = useUserContext();
 
     const handleAddVoiceRoom = async()=>{
         try {
@@ -22,7 +35,16 @@ const CreateVoiceRoom = () => {
             voiceRoomName:voiceRoomName
           })
           if (response.status === 200) {
-            window.location.reload();
+            const voiceRoomName = response.data
+            setSingleChannel((prev: SingleChannel | null)=>{
+              if (!prev) return prev;
+              return{
+                ...prev,
+                voiceChannel:[...prev.voiceChannel,voiceRoomName]
+              }
+            })
+            setOpenCreateVoiceRoom(!openCreateVoiceRoom);
+          
           }
         } catch (error) {
           console.log(error);

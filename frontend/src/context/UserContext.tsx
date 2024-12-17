@@ -44,6 +44,12 @@ interface UserContextType {
   setChannels: React.Dispatch<React.SetStateAction<Channel[]>>
 
 }
+
+interface VoiceChannel {
+  roomName: string;
+  messages: string[];
+}
+
 interface Channel {
   _id:string,
   channelName:string,
@@ -58,7 +64,7 @@ interface SingleChannel {
   _id: string;
   channelName: string;
   chatChannel: ChatChannel[];
-  voiceChannel: [];
+  voiceChannel: string[];
   channelUsers: [];
 }
 
