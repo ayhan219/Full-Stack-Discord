@@ -33,7 +33,7 @@ interface UserContextType {
   setOpenCreateVoiceRoom: (openCreateVoiceRoom: boolean) => void;
 
   singleChannel: SingleChannel | null;
-  setSingleChannel: (singleChannel: SingleChannel | null) => void;
+  setSingleChannel: React.Dispatch<React.SetStateAction<SingleChannel | null>>
 
   getSingleChannel: (id: string) => void;
 

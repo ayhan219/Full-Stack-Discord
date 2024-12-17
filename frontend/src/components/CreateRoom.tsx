@@ -4,7 +4,18 @@ import axios from "axios";
 import { useState } from "react";
 
 
+interface ChatChannel {
+  roomName: string;
+  messages: string[];
+}
 
+interface SingleChannel {
+  _id: string;
+  channelName: string;
+  chatChannel: ChatChannel[];
+  voiceChannel: [];
+  channelUsers: [];
+}
 
 
 
@@ -14,22 +25,36 @@ const CreateRoom = () => {
     const [chatRoomName,setChatRoomName] = useState<string>("");
     const {user,singleChannel,setSingleChannel} = useUserContext();
 
-    const handleAddChatRoom = async()=>{
-        try {
-          const response = await axios.post("http://localhost:5000/api/channel/createchatroom",{
-            channelId:singleChannel?._id,
-            userId:user?.userId,
-            chatRoomName:chatRoomName
-          })
-          if (response.status === 200) {
-            window.location.reload();
-          }
-        } catch (error) {
-          console.log(error);
+    const handleAddChatRoom = async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/api/channel/createchatroom", {
+          channelId: singleChannel?._id,
+          userId: user?.userId,
+          chatRoomName: chatRoomName,
+        });
+    
+        if (response.status === 200) {
+          const newChatRoom = response.data;
+    
+        
+          setSingleChannel((prev: SingleChannel | null) => {
+            if (!prev) return prev; 
+    
+            return {
+              ...prev, 
+              chatChannel: [...prev.chatChannel, newChatRoom], 
+            };
+          });
+    
           
+          setChatRoomName("");
+          setOpenCreateRoom(false);
         }
+      } catch (error) {
+        console.log("Error while adding chat room:", error);
       }
-
+    };
+    
 
     
   return (
