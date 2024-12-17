@@ -1,4 +1,4 @@
-import { useUserContext } from "../context/UserContext";
+
 
 type ChannelMemberProps ={
   name:string
@@ -15,9 +15,14 @@ const ChannelMember = ({name}: ChannelMemberProps) => {
           alt="Avatar"
         />
         <div
-          className="w-3 h-3 rounded-full bg-green-500 border-2 border-gray-800 absolute right-0 bottom-0"
+          className="w-5 h-5 rounded-full bg-gray-700 border-2 border-gray-800 absolute right-0 bottom-[-4px] flex items-center justify-center"
           title="Online"
-        ></div>
+        >
+          <div className="w-3 h-3 rounded-full bg-green-600  ">
+
+          </div>
+
+        </div>
       </div>
 
       {/* Username */}
