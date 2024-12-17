@@ -47,7 +47,6 @@ interface UserContextType {
 interface Channel {
   _id:string,
   channelName:string,
-  
   }
 
 interface ChatChannel {
