@@ -47,12 +47,15 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "password doesn't match" });
     }
 
+    const userFriends = await findUser.populate("friends","username");
+
     const token = jwt.sign(
       {
         userId: findUser._id,
         email: findUser.email,
         displayName: findUser.displayName,
         username: findUser.username,
+        friends:userFriends
       },
       process.env.JWT_SECRET,
       {
@@ -74,6 +77,7 @@ const login = async (req, res) => {
       email: findUser.email,
       displayName: findUser.displayName,
       username: findUser.username,
+      friends:userFriends
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
