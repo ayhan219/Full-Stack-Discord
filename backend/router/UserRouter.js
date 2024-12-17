@@ -12,4 +12,5 @@ router.delete("/logout",logout)
 router.get("/getfriends",getFriends)
 
 
+
 module.exports = router;

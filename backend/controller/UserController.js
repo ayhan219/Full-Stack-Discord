@@ -105,13 +105,14 @@ const getFriends = async (req, res) => {
     return res.status(400).json({ message: "no user id" });
   }
   try {
-    const findUser = await User.findById(userId);
+    const findUser = await User.findById(userId).populate("friends","username");
 
     if (!findUser) {
       return res.status(400).json({ messsage: "user not found" });
     }
 
-    console.log(findUser.friends);
+    
+    return res.status(200).json(findUser.friends)
   } catch (error) {
     return res.status(500).json({ message: "server error" });
   }
