@@ -118,7 +118,7 @@ const createChatRoom = async (req, res) => {
 
         await findChannel.save();
 
-        res.status(200).json({ message: "Chat room created successfully." });
+        res.status(200).json(chatRoomName);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ message: "Server error." });
