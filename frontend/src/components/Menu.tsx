@@ -6,8 +6,14 @@ import { GoPlus } from "react-icons/go";
 import MenuFriends from "./MenuFriends";
 import BottomProfile from "./BottomProfile";
 
+type MenuProps ={
+  activeMenu:string,
+  setActiveMenu:(activeMenu:string)=>void;
+}
 
-const Menu = () => {
+const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
+
+  
   return (
     <div className="w-[270px] h-screen bg-[#2B2D31] flex flex-col">
       <div className="w-full h-16 flex justify-center items-center">
@@ -19,28 +25,28 @@ const Menu = () => {
       </div>
       <div className="w-full h-[20%] flex flex-col items-center gap-2 ">
         <div className="w-full h-12 hover:text-gray-300 hover:rounded-lg text-gray-400 font-bold flex  gap-2 cursor-pointer hover:bg-gray-500 duration-100 ease-in-out">
-          <div className="flex w-[70%] justify-evenly items-center">
+          <div onClick={()=>setActiveMenu("friends")} className="flex w-[70%] justify-evenly items-center">
             <FaUserFriends className="text-3xl" />
             <h2 className="w-20 text-base font-semibold">Friends</h2>
           </div>
         </div>
 
         <div className="w-full h-12 hover:text-gray-300 hover:rounded-lg text-gray-400 font-bold flex  gap-2 cursor-pointer hover:bg-gray-500 duration-100 ease-in-out">
-          <div className="flex w-[70%] justify-evenly items-center">
+          <div onClick={()=>setActiveMenu("nitro")} className="flex w-[70%] justify-evenly items-center">
             <IoLogoIonitron className="text-3xl" />
             <h2 className="w-20 text-base font-semibold">Nitro</h2>
           </div>
         </div>
 
         <div className="w-full h-12 hover:text-gray-300 hover:rounded-lg text-gray-400 font-bold flex  gap-2 cursor-pointer hover:bg-gray-500 duration-100 ease-in-out">
-          <div className="flex w-[70%] justify-evenly items-center">
+          <div onClick={()=>setActiveMenu("message")} className="flex w-[70%] justify-evenly items-center">
           <FaEnvelope className="text-3xl" />
           <h2 className="w-20 text-base font-semibold ">Message Request</h2>
           </div>
         </div>
 
         <div className="w-full h-12 hover:text-gray-300 hover:rounded-lg text-gray-400 font-bold flex  gap-2 cursor-pointer hover:bg-gray-500 duration-100 ease-in-out">
-          <div className="flex w-[70%] justify-evenly items-center">
+          <div onClick={()=>setActiveMenu("shop")} className="flex w-[70%] justify-evenly items-center">
             <FaShop className="text-3xl" />
             <h2 className="w-20 text-base font-semibold ">Shop</h2>
           </div>

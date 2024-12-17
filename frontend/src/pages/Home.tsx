@@ -16,6 +16,7 @@ const Home = () => {
   const { user } = useUserContext();
 
   const [friends, setFriends] = useState<Friend[]>([]);
+  const [activeMenu,setActiveMenu] = useState<string>("friends");
 
   const getFriends = async () => {
     try {
@@ -27,8 +28,6 @@ const Home = () => {
           },
         }
       );
-
-      console.log(response.data);
       
       setFriends(response.data);
     } catch (error) {
@@ -41,10 +40,11 @@ const Home = () => {
       getFriends();
     }
   }, [user]);
+  
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
-      <Menu />
+      <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
       <div className="w-[70%] flex flex-col ">
         <TopBar />
         <div className="w-full border-r  border-x-gray-600 h-[88%]">
@@ -59,19 +59,43 @@ const Home = () => {
             </div>
           </div>
 
-          <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
-            <h3>ONLINE - 2</h3>
+          {
+            activeMenu==="friends" &&
+            <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
+            <h3>ONLINE - {friends.length}</h3>
           </div>
+          }
           <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
-            {friends.length > 0 ? (
-              friends.map((item, index) => (
-                <HomeFriend key={index} item={item} />
+            {
+              activeMenu==="friends" && 
+              (friends.length > 0 ? (
+                friends.map((item, index) => (
+                  <HomeFriend key={index} item={item} />
+                ))
+              ) : (
+                <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
+                  <p>You don't have any friends yet</p>
+                </div>
               ))
-            ) : (
+            }
+            {
+              activeMenu==="nitro" &&
               <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
-                <p>You don't have any friends yet</p>
-              </div>
-            )}
+                  <p>Nitro area</p>
+                </div>
+            }
+            {
+              activeMenu==="message" &&
+              <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
+                  <p>message area</p>
+                </div>
+            }
+            {
+              activeMenu==="shop" &&
+              <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
+                  <p>shop area</p>
+                </div>
+            }
           </div>
         </div>
       </div>
