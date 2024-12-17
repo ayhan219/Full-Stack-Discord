@@ -1,7 +1,14 @@
 
 import { IoChatbubble } from "react-icons/io5";
 
-const HomeFriend = () => {
+type HomeFriendProps={
+ item:{
+  username:string,
+  _id:string
+ }
+}
+
+const HomeFriend = ({item}:HomeFriendProps) => {
   return (
     <div className="w-full h-auto text-gray-400 font-semibold flex p-2 px-5 items-center border-t border-gray-600 justify-between hover:bg-gray-500 cursor-pointer hover:rounded-lg ">
       <div className="flex justify-center items-center gap-5">
@@ -12,7 +19,7 @@ const HomeFriend = () => {
         />
         <div className="w-3 h-3 rounded-full bg-green-700 absolute right-0 bottom-0"></div>
       </div>
-      <h3 className="text-base text-white ">Ayhan</h3>
+      <h3 className="text-base text-white ">{item?.username}</h3>
       </div>
       
       <div className="w-20 h-16 flex items-center justify-center">

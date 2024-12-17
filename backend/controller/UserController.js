@@ -99,7 +99,7 @@ const logout = async (req, res) => {
 };
 
 const getFriends = async (req, res) => {
-  const { userId } = req.body;
+  const { userId } = req.query;
 
   if (!userId) {
     return res.status(400).json({ message: "no user id" });

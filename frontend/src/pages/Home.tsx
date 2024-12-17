@@ -3,8 +3,45 @@ import Menu from "../components/Menu";
 import TopBar from "../components/TopBar";
 import { IoMdSearch } from "react-icons/io";
 import "../index.css";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useUserContext } from "../context/UserContext";
+
+type Friend ={
+  username:string,
+  _id:string
+}
 
 const Home = () => {
+  const { user } = useUserContext();
+
+  const [friends, setFriends] = useState<Friend[]>([]);
+
+  const getFriends = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/getfriends",
+        {
+          params: {
+            userId: user?.userId,
+          },
+        }
+      );
+
+      console.log(response.data);
+      
+      setFriends(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.userId) {
+      getFriends();
+    }
+  }, [user]);
+
   return (
     <div className="w-full h-screen flex bg-[#313338]">
       <Menu />
@@ -21,26 +58,24 @@ const Home = () => {
               <IoMdSearch className="absolute text-2xl text-gray-400 right-6 bottom-1 mr-1" />
             </div>
           </div>
-          
-            <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
-              <h3>ONLINE - 2</h3>
-            </div>
-            <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
-              <HomeFriend />
-              <HomeFriend />
-              <HomeFriend />
-              <HomeFriend />
-              <HomeFriend />
-              <HomeFriend />
-              <HomeFriend />
-              <HomeFriend />
-          
+
+          <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
+            <h3>ONLINE - 2</h3>
+          </div>
+          <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
+            {friends.length > 0 ? (
+              friends.map((item, index) => (
+                <HomeFriend key={index} item={item} />
+              ))
+            ) : (
+              <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
+                <p>You don't have any friends yet</p>
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <div className="w-[270px]">
-
-      </div>
+      <div className="w-[270px]"></div>
     </div>
   );
 };
