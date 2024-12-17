@@ -30,10 +30,10 @@ const createChannel = async(req,res)=>{
         await findUser.save();
         await newChannel.save();
 
-        return res.status(201).json({
-            message: "Channel created successfully",
-            channel: newChannel,
-          });
+        console.log(newChannel);
+        
+        return res.status(201).json(newChannel);
+        
 
     } catch (error) {
         console.log();

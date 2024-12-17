@@ -39,7 +39,17 @@ interface UserContextType {
 
   selectedChatRoom:string,
   setSelectedChatRoom:(selectedChatRoom:string)=>void;
+
+  channels:Channel[],
+  setChannels: React.Dispatch<React.SetStateAction<Channel[]>>
+
 }
+interface Channel {
+  _id:string,
+  channelName:string,
+  
+  }
+
 interface ChatChannel {
   roomName: string;
   messages: string[];
@@ -72,6 +82,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     useState<boolean>(false);
 
   const [selectedChatRoom, setSelectedChatRoom] = useState<string>("");
+  const [channels,setChannels] = useState<Channel[]>([]);
 
   const getCurrentUser = async () => {
     try {
@@ -104,7 +115,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
       );
       setSingleChannel(response.data);
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -129,7 +139,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         openCreateVoiceRoom,
         setOpenCreateVoiceRoom,
         selectedChatRoom,
-        setSelectedChatRoom
+        setSelectedChatRoom,
+        channels,
+        setChannels
       }}
     >
       {children}

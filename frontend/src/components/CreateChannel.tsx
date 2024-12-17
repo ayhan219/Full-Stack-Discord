@@ -3,8 +3,14 @@ import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 import { useState } from "react";
 
+interface Channel {
+  _id:string,
+  channelName:string,
+  
+  }
+
 const CreateChannel = () => {
-  const { setOpenCreateChannel, openCreateChannel,user } = useUserContext();
+  const { setOpenCreateChannel, openCreateChannel,user,setSingleChannel,setChannels, } = useUserContext();
   const [channelName,setChannelName] = useState<string>("");
 
 
@@ -15,7 +21,12 @@ const CreateChannel = () => {
         userId:user?.userId
       })
       if(response.status===201){
-        window.location.reload();
+        setSingleChannel(response.data);
+        setChannels((prev:Channel[])=>{
+          return [...prev, response.data];
+        })
+        setOpenCreateChannel(!openCreateChannel)
+        
       }
       
     } catch (error) {

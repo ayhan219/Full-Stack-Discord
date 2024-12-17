@@ -12,16 +12,12 @@ type SidebarInterface = {
   activeChannel: string;
 };
 
-interface Channel {
-_id:string,
-channelName:string,
 
-}
 
 const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
 
-  const [channels,setChannels] = useState<Channel[]>([]);
-  const {user} = useUserContext();
+  
+  const {user,channels,setChannels} = useUserContext();
 
   const {openCreateChannel,setOpenCreateChannel} = useUserContext();
 
@@ -34,6 +30,8 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
         }
       })
       setChannels(response.data.channels)
+      console.log(response.data);
+      
       
     } catch (error) {
       console.log(error);
