@@ -12,6 +12,7 @@ type User = {
   email: string;
   displayName: string;
   username: string;
+  friends:friend[];
 };
 
 interface UserContextType {
@@ -44,11 +45,11 @@ interface UserContextType {
   setChannels: React.Dispatch<React.SetStateAction<Channel[]>>
 
 }
+type friend = {
+  username: string;
+  _id: string;
+};
 
-interface VoiceChannel {
-  roomName: string;
-  messages: string[];
-}
 
 interface Channel {
   _id:string,

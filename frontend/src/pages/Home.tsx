@@ -8,41 +8,11 @@ import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
 import FriendChat from "../components/FriendChat";
 
-type Friend ={
-  username:string,
-  _id:string
-}
-
 const Home = () => {
   const { user } = useUserContext();
 
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [activeMenu,setActiveMenu] = useState<string>("friends");
-  const [openChat,setOpenChat] = useState<boolean>(false);
-
-  const getFriends = async () => {
-    try {
-      const response = await axios.get(
-        "http://localhost:5000/api/auth/getfriends",
-        {
-          params: {
-            userId: user?.userId,
-          },
-        }
-      );
-      
-      setFriends(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    if (user?.userId) {
-      getFriends();
-    }
-  }, [user]);
-  
+  const [activeMenu, setActiveMenu] = useState<string>("friends");
+  const [openChat, setOpenChat] = useState<boolean>(false);
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
@@ -61,44 +31,42 @@ const Home = () => {
             </div>
           </div>
 
-          {
-            activeMenu==="friends" &&
+          {activeMenu === "friends" && (
             <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
-            <h3>ONLINE - {friends.length}</h3>
-          </div>
-          }
+              <h3>ONLINE - {user?.friends.length}</h3>
+            </div>
+          )}
           <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
-            {
-              activeMenu==="friends" && 
-              (friends.length > 0 ? (
-                friends.map((item, index) => (
-                  <HomeFriend key={index} item={item} openChat={openChat} setOpenChat={setOpenChat} />
+            {activeMenu === "friends" &&
+              ( user?.friends && user?.friends.length > 0 ? (
+                user?.friends.map((item, index) => (
+                  <HomeFriend
+                    key={index}
+                    item={item}
+                    openChat={openChat}
+                    setOpenChat={setOpenChat}
+                  />
                 ))
               ) : (
                 <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
                   <p>You don't have any friends yet</p>
                 </div>
-              ))
-            }
-            {
-              activeMenu==="nitro" &&
+              ))}
+            {activeMenu === "nitro" && (
               <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
-                  <p>Nitro area</p>
-                </div>
-            }
-            {
-              activeMenu==="message" &&
+                <p>Nitro area</p>
+              </div>
+            )}
+            {activeMenu === "message" && (
               <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
-                  <p>message area</p>
-                </div>
-            }
-            {
-              activeMenu==="shop" &&
+                <p>message area</p>
+              </div>
+            )}
+            {activeMenu === "shop" && (
               <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
-                  <p>shop area</p>
-                </div>
-            }
-            
+                <p>shop area</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

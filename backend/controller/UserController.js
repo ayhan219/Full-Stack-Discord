@@ -55,7 +55,7 @@ const login = async (req, res) => {
         email: findUser.email,
         displayName: findUser.displayName,
         username: findUser.username,
-        friends:userFriends
+        friends:userFriends.friends
       },
       process.env.JWT_SECRET,
       {
@@ -77,7 +77,7 @@ const login = async (req, res) => {
       email: findUser.email,
       displayName: findUser.displayName,
       username: findUser.username,
-      friends:userFriends
+      friends:userFriends.friends
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
