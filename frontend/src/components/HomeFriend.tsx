@@ -5,11 +5,13 @@ type HomeFriendProps = {
     username: string;
     _id: string;
   };
+  openChat:boolean;
+  setOpenChat:(openChat:boolean)=>void;
 };
 
-const HomeFriend = ({ item }: HomeFriendProps) => {
+const HomeFriend = ({ item,openChat,setOpenChat }: HomeFriendProps) => {
   return (
-    <div className="w-full h-auto text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all">
+    <div onClick={()=>setOpenChat(!openChat)} className="w-full h-auto text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all">
       <div className="flex justify-center items-center gap-4">
         <div className="relative">
           <img

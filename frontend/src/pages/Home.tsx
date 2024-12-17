@@ -6,6 +6,7 @@ import "../index.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
+import FriendChat from "../components/FriendChat";
 
 type Friend ={
   username:string,
@@ -17,6 +18,7 @@ const Home = () => {
 
   const [friends, setFriends] = useState<Friend[]>([]);
   const [activeMenu,setActiveMenu] = useState<string>("friends");
+  const [openChat,setOpenChat] = useState<boolean>(false);
 
   const getFriends = async () => {
     try {
@@ -70,7 +72,7 @@ const Home = () => {
               activeMenu==="friends" && 
               (friends.length > 0 ? (
                 friends.map((item, index) => (
-                  <HomeFriend key={index} item={item} />
+                  <HomeFriend key={index} item={item} openChat={openChat} setOpenChat={setOpenChat} />
                 ))
               ) : (
                 <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
@@ -96,6 +98,7 @@ const Home = () => {
                   <p>shop area</p>
                 </div>
             }
+            
           </div>
         </div>
       </div>
