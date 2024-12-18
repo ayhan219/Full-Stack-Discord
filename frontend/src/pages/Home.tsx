@@ -3,16 +3,12 @@ import Menu from "../components/Menu";
 import TopBar from "../components/TopBar";
 import { IoMdSearch } from "react-icons/io";
 import "../index.css";
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
-import FriendChat from "../components/FriendChat";
 
 const Home = () => {
   const { user,activeMenu,setActiveMenu } = useUserContext();
 
   
-  const [openChat, setOpenChat] = useState<boolean>(false);
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
@@ -42,8 +38,6 @@ const Home = () => {
                     <HomeFriend
                       key={index}
                       item={item}
-                      openChat={openChat}
-                      setOpenChat={setOpenChat}
                     />
                   ))
                 ) : (

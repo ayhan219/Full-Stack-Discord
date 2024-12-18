@@ -2,16 +2,16 @@ import { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
-import Menu from "./components/Menu";
 import Channel from "./pages/Channel";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { useUserContext } from "./context/UserContext";
-import FriendChat from "./components/FriendChat";
+import FriendChat from "./pages/FriendChat";
+
 
 function App() {
   const [activeChannel, setActiveChannel] = useState<string>("home");
-  const {user} = useUserContext();
+  const { user } = useUserContext();
 
   return (
     <BrowserRouter>

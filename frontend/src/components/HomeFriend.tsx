@@ -1,17 +1,20 @@
 import { IoChatbubble } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 
 type HomeFriendProps = {
   item: {
     username: string;
     _id: string;
   };
-  openChat:boolean;
-  setOpenChat:(openChat:boolean)=>void;
 };
 
-const HomeFriend = ({ item,openChat,setOpenChat }: HomeFriendProps) => {
+const HomeFriend = ({ item }: HomeFriendProps) => {
+  const navigate = useNavigate();
   return (
-    <div onClick={()=>setOpenChat(!openChat)} className="w-full h-auto text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all">
+    <div
+      onClick={() => navigate("/friendchat")}
+      className="w-full h-auto text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all"
+    >
       <div className="flex justify-center items-center gap-4">
         <div className="relative">
           <img
