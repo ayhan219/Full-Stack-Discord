@@ -23,8 +23,8 @@ const TopBar = () => {
             <div className='w-[0.13px] h-[40%] bg-gray-300'>
             </div>
         </div>
-        <div className='w-full h-full px-10 flex'>
-            <div className='text-gray-400 font-semibold flex items-center cursor-pointer gap-10'>
+        <div className=' w-[70%] md:w-full h-full px-10 flex'>
+            <div className='text-gray-400 font-semibold hidden md:flex items-center cursor-pointer gap-10 text-base'>
             <a onClick={()=>handleActiveMenu("online")} className={`w-auto max-w-28 h-6 text-center ${activeTopBarMenu === "online" && " bg-[#44474d] rounded-sm text-white" }`}>Online</a>
             <a onClick={()=>handleActiveMenu("all")} className={`w-auto h-6 text-center ${activeTopBarMenu === "all" && " bg-[#44474d] rounded-sm text-white" }`}>All</a>
             <a onClick={()=>handleActiveMenu("pending")} className={`w-auto h-6 text-center ${activeTopBarMenu === "pending" && " bg-[#44474d] rounded-sm text-white" }`}>Pending</a>

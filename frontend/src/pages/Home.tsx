@@ -49,7 +49,6 @@ const Home = () => {
           </div>
         </div>
       )}
-      <div className="w-[270px]"></div>
     </div>
   );
 };
