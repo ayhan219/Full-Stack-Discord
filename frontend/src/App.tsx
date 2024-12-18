@@ -7,6 +7,7 @@ import Channel from "./pages/Channel";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { useUserContext } from "./context/UserContext";
+import FriendChat from "./components/FriendChat";
 
 function App() {
   const [activeChannel, setActiveChannel] = useState<string>("home");
@@ -30,6 +31,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/friendchat" element={<FriendChat />} />
         </Routes>
       </div>
     </BrowserRouter>
