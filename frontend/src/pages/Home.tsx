@@ -9,9 +9,9 @@ import { useUserContext } from "../context/UserContext";
 import FriendChat from "../components/FriendChat";
 
 const Home = () => {
-  const { user } = useUserContext();
+  const { user,activeMenu,setActiveMenu } = useUserContext();
 
-  const [activeMenu, setActiveMenu] = useState<string>("friends");
+  
   const [openChat, setOpenChat] = useState<boolean>(false);
 
   return (

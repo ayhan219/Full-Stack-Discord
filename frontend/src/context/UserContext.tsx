@@ -44,6 +44,9 @@ interface UserContextType {
   channels:Channel[],
   setChannels: React.Dispatch<React.SetStateAction<Channel[]>>
 
+  activeMenu:string,
+  setActiveMenu:(activeMenu:string)=>void;
+
 }
 type friend = {
   username: string;
@@ -89,6 +92,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   const [selectedChatRoom, setSelectedChatRoom] = useState<string>("");
   const [channels,setChannels] = useState<Channel[]>([]);
+
+  const [activeMenu, setActiveMenu] = useState<string>("friends");
 
   const getCurrentUser = async () => {
     try {
@@ -147,7 +152,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         selectedChatRoom,
         setSelectedChatRoom,
         channels,
-        setChannels
+        setChannels,
+        activeMenu,
+        setActiveMenu
       }}
     >
       {children}
