@@ -137,11 +137,13 @@ const addFriend = async(req,res)=>{
     }
    
     const findFriend = await User.findOne({username:friendName});
+    console.log(findFriend.username);
+    
 
-    if(findFriend.pendingFriend.includes(findUser._id)){
+    if(findFriend.pendingFriend.includes(findUser.username)){
       return res.status(400).json({message:"request already sended"})
     }
-    findFriend.pendingFriend.push(findUser._id);
+    findFriend.pendingFriend.push(findUser.username);
     
     
     
@@ -159,5 +161,5 @@ module.exports = {
   getCurrentUser,
   logout,
   getFriends,
-  addFriend
+  addFriend,
 };

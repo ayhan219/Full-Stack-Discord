@@ -11,6 +11,7 @@ import PendingFriend from "../components/PendingFriend";
 const Home = () => {
   const { user,activeMenu,setActiveMenu } = useUserContext();
   const [activeTopBarMenu,setActiveTopBarMenu] = useState<string>("online");
+  
 
   
 
@@ -60,7 +61,14 @@ const Home = () => {
           }
           {
             activeTopBarMenu === "pending" &&
-            <PendingFriend />
+           <>
+           {
+            user?.pendingFriend.map((item,index)=>(
+              <PendingFriend key={index} name={item} />
+            ))
+           }
+           </>
+            
           }
         </div>
       )}
