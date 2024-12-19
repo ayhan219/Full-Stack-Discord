@@ -6,6 +6,7 @@ import { SiPinboard } from "react-icons/si";
 import { LiaUserFriendsSolid } from "react-icons/lia";
 import { CiSearch } from "react-icons/ci";
 import PrivateChat from "../components/PrivateChat";
+import "../index.css"
 
 const FriendChat = () => {
   const { activeMenu, setActiveMenu } = useUserContext();
@@ -46,20 +47,25 @@ const FriendChat = () => {
         </div>
 
         {/* Chat Area */}
-        <div className="flex-1 bg-[#2F3136] text-gray-400 flex flex-col">
+        <div className="flex-1 bg-[#2F3136] text-gray-400 flex flex-col custom-scrollbar overflow-y-auto">
           {/* Messages Container */}
-          <div className="flex-1 overflow-y-auto p-4">
-            
-           
+          <div className="flex-1 p-4">
             <PrivateChat />
             <PrivateChat />
             <PrivateChat />
             <PrivateChat />
-            
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
           </div>
-
-          {/* Message Input Section */}
-          <div className="w-full p-4 border-t border-gray-700">
+        </div>
+         {/* Message Input Section */}
+         <div className="w-full p-4 border-t border-gray-700">
             <div className="flex items-center gap-3">
               <input
                 className="w-full bg-[#40444B] text-white rounded-lg p-3 focus:outline-none focus:ring-2"
@@ -69,7 +75,6 @@ const FriendChat = () => {
               <button className="text-blue-500">Send</button>
             </div>
           </div>
-        </div>
       </div>
     </div>
   );
