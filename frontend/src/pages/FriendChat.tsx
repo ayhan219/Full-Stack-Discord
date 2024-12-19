@@ -5,6 +5,7 @@ import { BsFillCameraVideoFill } from "react-icons/bs";
 import { SiPinboard } from "react-icons/si";
 import { LiaUserFriendsSolid } from "react-icons/lia";
 import { CiSearch } from "react-icons/ci";
+import PrivateChat from "../components/PrivateChat";
 
 const FriendChat = () => {
   const { activeMenu, setActiveMenu } = useUserContext();
@@ -48,35 +49,13 @@ const FriendChat = () => {
         <div className="flex-1 bg-[#2F3136] text-gray-400 flex flex-col">
           {/* Messages Container */}
           <div className="flex-1 overflow-y-auto p-4">
-            {/* Message 1 */}
-            <div className="flex items-start gap-3 mb-4">
-              <img
-                className="w-8 h-8 rounded-full object-cover"
-                src="https://sabalawfirm.org/wp-content/uploads/2022/05/default-profile.png"
-                alt="Sender"
-              />
-              <div className="flex flex-col">
-                <div className="bg-[#40444B] text-white p-3 rounded-lg max-w-xs">
-                  <p>Hello! How are you?</p>
-                </div>
-                <span className="text-xs text-gray-500 mt-1">12:30 PM</span>
-              </div>
-            </div>
-            {/* Message 2 */}
-            <div className="flex items-start gap-3 mb-4 justify-end">
-              <div className="flex flex-col items-end">
-                <div className="bg-[#7289DA] text-white p-3 rounded-lg max-w-xs">
-                  <p>I'm good, thanks! How about you?</p>
-                </div>
-                <span className="text-xs text-gray-500 mt-1">12:32 PM</span>
-              </div>
-              <img
-                className="w-8 h-8 rounded-full object-cover"
-                src="https://sabalawfirm.org/wp-content/uploads/2022/05/default-profile.png"
-                alt="Receiver"
-              />
-            </div>
-            {/* Add more messages here */}
+            
+           
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
+            <PrivateChat />
+            
           </div>
 
           {/* Message Input Section */}
