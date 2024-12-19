@@ -152,38 +152,17 @@ const addFriend = async(req,res)=>{
   }
 }
 
-// const acceptFriend = async(req,res)=>{
-//   const {userId,friendName} = req.body;
-  
-
-//   if(!userId || !friendName){
-//     return res.status(400).json({message:"no user id or friend name"})
-//   }
-
-//   try {
-//     const findUser = await User.findById(userId);
-//     const findFriend = await User.findOne({username:friendName});
-
-//     if(!findUser){
-//       return res.status(400).json({message:"user not found"})
-//     }
-
-//     if(!findFriend){
-//       return res.status(400).json({message:"friend not found"})
-//     }
-
-//     findUser.pendingFriend = findUser.pendingFriend.filter((item)=>item!==friendName);
-//     findUser.friends.push(friendName);
-//     findFriend.friends.push(findUser.username);
-
-//     await findFriend.save();
-//     await findUser.save();
-
-//     return res.status(200).json({message:"friend accepted"})
-//   } catch (error) {
-//     return res.status(500).json(error);
-//   }
-// }
+const getPendingName = async(req,res)=>{
+  try {
+    const { friendIds } = req.query; 
+    console.log(friendIds);
+    
+    const friends = await User.find({ _id: { $in: friendIds } }).select('username');
+    res.json(friends);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+}
 
 module.exports = {
   signup,
@@ -192,4 +171,5 @@ module.exports = {
   logout,
   getFriends,
   addFriend,
+  getPendingName
 };

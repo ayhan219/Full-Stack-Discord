@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
 const AuthMiddleware = require("../middleware/AuthMiddleware")
-const {signup,login,getCurrentUser,logout,getFriends,addFriend} = require("../controller/UserController");
+const {signup,login,getCurrentUser,logout,getFriends,addFriend, getPendingName} = require("../controller/UserController");
 
 
 router.post("/signup",signup)
@@ -11,7 +11,7 @@ router.get("/getcurrent",AuthMiddleware,getCurrentUser)
 router.delete("/logout",logout)
 router.get("/getfriends",getFriends)
 router.post("/addfriend",addFriend)
-// router.post("/acceptfriend",acceptFriend)
+router.get("/getpendingname",getPendingName)
 
 
 
