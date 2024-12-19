@@ -122,10 +122,36 @@ const getFriends = async (req, res) => {
   }
 };
 
+const addFriend = async(req,res)=>{
+  const {userId,friendName} = req.body;
+
+  if(!userId | !friendName){
+    return res.status(400).json({message:"provide all area"})
+  }
+  try {
+    const findUser = await User.findById(userId);
+    if(!findUser){
+      return res.status(400).json({message:"user not found"})
+    }
+   
+    const findFriend = await User.findOne({username:friendName});
+    
+    findFriend.pendingFriend.push(findUser._id);
+    
+    
+    await findUser.save();
+    await findFriend.save();
+    res.status(200).json({message:"friend sended"})
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+}
+
 module.exports = {
   signup,
   login,
   getCurrentUser,
   logout,
   getFriends,
+  addFriend
 };
