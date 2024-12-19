@@ -11,6 +11,7 @@ router.get("/getcurrent",AuthMiddleware,getCurrentUser)
 router.delete("/logout",logout)
 router.get("/getfriends",getFriends)
 router.post("/addfriend",addFriend)
+// router.post("/acceptfriend",acceptFriend)
 
 
 

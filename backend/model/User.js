@@ -43,7 +43,7 @@ const UserSchema = new mongoose.Schema({
     ],
     pendingFriend:[
         {
-            type:String,
+            type:mongoose.Schema.Types.ObjectId,
             ref:"User",
             default:null
         }

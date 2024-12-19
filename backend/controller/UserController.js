@@ -137,15 +137,12 @@ const addFriend = async(req,res)=>{
     }
    
     const findFriend = await User.findOne({username:friendName});
-    console.log(findFriend.username);
     
 
-    if(findFriend.pendingFriend.includes(findUser.username)){
+    if(findFriend.pendingFriend.includes(findUser._id)){
       return res.status(400).json({message:"request already sended"})
     }
-    findFriend.pendingFriend.push(findUser.username);
-    
-    
+    findFriend.pendingFriend.push(findUser._id);
     
     await findUser.save();
     await findFriend.save();
@@ -154,6 +151,39 @@ const addFriend = async(req,res)=>{
     return res.status(500).json(error);
   }
 }
+
+// const acceptFriend = async(req,res)=>{
+//   const {userId,friendName} = req.body;
+  
+
+//   if(!userId || !friendName){
+//     return res.status(400).json({message:"no user id or friend name"})
+//   }
+
+//   try {
+//     const findUser = await User.findById(userId);
+//     const findFriend = await User.findOne({username:friendName});
+
+//     if(!findUser){
+//       return res.status(400).json({message:"user not found"})
+//     }
+
+//     if(!findFriend){
+//       return res.status(400).json({message:"friend not found"})
+//     }
+
+//     findUser.pendingFriend = findUser.pendingFriend.filter((item)=>item!==friendName);
+//     findUser.friends.push(friendName);
+//     findFriend.friends.push(findUser.username);
+
+//     await findFriend.save();
+//     await findUser.save();
+
+//     return res.status(200).json({message:"friend accepted"})
+//   } catch (error) {
+//     return res.status(500).json(error);
+//   }
+// }
 
 module.exports = {
   signup,
