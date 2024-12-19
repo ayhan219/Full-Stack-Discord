@@ -135,8 +135,12 @@ const addFriend = async(req,res)=>{
     }
    
     const findFriend = await User.findOne({username:friendName});
-    
+
+    if(findFriend.pendingFriend.includes(findUser._id)){
+      return res.status(400).json({message:"request already sended"})
+    }
     findFriend.pendingFriend.push(findUser._id);
+    
     
     
     await findUser.save();
