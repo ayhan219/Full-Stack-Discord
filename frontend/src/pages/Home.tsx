@@ -5,6 +5,7 @@ import { IoMdSearch } from "react-icons/io";
 import "../index.css";
 import { useUserContext } from "../context/UserContext";
 import { useState } from "react";
+import AddFriendMenu from "../components/AddFriendMenu";
 
 const Home = () => {
   const { user,activeMenu,setActiveMenu } = useUserContext();
@@ -54,7 +55,7 @@ const Home = () => {
           }
           {
             activeTopBarMenu === "addfriend" &&
-            <div>fewfe</div>
+            <AddFriendMenu />
           }
         </div>
       )}
