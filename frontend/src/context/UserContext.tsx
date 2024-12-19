@@ -13,6 +13,7 @@ type User = {
   displayName: string;
   username: string;
   friends:friend[];
+  pendingFriend:[];
 };
 
 interface UserContextType {
