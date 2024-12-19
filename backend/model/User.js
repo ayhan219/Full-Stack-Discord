@@ -40,6 +40,13 @@ const UserSchema = new mongoose.Schema({
             ref:"User",
             default:null
         }
+    ],
+    pendingFriend:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
+            default:null
+        }
     ]
 
 });
