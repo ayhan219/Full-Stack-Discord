@@ -7,41 +7,14 @@ import { useUserContext } from "../context/UserContext";
 import { useEffect, useState } from "react";
 import AddFriendMenu from "../components/AddFriendMenu";
 import PendingFriend from "../components/PendingFriend";
-import axios from "axios";
 
-type friend = {
-  username: string;
-  _id: string;
-};
 
 const Home = () => {
   const { user, activeMenu, setActiveMenu } = useUserContext();
   const [activeTopBarMenu, setActiveTopBarMenu] = useState<string>("online");
 
-  const [pendingFriendsName, setPendingFriendsName] = useState<friend[]>([]);
 
-  useEffect(() => {
-    const getPendingName = async () => {
-      if (!user?.pendingFriend || user.pendingFriend.length === 0) return;
-
-      try {
-        const response = await axios.get(
-          "http://localhost:5000/api/auth/getpendingname",
-          {
-            params: {
-              friendIds: user?.pendingFriend,
-            },
-          }
-        );
-        setPendingFriendsName(response.data);
-      } catch (error) {
-        console.error("Error fetching pending friend names:", error);
-      }
-    };
-
-    getPendingName();
-  }, [user?.pendingFriend]);
-
+  
   return (
     <div className="w-full h-screen flex bg-[#313338]">
       <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
@@ -89,9 +62,7 @@ const Home = () => {
                   <h3>Pending - {user?.pendingFriend.length}</h3>
                 </div>
                 <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
-                  {pendingFriendsName.map((item, index) => (
-                    <PendingFriend key={index} friendName={item} />
-                  ))}
+                 <PendingFriend />
                 </div>
               </div>
             </>

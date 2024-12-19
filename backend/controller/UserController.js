@@ -152,17 +152,7 @@ const addFriend = async(req,res)=>{
   }
 }
 
-const getPendingName = async(req,res)=>{
-  try {
-    const { friendIds } = req.query; 
-    console.log(friendIds);
-    
-    const friends = await User.find({ _id: { $in: friendIds } }).select('username');
-    res.json(friends);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-}
+
 
 module.exports = {
   signup,
@@ -171,5 +161,4 @@ module.exports = {
   logout,
   getFriends,
   addFriend,
-  getPendingName
 };
