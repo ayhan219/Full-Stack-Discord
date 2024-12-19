@@ -6,6 +6,7 @@ import "../index.css";
 import { useUserContext } from "../context/UserContext";
 import { useState } from "react";
 import AddFriendMenu from "../components/AddFriendMenu";
+import PendingFriend from "../components/PendingFriend";
 
 const Home = () => {
   const { user,activeMenu,setActiveMenu } = useUserContext();
@@ -56,6 +57,10 @@ const Home = () => {
           {
             activeTopBarMenu === "addfriend" &&
             <AddFriendMenu />
+          }
+          {
+            activeTopBarMenu === "pending" &&
+            <PendingFriend />
           }
         </div>
       )}
