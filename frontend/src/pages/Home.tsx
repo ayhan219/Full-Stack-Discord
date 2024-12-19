@@ -4,9 +4,11 @@ import TopBar from "../components/TopBar";
 import { IoMdSearch } from "react-icons/io";
 import "../index.css";
 import { useUserContext } from "../context/UserContext";
+import { useState } from "react";
 
 const Home = () => {
   const { user,activeMenu,setActiveMenu } = useUserContext();
+  const [activeTopBarMenu,setActiveTopBarMenu] = useState<string>("online");
 
   
 
@@ -15,8 +17,10 @@ const Home = () => {
       <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
       {activeMenu === "friends" && (
         <div className="w-[70%] flex flex-col ">
-          <TopBar />
-          <div className="w-full border-r  border-x-gray-600 h-[88%]">
+          <TopBar activeTopBarMenu={activeTopBarMenu} setActiveTopBarMenu={setActiveTopBarMenu} />
+          {
+            activeTopBarMenu === "online" &&
+            <div className="w-full border-r  border-x-gray-600 h-[88%]">
             <div className="w-full h-12 flex  items-center  relative ">
               <div className="w-full h-[70%] relative flex justify-center">
                 <input
@@ -47,6 +51,11 @@ const Home = () => {
                 ))}
             </div>
           </div>
+          }
+          {
+            activeTopBarMenu === "addfriend" &&
+            <div>fewfe</div>
+          }
         </div>
       )}
     </div>

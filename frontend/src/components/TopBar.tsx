@@ -1,18 +1,14 @@
 import React, { act, useState } from 'react'
 import { FaUserFriends } from "react-icons/fa";
 
+type TopBarProps ={
+    activeTopBarMenu:string,
+    setActiveTopBarMenu:(activeTopBarMenu:string)=>void;
+}
 
-const TopBar = () => {
-
-    const [activeTopBarMenu,setActiveTopBarMenu] = useState<string>("online");
-
-
-    
-
-
+const TopBar = ({activeTopBarMenu,setActiveTopBarMenu}:TopBarProps) => {
     function handleActiveMenu(activeMenu: string): void {
        setActiveTopBarMenu(activeMenu);
-
     }
 
   return (
@@ -31,7 +27,7 @@ const TopBar = () => {
             <a onClick={()=>handleActiveMenu("suggestions")} className={`w-auto h-6 text-center ${activeTopBarMenu === "suggestions" && " bg-[#44474d] rounded-sm text-white" }`}>Suggestions</a>
             <a onClick={()=>handleActiveMenu("blocked")} className={`w-auto h-6 text-center ${activeTopBarMenu === "blocked" && " bg-[#44474d] rounded-sm text-white" }`}>Blocked</a>
             <div className='w-auto h-auto'>
-                <button className='bg-green-800 w-24 h-8 rounded-lg text-white'>Add Friend</button>
+                <button onClick={()=>handleActiveMenu("addfriend")} className='bg-green-800 w-24 h-8 rounded-lg text-white'>Add Friend</button>
             </div>
             </div>
         </div>
