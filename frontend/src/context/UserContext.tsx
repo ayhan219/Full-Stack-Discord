@@ -40,6 +40,7 @@ interface UserContextType {
   activeMenu: string;
   setActiveMenu: (activeMenu: string) => void;
   socket: Socket;
+  getCurrentUser:()=>void;
 }
 
 type friend = {
@@ -139,7 +140,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     if (socket) {
       socket.on("friendRequestNotification", (senderId: string) => {
         console.log("Notification received:", senderId);
-
         // Gelen bildirimle pendingFriend dizisini güncelle
         setUser((prev: User | null) => {
           if (!prev) return prev;
@@ -150,6 +150,23 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           
         });
       });
+      socket.on("sendReceiverIdToUser",(senderId:string,selectedValue:string)=>{
+        console.log("Notification received:", senderId);
+        if(selectedValue==="accept"){
+          setUser((prev:User | null)=>{
+            if (!prev) return prev;
+  
+            const newFriend: friend = { username: "PlaceholderUsername", _id: senderId };
+            return{
+              ...prev,
+              friends:[...prev.friends,newFriend],
+            }
+          })
+        }
+        else{
+          return;
+        }
+      })
     }
 
     // Temizleme işlemi
@@ -185,6 +202,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         activeMenu,
         setActiveMenu,
         socket,
+        getCurrentUser
       }}
     >
       {children}

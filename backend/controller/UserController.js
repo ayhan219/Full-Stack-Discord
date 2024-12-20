@@ -173,6 +173,9 @@ const addFriend = async(req,res)=>{
 const acceptOrDecline = async (req, res) => {
   const { userId, request, friendUserId } = req.body;
 
+  console.log(userId,request,friendUserId);
+  
+
   if (!userId || !request || !friendUserId) {
     return res.status(400).json({ message: "Provide all fields" });
   }
@@ -190,10 +193,8 @@ const acceptOrDecline = async (req, res) => {
     }
 
     if (request === "accept") {
-      // 'pendingFriend' dizisinden friendUserId'yi pull metodu ile sil
       findUser.pendingFriend.pull(friendUserId);
 
-      // Kullanıcılar zaten arkadaş mı diye kontrol et
       if (!findFriend.friends.includes(userId) && !findUser.friends.includes(friendUserId)) {
         findFriend.friends.push(userId);
         findUser.friends.push(friendUserId);
@@ -203,14 +204,13 @@ const acceptOrDecline = async (req, res) => {
     }
 
     if (request === "decline") {
-      // 'pendingFriend' dizisinden friendUserId'yi pull metodu ile sil
       findUser.pendingFriend.pull(friendUserId);
     }
 
     await findUser.save();
     await findFriend.save();
 
-    return res.status(200).json({ message: "Successful" });
+    return res.status(200).json(findUser);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

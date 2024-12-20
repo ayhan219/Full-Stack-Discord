@@ -10,29 +10,38 @@ type PendingFriendProps = {
 
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
-  const { user,socket } = useUserContext();
+  const { user,socket,setUser,getCurrentUser } = useUserContext();
 
   const handleAction = async (action: string) => {
     try {
-      // setSelectedValue(action);
-      // const response = await axios.post("http://localhost:5000/api/auth/acceptordeclinefriend", {
-      //   userId: user?.userId,
-      //   request: action,
-      //   friendUserId: item, 
-      // });
-      // console.log(response.data);
+      setSelectedValue(action);
+      const response = await axios.post("http://localhost:5000/api/auth/acceptordeclinefriend", {
+        userId: user?.userId,
+        request: action,
+        friendUserId: item, 
+      });
+      console.log(response.data);
+      
+      setUser(response.data)
 
-      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,item);
+      if(response.status===200){
+        getCurrentUser();
+      }
+      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,item,selectedValue);
       
     } catch (error) {
       console.error(error);
     }
   };
 
+  const show = ()=>{
+    console.log(user);
+  }
+
   return (
     <div className="w-full h-16 px-3 border-b border-gray-600 flex justify-between">
       <div className="w-auto h-full flex gap-4 items-center ">
-        <img
+        <img onClick={()=>show()}
           className="w-8 h-8 rounded-full"
           src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
           alt=""
