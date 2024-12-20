@@ -24,17 +24,26 @@ io.on('connection', (socket) => {
         console.log(`${userId} aktif oldu`);        
     });
 
-    socket.on('friendRequest', (senderId, receiverId,username) => {
-
-  
-      
+    socket.on('friendRequest', (senderId, receiverId) => {
       if (onlineUsers[receiverId]) {
-        io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId,username);
+        io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId);
         console.log(`Aktif kullanıcıya bildirim gönderildi: ${receiverId}`);
       } else {
         console.log(`${receiverId} şu anda çevrimdışı, bildirim önümüzdeki bağlantısında görünecek.`);
       }
     });
+
+    socket.on("sendAcceptOrDecNotificationToUser",(senderId,receiverId)=>{
+      if(onlineUsers[receiverId]){
+        console.log(senderId,receiverId);
+      io.to(onlineUsers[receiverId]).emit("sendReceiverIdToUser",receiverId);
+      console.log(`notification sended to ${receiverId}`);
+      }
+      else{
+        console.log(`${receiverId} now is offline`);
+      }
+      
+    })
 
     // Kullanıcı bağlantıyı kestiğinde
     socket.on('disconnect', () => {
