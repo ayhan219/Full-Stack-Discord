@@ -61,8 +61,12 @@ const Home = () => {
                 <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
                   <h3>Pending - {user?.pendingFriend.length}</h3>
                 </div>
-                <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
-                 <PendingFriend />
+                <div  className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
+                 {
+                  user?.pendingFriend.map((item,index)=>(
+                    <PendingFriend key={index} item={item} />
+                  ))
+                 }
                 </div>
               </div>
             </>

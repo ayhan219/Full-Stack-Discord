@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
+
+type User = {
+  userId: string;
+  email: string;
+  displayName: string;
+  username: string;
+  friends: friend[];
+  pendingFriend: string[];
+};
+
+type friend = {
+  username: string;
+  _id: string;
+};
 
 const AddFriendMenu = () => {
   const [friendName, setFriendName] = useState<string>("");
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
-  const [messages,setMessages] = useState<string>("");
+  const [messages, setMessages] = useState<string>("");
+  const { user,  socket } = useUserContext();
 
+  // Arkadaş ekleme işlemi
   const handleAddFriend = async () => {
     try {
       const response = await axios.post(
@@ -16,33 +32,18 @@ const AddFriendMenu = () => {
           friendName,
         }
       );
-  
-      console.log(response.data);
-  
-      if (response.status === 200) {
-        setIsSuccess(true);
-        setMessages("Friend request sent successfully!"); 
-      } else {
-        setIsSuccess(false);
-        setMessages("Failed to send friend request.");
-      }
-    } catch (error: any) {
+
+
+      // Arkadaşlık isteği gönderildiğinde socket ile diğer kullanıcıyı bilgilendir
+      socket.emit("friendRequest", user?.userId, response.data);
+    } catch (error) {
       console.log(error);
-  
-      const errorMessage =
-        error.response?.data?.message || error.message || "An unexpected error occurred.";
-      setMessages(errorMessage);
-  
-      setIsSuccess(false);
     }
   };
-  
-
-  const { user } = useUserContext();
 
   return (
     <div className="w-full h-full bg-[#313338]">
-      <div className="w-auto h-auto text-[#E8EAEB] flex flex-col gap-2  p-6">
+      <div className="w-auto h-auto text-[#E8EAEB] flex flex-col gap-2 p-6">
         <h3 className="font-bold">ADD FRIEND</h3>
         <p className="text-sm text-[#969BA1]">
           You can add friends with their Discord username.
@@ -53,8 +54,8 @@ const AddFriendMenu = () => {
           <input
             onChange={(e) => setFriendName(e.target.value)}
             value={friendName}
-            className={`flex-grow bg-transparent outline-none text-white p-3 `}
-            placeholder="You can add friends with their Discord username"
+            className="flex-grow bg-transparent outline-none text-white p-3"
+            placeholder="Enter friend's username"
             type="text"
           />
           <button
@@ -70,13 +71,13 @@ const AddFriendMenu = () => {
             Send friend request
           </button>
         </div>
-        
       </div>
-      {
-        !isSuccess && isSuccess!==null && <div className="w-full h-auto px-6 text-red-600 font-semibold text-sm">
+
+      {messages && (
+        <div className="w-full h-auto px-6 text-red-600 font-semibold text-sm">
           <p>{messages}</p>
         </div>
-      }
+      )}
     </div>
   );
 };

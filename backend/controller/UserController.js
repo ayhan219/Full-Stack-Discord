@@ -87,13 +87,29 @@ const login = async (req, res) => {
 };
 
 const getCurrentUser = async (req, res) => {
-  const user = req.user;
+  const userId = req.user?.userId;  // userId'yi token'dan alıyoruz
+  
+  
+  if (!userId) {
+    return res.status(400).json({ message: "user not found" });
+  }
 
   try {
+    const user = await User.findById(userId).populate("friends", "username");
+    
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
-    return res.status(200).json(user);
+
+    return res.status(200).json({
+      userId: user._id,
+      email: user.email,
+      displayName: user.displayName,
+      username: user.username,
+      friends: user.friends,
+      pendingFriend: user.pendingFriend,
+    });
+    
   } catch (error) {
     return res.status(500).json({ message: "server error", error });
   }
@@ -126,6 +142,7 @@ const getFriends = async (req, res) => {
 
 const addFriend = async(req,res)=>{
   const {userId,friendName} = req.body;
+  
 
   if(!userId | !friendName){
     return res.status(400).json({message:"provide all area"})
@@ -146,7 +163,8 @@ const addFriend = async(req,res)=>{
     
     await findUser.save();
     await findFriend.save();
-    res.status(200).json({message:"friend sended"})
+    
+    res.status(200).json(findFriend._id)
   } catch (error) {
     return res.status(500).json(error);
   }

@@ -6,59 +6,51 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { Socket, io } from "socket.io-client";
 
 type User = {
   userId: string;
   email: string;
   displayName: string;
   username: string;
-  friends:friend[];
-  pendingFriend:[];
+  friends: friend[];
+  pendingFriend: string[];
 };
 
 interface UserContextType {
   user: User | null;
-  setUser: (user: User | null) => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   turnMicOff: boolean;
   setTurnMicOff: (turnMicOff: boolean) => void;
-
   turnHeadOff: boolean;
   setTurnHeadOff: (turnHeadOff: boolean) => void;
-
   openCreateChannel: boolean;
   setOpenCreateChannel: (openCreateChannel: boolean) => void;
-
   openCreateRoom: boolean;
   setOpenCreateRoom: (openCreateRoom: boolean) => void;
-
   openCreateVoiceRoom: boolean;
   setOpenCreateVoiceRoom: (openCreateVoiceRoom: boolean) => void;
-
   singleChannel: SingleChannel | null;
-  setSingleChannel: React.Dispatch<React.SetStateAction<SingleChannel | null>>
-
+  setSingleChannel: React.Dispatch<React.SetStateAction<SingleChannel | null>>;
   getSingleChannel: (id: string) => void;
-
-  selectedChatRoom:string,
-  setSelectedChatRoom:(selectedChatRoom:string)=>void;
-
-  channels:Channel[],
-  setChannels: React.Dispatch<React.SetStateAction<Channel[]>>
-
-  activeMenu:string,
-  setActiveMenu:(activeMenu:string)=>void;
-
+  selectedChatRoom: string;
+  setSelectedChatRoom: (selectedChatRoom: string) => void;
+  channels: Channel[];
+  setChannels: React.Dispatch<React.SetStateAction<Channel[]>>;
+  activeMenu: string;
+  setActiveMenu: (activeMenu: string) => void;
+  socket: Socket;
 }
+
 type friend = {
   username: string;
   _id: string;
 };
 
-
 interface Channel {
-  _id:string,
-  channelName:string,
-  }
+  _id: string;
+  channelName: string;
+}
 
 interface ChatChannel {
   roomName: string;
@@ -79,6 +71,8 @@ type UserProviderProps = {
   children: ReactNode;
 };
 
+const socket = io("http://localhost:3001"); // Socket.IO client instance
+
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [turnMicOff, setTurnMicOff] = useState<boolean>(false);
@@ -90,10 +84,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [openCreateRoom, setOpenCreateRoom] = useState<boolean>(false);
   const [openCreateVoiceRoom, setOpenCreateVoiceRoom] =
     useState<boolean>(false);
-
   const [selectedChatRoom, setSelectedChatRoom] = useState<string>("");
-  const [channels,setChannels] = useState<Channel[]>([]);
-
+  const [channels, setChannels] = useState<Channel[]>([]);
   const [activeMenu, setActiveMenu] = useState<string>("friends");
 
   const getCurrentUser = async () => {
@@ -105,7 +97,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
       );
       console.log(response.data);
-
+      
       setUser(response.data);
     } catch (error) {
       console.log(error);
@@ -115,6 +107,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     getCurrentUser();
   }, []);
+
+  // Register user with socket after they are fetched
+  useEffect(() => {
+    if (user?.userId) {
+      socket.emit("userOnline", user.userId);
+    }
+  }, [user]); // Only run this effect when the user is available
 
   const getSingleChannel = async (id: string) => {
     try {
@@ -131,6 +130,35 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       console.log(error);
     }
   };
+
+
+  // useEffect component render edildiğinde çalışacak
+  useEffect(() => {
+    
+    // Eğer socket mevcutsa, friendRequestNotification olayını dinlemeye başla
+    if (socket) {
+      socket.on("friendRequestNotification", (senderId: string) => {
+        console.log("Notification received:", senderId);
+
+        // Gelen bildirimle pendingFriend dizisini güncelle
+        setUser((prev: User | null) => {
+          if (!prev) return prev;
+          return {
+            ...prev,
+            pendingFriend: [...prev.pendingFriend, senderId],
+          };
+          
+        });
+      });
+    }
+
+    // Temizleme işlemi
+    return () => {
+      if (socket) {
+        socket.off("friendRequestNotification");
+      }
+    };
+  }, [socket]);
 
   return (
     <UserContext.Provider
@@ -155,7 +183,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         channels,
         setChannels,
         activeMenu,
-        setActiveMenu
+        setActiveMenu,
+        socket,
       }}
     >
       {children}
