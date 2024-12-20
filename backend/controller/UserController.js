@@ -170,6 +170,53 @@ const addFriend = async(req,res)=>{
   }
 }
 
+const acceptOrDecline = async (req, res) => {
+  const { userId, request, friendUserId } = req.body;
+
+  if (!userId || !request || !friendUserId) {
+    return res.status(400).json({ message: "Provide all fields" });
+  }
+
+  try {
+    const findUser = await User.findById(userId);
+    const findFriend = await User.findById(friendUserId);
+
+    if (!findUser) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    if (!findFriend) {
+      return res.status(400).json({ message: "Friend not found" });
+    }
+
+    if (request === "accept") {
+      // 'pendingFriend' dizisinden friendUserId'yi pull metodu ile sil
+      findUser.pendingFriend.pull(friendUserId);
+
+      // Kullanıcılar zaten arkadaş mı diye kontrol et
+      if (!findFriend.friends.includes(userId) && !findUser.friends.includes(friendUserId)) {
+        findFriend.friends.push(userId);
+        findUser.friends.push(friendUserId);
+      } else {
+        return res.status(400).json({ message: "Already friends" });
+      }
+    }
+
+    if (request === "decline") {
+      // 'pendingFriend' dizisinden friendUserId'yi pull metodu ile sil
+      findUser.pendingFriend.pull(friendUserId);
+    }
+
+    await findUser.save();
+    await findFriend.save();
+
+    return res.status(200).json({ message: "Successful" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 
 
 module.exports = {
@@ -179,4 +226,5 @@ module.exports = {
   logout,
   getFriends,
   addFriend,
+  acceptOrDecline
 };
