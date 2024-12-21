@@ -226,6 +226,10 @@ const addToMenuChat = async(req,res)=>{
       return res.status(400).json({message:"user not found"})
     }
 
+    if(findUser.menuChat.includes(friendUserId)){
+      return;
+    }
+
     const datasToAdd = {username:findFriend.username,_id:findFriend._id}
 
     findUser.menuChat.unshift(datasToAdd);
