@@ -7,6 +7,8 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import { useUserContext } from "./context/UserContext";
 import FriendChat from "./pages/FriendChat";
+import Profile from "./pages/Profile";
+
 
 
 function App() {
@@ -32,6 +34,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<Home />} />
           <Route path="/friendchat" element={<FriendChat />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
     </BrowserRouter>

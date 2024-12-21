@@ -76,7 +76,7 @@ const BottomProfile = () => {
             <h3 className="text-white text-lg font-semibold">Account Settings</h3>
           </div>
           <div className="flex-1 flex flex-col justify-center px-4">
-            <button className="w-full py-2 bg-[#2B2D31] hover:bg-[#3A3C41] text-white font-medium rounded-md text-center transition duration-150 ease-in-out">
+            <button onClick={()=>navigate("/profile")} className="w-full py-2 bg-[#2B2D31] hover:bg-[#3A3C41] text-white font-medium rounded-md text-center transition duration-150 ease-in-out">
               Manage Account
             </button>
           </div>
