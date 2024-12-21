@@ -4,10 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 
 type HomeFriendProps = {
- item:{
-  username:string,
-  _id:string,
- }
+  item: {
+    username: string;
+    _id: string;
+  };
 };
 
 type User = {
@@ -17,58 +17,56 @@ type User = {
   username: string;
   friends: Friend[];
   pendingFriend: Friend[];
-  menuChat:Friend[];
+  menuChat: Friend[];
 };
 
-interface Friend{
-  username:string,
-  _id:string
+interface Friend {
+  username: string;
+  _id: string;
 }
 
 const HomeFriend = ({ item }: HomeFriendProps) => {
   const navigate = useNavigate();
 
-  const {user,setUser} = useUserContext();
+  const { user, setUser } = useUserContext();
 
-  const addToMenuChat = async()=>{
+  const addToMenuChat = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/addtomenuchat",{
-        userId:user?.userId,
-        friendUserId:item._id
-      })
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/addtomenuchat",
+        {
+          userId: user?.userId,
+          friendUserId: item._id,
+        }
+      );
       console.log(response);
-      if(response.status===200){
-        setUser((prev:User | null)=>{
-          if(!prev){
+      if (response.status === 200) {
+        setUser((prev: User | null) => {
+          if (!prev) {
             return prev;
           }
-          return{
+          return {
             ...prev,
-            menuChat:[...prev?.menuChat,response.data]
-          }
-
-        })
+            menuChat: [response.data, ...prev.menuChat],
+          };
+        });
       }
-      
     } catch (error) {
       console.log(error);
-      
     }
-    
-  }
- 
+  };
+
   return (
     <div
       onClick={() => {
-        navigate("/friendchat")
-        addToMenuChat()
+        navigate("/friendchat");
+        addToMenuChat();
       }}
       className="w-full h-auto text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all"
     >
       <div className="flex justify-center items-center gap-4">
         <div className="relative">
           <img
-         
             src="https://m.media-amazon.com/images/I/61GU80tkXwL._AC_UF894,1000_QL80_.jpg"
             alt={`${item}'s profile`}
             className="w-12 h-12 rounded-full object-cover border-2 border-gray-500"
