@@ -47,6 +47,13 @@ const UserSchema = new mongoose.Schema({
             ref:"User",
             default:null
         }
+    ],
+    menuChat:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
+            default:null 
+        }
     ]
 
 });
