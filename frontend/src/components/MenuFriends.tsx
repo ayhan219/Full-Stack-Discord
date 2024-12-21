@@ -12,7 +12,7 @@ const MenuFriends = () => {
         <div className="w-3 h-3 rounded-full bg-green-700 absolute right-0 bottom-0"></div>
       </div>
       <div className=" font-semibold">
-        <p>Ayhan Taha</p>
+        <p>Ayhan</p>
       </div>
     </div>
   );

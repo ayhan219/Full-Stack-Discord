@@ -6,6 +6,9 @@ import { GoPlus } from "react-icons/go";
 import MenuFriends from "./MenuFriends";
 import BottomProfile from "./BottomProfile";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../context/UserContext";
+import FriendChat from "../pages/FriendChat";
+import HomeFriend from "./HomeFriend";
 
 type MenuProps ={
   activeMenu:string,
@@ -13,6 +16,8 @@ type MenuProps ={
 }
 
 const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
+
+  const {user} = useUserContext();
 
   const navigate = useNavigate();
   
@@ -65,9 +70,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         <GoPlus className=" text-xl cursor-pointer" />
         </div>
         <div className="w-full h-auto flex flex-col gap-2">
-           <MenuFriends />
-           <MenuFriends />
-           <MenuFriends />
+          <MenuFriends  />
         </div>
 
         
