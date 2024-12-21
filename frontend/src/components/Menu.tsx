@@ -70,7 +70,11 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         <GoPlus className=" text-xl cursor-pointer" />
         </div>
         <div className="w-full h-auto flex flex-col gap-2">
-          <MenuFriends  />
+          {
+            user?.menuChat.map((item,index)=>(
+              <MenuFriends key={index} item={item} />
+            ))
+          }
         </div>
 
         

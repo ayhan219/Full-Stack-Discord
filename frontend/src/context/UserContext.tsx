@@ -15,7 +15,7 @@ type User = {
   username: string;
   friends: Friend[];
   pendingFriend: Friend[];
-  menuFriend:Friend[];
+  menuChat:Friend[];
 };
 
 interface UserContextType {

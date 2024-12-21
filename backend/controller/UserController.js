@@ -57,7 +57,8 @@ const login = async (req, res) => {
         displayName: findUser.displayName,
         username: findUser.username,
         friends:findUser.friends,
-        pendingFriend:findUser.pendingFriend
+        pendingFriend:findUser.pendingFriend,
+        menuChat:findUser.menuChat
       },
       process.env.JWT_SECRET,
       {
@@ -80,7 +81,8 @@ const login = async (req, res) => {
       displayName: findUser.displayName,
       username: findUser.username,
       friends:findUser.friends,
-      pendingFriend:findUser.pendingFriend
+      pendingFriend:findUser.pendingFriend,
+      menuChat:findUser.menuChat
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -98,7 +100,8 @@ const getCurrentUser = async (req, res) => {
     // Hem 'friends' hem de 'pendingFriend' alanlarını populate et
     const user = await User.findById(userId)
       .populate("friends", "username")
-      .populate("pendingFriend", "username");
+      .populate("pendingFriend", "username")
+      .populate("menuChat","username")
 
     if (!user) {
       return res.status(400).json({ message: "user not found" });
@@ -111,6 +114,7 @@ const getCurrentUser = async (req, res) => {
       username: user.username,
       friends: user.friends, 
       pendingFriend: user.pendingFriend, 
+      menuChat:user.menuChat
     });
   } catch (error) {
     return res.status(500).json({ message: "server error", error });
