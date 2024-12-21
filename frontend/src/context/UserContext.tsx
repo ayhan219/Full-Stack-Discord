@@ -135,14 +135,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   };
 
 
-  // useEffect component render edildiğinde çalışacak
   useEffect(() => {
     
-    // Eğer socket mevcutsa, friendRequestNotification olayını dinlemeye başla
     if (socket) {
       socket.on("friendRequestNotification", (senderId: string,username:string) => {
         console.log("Notification received:", senderId);
-        // Gelen bildirimle pendingFriend dizisini güncelle
         setUser((prev: User | null) => {
           if (!prev) return prev;
 
@@ -154,13 +151,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           
         });
       });
-      socket.on("sendReceiverIdToUser",(senderId:string,selectedValue:string)=>{
+      socket.on("sendReceiverIdToUser",(senderId:string,selectedValue:string,username:string)=>{
         console.log("Notification received:", senderId);
         if(selectedValue==="accept"){
           setUser((prev:User | null)=>{
             if (!prev) return prev;
 
-            const newFriend: Friend = { username: "PlaceholderUsername", _id: senderId };
+            const newFriend: Friend = { username: username, _id: senderId };
             return{
               ...prev,
               friends:[...prev.friends,newFriend],

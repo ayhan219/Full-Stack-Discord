@@ -31,7 +31,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
       if(response.status===200){
         getCurrentUser();
       }
-      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,selectedValue);
+      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,selectedValue,user?.username);
       
     } catch (error) {
       console.error(error);
@@ -40,7 +40,6 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
 
   const show = ()=>{
     console.log(user);
-    console.log(item.username);
     
   }
 
