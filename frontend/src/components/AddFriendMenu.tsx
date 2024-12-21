@@ -11,7 +11,6 @@ const AddFriendMenu = () => {
   const [messages, setMessages] = useState<string>("");
   const { user,  socket } = useUserContext();
 
-  // Arkadaş ekleme işlemi
   const handleAddFriend = async () => {
     try {
       const response = await axios.post(
@@ -22,11 +21,17 @@ const AddFriendMenu = () => {
         }
       );
 
-
-      // Arkadaşlık isteği gönderildiğinde socket ile diğer kullanıcıyı bilgilendir
+      
+      if(response.status===200){
+        setIsSuccess(true);
+        setMessages("friend request sended!")
+      }
+  
       socket.emit("friendRequest", user?.userId, response.data,user?.username);
     } catch (error) {
       console.log(error);
+      setMessages("error")
+      setIsSuccess(false);
     }
   };
 
@@ -43,7 +48,7 @@ const AddFriendMenu = () => {
           <input
             onChange={(e) => setFriendName(e.target.value)}
             value={friendName}
-            className="flex-grow bg-transparent outline-none text-white p-3"
+            className={`flex-grow bg-transparent outline-none text-white p-3`}
             placeholder="Enter friend's username"
             type="text"
           />
@@ -63,7 +68,7 @@ const AddFriendMenu = () => {
       </div>
 
       {messages && (
-        <div className="w-full h-auto px-6 text-red-600 font-semibold text-sm">
+        <div className={`w-full h-auto px-6 ${isSuccess ? "text-green-600" : "text-red-600"}  font-semibold text-sm`}>
           <p>{messages}</p>
         </div>
       )}
