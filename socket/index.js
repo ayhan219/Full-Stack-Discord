@@ -24,9 +24,9 @@ io.on('connection', (socket) => {
         console.log(`${userId} aktif oldu`);        
     });
 
-    socket.on('friendRequest', (senderId, receiverId) => {
+    socket.on('friendRequest', (senderId, receiverId,username) => {
       if (onlineUsers[receiverId]) {
-        io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId);
+        io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId,username);
         console.log(`Aktif kullanıcıya bildirim gönderildi: ${receiverId}`);
       } else {
         console.log(`${receiverId} şu anda çevrimdışı, bildirim önümüzdeki bağlantısında görünecek.`);

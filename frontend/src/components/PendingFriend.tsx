@@ -5,12 +5,16 @@ import axios from "axios";
 import { useUserContext } from "../context/UserContext";
 
 type PendingFriendProps = {
-  item: string;
+  item:{
+    username:string,
+    _id:string
+  }
 };
 
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
   const { user,socket,setUser,getCurrentUser } = useUserContext();
+  const [selectFriendName,setSelectFriendName] = useState<string>("");
 
   const handleAction = async (action: string) => {
     try {
@@ -27,7 +31,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
       if(response.status===200){
         getCurrentUser();
       }
-      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,item,selectedValue);
+      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,selectedValue);
       
     } catch (error) {
       console.error(error);
@@ -36,6 +40,8 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
 
   const show = ()=>{
     console.log(user);
+    console.log(item.username);
+    
   }
 
   return (
@@ -46,7 +52,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
           src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
           alt=""
         />
-        <p className="text-[#9CA3AF] text-base">{item}</p>
+        <p className="text-[#9CA3AF] text-base">{item.username}</p>
       </div>
       <div className="w-24 h-full flex items-center gap-2">
         <div

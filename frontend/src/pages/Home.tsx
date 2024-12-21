@@ -14,6 +14,10 @@ const Home = () => {
   const [activeTopBarMenu, setActiveTopBarMenu] = useState<string>("online");
 
 
+  const show = ()=>{
+    console.log(user);
+    
+  }
   
   return (
     <div className="w-full h-screen flex bg-[#313338]">
@@ -38,7 +42,7 @@ const Home = () => {
               </div>
 
               <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
-                <h3>ONLINE - {user?.friends.length}</h3>
+                <h3 onClick={()=>show()}>ONLINE - {user?.friends.length}</h3>
               </div>
               <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
                 {activeMenu === "friends" &&

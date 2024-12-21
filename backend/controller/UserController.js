@@ -38,7 +38,8 @@ const login = async (req, res) => {
     return res.status(400).json({ message: "provide all area" });
   }
   try {
-    const findUser = await User.findOne({ email });
+    const findUser = await User.findOne({ email }).populate("friends", "username")
+    .populate("pendingFriend", "username");
     if (!findUser) {
       return res.status(400).json({ message: "user not found" });
     }
@@ -47,7 +48,7 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "password doesn't match" });
     }
 
-    const userFriends = await findUser.populate("friends","username");
+    
 
     const token = jwt.sign(
       {
@@ -55,7 +56,7 @@ const login = async (req, res) => {
         email: findUser.email,
         displayName: findUser.displayName,
         username: findUser.username,
-        friends:userFriends.friends,
+        friends:findUser.friends,
         pendingFriend:findUser.pendingFriend
       },
       process.env.JWT_SECRET,
@@ -78,7 +79,7 @@ const login = async (req, res) => {
       email: findUser.email,
       displayName: findUser.displayName,
       username: findUser.username,
-      friends:userFriends.friends,
+      friends:findUser.friends,
       pendingFriend:findUser.pendingFriend
     });
   } catch (error) {
@@ -87,16 +88,18 @@ const login = async (req, res) => {
 };
 
 const getCurrentUser = async (req, res) => {
-  const userId = req.user?.userId;  // userId'yi token'dan alıyoruz
-  
-  
+  const userId = req.user?.userId;
+
   if (!userId) {
     return res.status(400).json({ message: "user not found" });
   }
 
   try {
-    const user = await User.findById(userId).populate("friends", "username");
-    
+    // Hem 'friends' hem de 'pendingFriend' alanlarını populate et
+    const user = await User.findById(userId)
+      .populate("friends", "username")
+      .populate("pendingFriend", "username");
+
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
@@ -106,44 +109,28 @@ const getCurrentUser = async (req, res) => {
       email: user.email,
       displayName: user.displayName,
       username: user.username,
-      friends: user.friends,
-      pendingFriend: user.pendingFriend,
+      friends: user.friends, 
+      pendingFriend: user.pendingFriend, 
     });
-    
   } catch (error) {
     return res.status(500).json({ message: "server error", error });
   }
 };
+
 
 const logout = async (req, res) => {
   res.clearCookie("token");
   return res.status(200).json({ message: "logout successfull" });
 };
 
-const getFriends = async (req, res) => {
-  const { userId } = req.query;
 
-  if (!userId) {
-    return res.status(400).json({ message: "no user id" });
-  }
-  try {
-    const findUser = await User.findById(userId).populate("friends","username");
-
-    if (!findUser) {
-      return res.status(400).json({ messsage: "user not found" });
-    }
-
-    
-    return res.status(200).json(findUser.friends)
-  } catch (error) {
-    return res.status(500).json({ message: "server error" });
-  }
-};
 
 const addFriend = async(req,res)=>{
   const {userId,friendName} = req.body;
   
 
+  console.log(userId,friendName);
+  
   if(!userId | !friendName){
     return res.status(400).json({message:"provide all area"})
   }
@@ -159,7 +146,8 @@ const addFriend = async(req,res)=>{
     if(findFriend.pendingFriend.includes(findUser._id)){
       return res.status(400).json({message:"request already sended"})
     }
-    findFriend.pendingFriend.push(findUser._id);
+    const friend = {username:findUser.username,_id:findUser._id}
+    findFriend.pendingFriend.push(friend);
     
     await findUser.save();
     await findFriend.save();
@@ -224,7 +212,6 @@ module.exports = {
   login,
   getCurrentUser,
   logout,
-  getFriends,
   addFriend,
   acceptOrDecline
 };

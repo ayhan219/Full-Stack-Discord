@@ -2,19 +2,8 @@ import { useState, useEffect } from "react";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 
-type User = {
-  userId: string;
-  email: string;
-  displayName: string;
-  username: string;
-  friends: friend[];
-  pendingFriend: string[];
-};
 
-type friend = {
-  username: string;
-  _id: string;
-};
+
 
 const AddFriendMenu = () => {
   const [friendName, setFriendName] = useState<string>("");
@@ -35,7 +24,7 @@ const AddFriendMenu = () => {
 
 
       // Arkadaşlık isteği gönderildiğinde socket ile diğer kullanıcıyı bilgilendir
-      socket.emit("friendRequest", user?.userId, response.data);
+      socket.emit("friendRequest", user?.userId, response.data,user?.username);
     } catch (error) {
       console.log(error);
     }

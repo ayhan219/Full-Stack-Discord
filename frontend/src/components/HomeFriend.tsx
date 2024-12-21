@@ -2,14 +2,15 @@ import { IoChatbubble } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 
 type HomeFriendProps = {
-  item: {
-    username: string;
-    _id: string;
-  };
+ item:{
+  username:string,
+  _id:string,
+ }
 };
 
 const HomeFriend = ({ item }: HomeFriendProps) => {
   const navigate = useNavigate();
+ 
   return (
     <div
       onClick={() => navigate("/friendchat")}
@@ -18,8 +19,9 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
       <div className="flex justify-center items-center gap-4">
         <div className="relative">
           <img
+         
             src="https://m.media-amazon.com/images/I/61GU80tkXwL._AC_UF894,1000_QL80_.jpg"
-            alt={`${item.username}'s profile`}
+            alt={`${item}'s profile`}
             className="w-12 h-12 rounded-full object-cover border-2 border-gray-500"
           />
           <div className="w-3 h-3 rounded-full bg-green-500 absolute right-0 bottom-0 border-2 border-white"></div>

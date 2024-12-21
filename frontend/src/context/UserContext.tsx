@@ -13,8 +13,8 @@ type User = {
   email: string;
   displayName: string;
   username: string;
-  friends: friend[];
-  pendingFriend: string[];
+  friends: Friend[];
+  pendingFriend: Friend[];
 };
 
 interface UserContextType {
@@ -43,10 +43,12 @@ interface UserContextType {
   getCurrentUser:()=>void;
 }
 
-type friend = {
-  username: string;
-  _id: string;
-};
+interface Friend{
+  username:string,
+  _id:string
+}
+
+
 
 interface Channel {
   _id: string;
@@ -138,14 +140,16 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     
     // Eğer socket mevcutsa, friendRequestNotification olayını dinlemeye başla
     if (socket) {
-      socket.on("friendRequestNotification", (senderId: string) => {
+      socket.on("friendRequestNotification", (senderId: string,username:string) => {
         console.log("Notification received:", senderId);
         // Gelen bildirimle pendingFriend dizisini güncelle
         setUser((prev: User | null) => {
           if (!prev) return prev;
+
+          const newFriend: Friend = { username: username, _id: senderId };
           return {
             ...prev,
-            pendingFriend: [...prev.pendingFriend, senderId],
+            pendingFriend: [...prev.pendingFriend, newFriend],
           };
           
         });
@@ -155,8 +159,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         if(selectedValue==="accept"){
           setUser((prev:User | null)=>{
             if (!prev) return prev;
-  
-            const newFriend: friend = { username: "PlaceholderUsername", _id: senderId };
+
+            const newFriend: Friend = { username: "PlaceholderUsername", _id: senderId };
             return{
               ...prev,
               friends:[...prev.friends,newFriend],
