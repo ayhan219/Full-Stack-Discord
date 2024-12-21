@@ -1,5 +1,7 @@
+import axios from "axios";
 import { IoChatbubble } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../context/UserContext";
 
 type HomeFriendProps = {
  item:{
@@ -10,10 +12,30 @@ type HomeFriendProps = {
 
 const HomeFriend = ({ item }: HomeFriendProps) => {
   const navigate = useNavigate();
+
+  const {user} = useUserContext();
+
+  const addToMenuChat = async()=>{
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/addtomenuchat",{
+        userId:user?.userId,
+        friendUserId:item._id
+      })
+      console.log(response);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
+  }
  
   return (
     <div
-      onClick={() => navigate("/friendchat")}
+      onClick={() => {
+        navigate("/friendchat")
+        addToMenuChat()
+      }}
       className="w-full h-auto text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all"
     >
       <div className="flex justify-center items-center gap-4">

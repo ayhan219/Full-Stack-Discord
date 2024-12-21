@@ -1,5 +1,6 @@
 
 
+
 type MenuFriendProps ={
   item:{
     username:string,
@@ -7,11 +8,14 @@ type MenuFriendProps ={
   }
 }
 
+
+
 const MenuFriends = ({item}:MenuFriendProps) => {
+
   return (
     <div className="w-full h-14 flex items-center px-6 gap-3 cursor-pointer hover:bg-gray-400 ease-in-out duration-100 text-gray-400 hover:text-gray-800 hover:rounded-lg ">
       <div className="relative">
-        <img
+        <img 
           className="w-11 h-11 rounded-full"
           src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0zUQ_eRMwCKHAcmo9FNIK4ncsXxHnaxi7qQ&s"
           alt=""
