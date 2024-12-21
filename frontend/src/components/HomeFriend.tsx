@@ -10,10 +10,25 @@ type HomeFriendProps = {
  }
 };
 
+type User = {
+  userId: string;
+  email: string;
+  displayName: string;
+  username: string;
+  friends: Friend[];
+  pendingFriend: Friend[];
+  menuChat:Friend[];
+};
+
+interface Friend{
+  username:string,
+  _id:string
+}
+
 const HomeFriend = ({ item }: HomeFriendProps) => {
   const navigate = useNavigate();
 
-  const {user} = useUserContext();
+  const {user,setUser} = useUserContext();
 
   const addToMenuChat = async()=>{
     try {
@@ -22,6 +37,18 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
         friendUserId:item._id
       })
       console.log(response);
+      if(response.status===200){
+        setUser((prev:User | null)=>{
+          if(!prev){
+            return prev;
+          }
+          return{
+            ...prev,
+            menuChat:[...prev?.menuChat,response.data]
+          }
+
+        })
+      }
       
     } catch (error) {
       console.log(error);

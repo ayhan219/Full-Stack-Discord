@@ -231,7 +231,7 @@ const addToMenuChat = async(req,res)=>{
     findUser.menuChat.unshift(datasToAdd);
     await findUser.save();
 
-    return res.status(200).json({message:"successfull"})
+    return res.status(200).json(datasToAdd)
     
 
   } catch (error) {
