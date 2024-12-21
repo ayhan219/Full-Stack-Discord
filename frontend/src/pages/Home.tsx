@@ -44,7 +44,7 @@ const Home = () => {
               <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
                 <h3 onClick={()=>show()}>ONLINE - {user?.friends.length}</h3>
               </div>
-              <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
+              <div className="w-full h-[calc(100%-60px)] p-4  overflow-y-auto  custom-scrollbar flex flex-col gap-2 ">
                 {activeMenu === "friends" &&
                   (user?.friends && user?.friends.length > 0 ? (
                     user?.friends.map((item, index) => (
