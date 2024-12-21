@@ -204,6 +204,37 @@ const acceptOrDecline = async (req, res) => {
   }
 };
 
+const addToMenuChat = async(req,res)=>{
+  const {userId,friendUserId} = req.body;
+
+  if(!userId || !friendUserId){
+    return res.status(400).json({message:"provide all area"})
+  }
+  try {
+    const findUser = await User.findById(userId);
+    const findFriend = await User.findById(friendUserId);
+
+    if(!findFriend){
+      return res.status(400).json({message:"friend not found"})
+    }
+
+    if(!findUser){
+      return res.status(400).json({message:"user not found"})
+    }
+
+    const datasToAdd = {username:findFriend.username,_id:findFriend._id}
+
+    findUser.menuChat.unshift(datasToAdd);
+    await findUser.save();
+
+    return res.status(200).json({message:"successfull"})
+    
+
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
 
 
 
@@ -213,5 +244,6 @@ module.exports = {
   getCurrentUser,
   logout,
   addFriend,
-  acceptOrDecline
+  acceptOrDecline,
+  addToMenuChat
 };
