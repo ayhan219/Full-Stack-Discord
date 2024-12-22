@@ -13,10 +13,10 @@ type User = {
   email: string;
   displayName: string;
   username: string;
-  profilePic:string;
+  profilePic: string;
   friends: Friend[];
   pendingFriend: Friend[];
-  menuChat:Friend[];
+  menuChat: Friend[];
 };
 
 interface UserContextType {
@@ -42,15 +42,14 @@ interface UserContextType {
   activeMenu: string;
   setActiveMenu: (activeMenu: string) => void;
   socket: Socket;
-  getCurrentUser:()=>void;
+  getCurrentUser: () => void;
 }
 
-interface Friend{
-  username:string,
-  _id:string
+interface Friend {
+  username: string;
+  _id: string;
+  profilePic: string;
 }
-
-
 
 interface Channel {
   _id: string;
@@ -102,7 +101,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
       );
       console.log(response.data);
-      
+
       setUser(response.data);
     } catch (error) {
       console.log(error);
@@ -136,40 +135,55 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
-
   useEffect(() => {
-    
     if (socket) {
-      socket.on("friendRequestNotification", (senderId: string,username:string) => {
-        console.log("Notification received:", senderId);
-        setUser((prev: User | null) => {
-          if (!prev) return prev;
-
-          const newFriend: Friend = { username: username, _id: senderId };
-          return {
-            ...prev,
-            pendingFriend: [...prev.pendingFriend, newFriend],
-          };
-          
-        });
-      });
-      socket.on("sendReceiverIdToUser",(senderId:string,selectedValue:string,username:string)=>{
-        console.log("Notification received:", senderId);
-        if(selectedValue==="accept"){
-          setUser((prev:User | null)=>{
+      socket.on(
+        "friendRequestNotification",
+        (senderId: string, username: string, profilePic: string) => {
+          console.log("Notification received:", senderId, profilePic);
+          setUser((prev: User | null) => {
             if (!prev) return prev;
 
-            const newFriend: Friend = { username: username, _id: senderId };
-            return{
+            const newFriend: Friend = {
+              username: username,
+              _id: senderId,
+              profilePic: profilePic,
+            };
+            return {
               ...prev,
-              friends:[...prev.friends,newFriend],
-            }
-          })
+              pendingFriend: [...prev.pendingFriend, newFriend],
+            };
+          });
         }
-        else{
-          return;
+      );
+      socket.on(
+        "sendReceiverIdToUser",
+        (
+          senderId: string,
+          selectedValue: string,
+          username: string,
+          profilePic: string
+        ) => {
+          console.log("Notification received:", senderId);
+          if (selectedValue === "accept") {
+            setUser((prev: User | null) => {
+              if (!prev) return prev;
+
+              const newFriend: Friend = {
+                username: username,
+                _id: senderId,
+                profilePic,
+              };
+              return {
+                ...prev,
+                friends: [...prev.friends, newFriend],
+              };
+            });
+          } else {
+            return;
+          }
         }
-      })
+      );
     }
 
     // Temizleme işlemi
@@ -205,7 +219,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         activeMenu,
         setActiveMenu,
         socket,
-        getCurrentUser
+        getCurrentUser,
       }}
     >
       {children}

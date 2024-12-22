@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 
@@ -27,7 +27,10 @@ const AddFriendMenu = () => {
         setMessages("friend request sended!")
       }
   
-      socket.emit("friendRequest", user?.userId, response.data,user?.username);
+      
+      console.log(user?.profilePic);
+      
+      socket.emit("friendRequest", user?.userId, response.data,user?.username,user?.profilePic);
     } catch (error) {
       console.log(error);
       setMessages("error")

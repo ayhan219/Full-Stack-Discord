@@ -7,14 +7,14 @@ import { useUserContext } from "../context/UserContext";
 type PendingFriendProps = {
   item:{
     username:string,
-    _id:string
+    _id:string,
+    profilePic:string
   }
 };
 
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
   const { user,socket,setUser,getCurrentUser } = useUserContext();
-  const [selectFriendName,setSelectFriendName] = useState<string>("");
 
   const handleAction = async (action: string) => {
     try {
@@ -39,7 +39,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
   };
 
   const show = ()=>{
-    console.log(user);
+    console.log(item);
     
   }
 
@@ -48,7 +48,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
       <div className="w-auto h-full flex gap-4 items-center ">
         <img onClick={()=>show()}
           className="w-8 h-8 rounded-full"
-          src="https://static.vecteezy.com/system/resources/thumbnails/009/292/244/small/default-avatar-icon-of-social-media-user-vector.jpg"
+          src={`http://localhost:5000${item.profilePic}`}
           alt=""
         />
         <p className="text-[#9CA3AF] text-base">{item.username}</p>

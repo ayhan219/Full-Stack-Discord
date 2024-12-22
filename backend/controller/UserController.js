@@ -138,7 +138,6 @@ const addFriend = async(req,res)=>{
   const {userId,friendName} = req.body;
   
 
-  console.log(userId,friendName);
   
   if(!userId | !friendName){
     return res.status(400).json({message:"provide all area"})
@@ -155,7 +154,7 @@ const addFriend = async(req,res)=>{
     if(findFriend.pendingFriend.includes(findUser._id)){
       return res.status(400).json({message:"request already sended"})
     }
-    const friend = {username:findUser.username,_id:findUser._id}
+    const friend = {username:findUser.username,_id:findUser._id,profilePic:findUser.profilePic}
     findFriend.pendingFriend.push(friend);
     
     await findUser.save();
