@@ -260,6 +260,7 @@ const uploadProfilePicture = async (req, res) => {
       message: "Profile picture updated successfully!",
       profilePic: filePath,
     });
+    await user.save();
   } catch (error) {
     res.status(500).json({ message: "Something went wrong", error });
   }
