@@ -8,17 +8,14 @@ import { useEffect, useState } from "react";
 import AddFriendMenu from "../components/AddFriendMenu";
 import PendingFriend from "../components/PendingFriend";
 
-
 const Home = () => {
   const { user, activeMenu, setActiveMenu } = useUserContext();
   const [activeTopBarMenu, setActiveTopBarMenu] = useState<string>("online");
 
-
-  const show = ()=>{
+  const show = () => {
     console.log(user);
-    
-  }
-  
+  };
+
   return (
     <div className="w-full h-screen flex bg-[#313338]">
       <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
@@ -42,7 +39,7 @@ const Home = () => {
               </div>
 
               <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
-                <h3 onClick={()=>show()}>ONLINE - {user?.friends.length}</h3>
+                <h3 onClick={() => show()}>ONLINE - {user?.friends.length}</h3>
               </div>
               <div className="w-full h-[calc(100%-60px)] p-4  overflow-y-auto  custom-scrollbar flex flex-col gap-2 ">
                 {activeMenu === "friends" &&
@@ -65,12 +62,37 @@ const Home = () => {
                 <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
                   <h3>Pending - {user?.pendingFriend.length}</h3>
                 </div>
-                <div  className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
-                 {
-                  user?.pendingFriend.map((item,index)=>(
+                <div className="w-full h-[calc(100%-60px)] p-3  overflow-y-auto  custom-scrollbar ">
+                  {user?.pendingFriend.map((item, index) => (
                     <PendingFriend key={index} item={item} />
-                  ))
-                 }
+                  ))}
+                  {user?.pendingFriend?.length === 0 && (
+                    <div className="flex flex-col items-center justify-center text-gray-500 bg-[#2B2D31] p-6 rounded-lg shadow-md">
+                      <div className="text-4xl mb-4">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="w-12 h-12"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9.75 9.75a3 3 0 116 0 3 3 0 01-6 0zm0 0v-.75A6 6 0 1112 21a6 6 0 01-6-6v-.75"
+                          />
+                        </svg>
+                      </div>
+                      <p className="text-lg font-semibold">
+                        You have no pending friend requests.
+                      </p>
+                      <p className="text-sm mt-1">
+                        Send friend requests or wait for others to send you one!
+                      </p>
+                      
+                    </div>
+                  )}
                 </div>
               </div>
             </>
