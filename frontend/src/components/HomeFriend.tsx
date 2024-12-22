@@ -15,6 +15,7 @@ type User = {
   email: string;
   displayName: string;
   username: string;
+  profilePic:string;
   friends: Friend[];
   pendingFriend: Friend[];
   menuChat: Friend[];
@@ -23,6 +24,7 @@ type User = {
 interface Friend {
   username: string;
   _id: string;
+  profilePic:string
 }
 
 const HomeFriend = ({ item }: HomeFriendProps) => {
