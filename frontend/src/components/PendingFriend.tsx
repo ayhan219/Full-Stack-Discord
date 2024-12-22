@@ -18,6 +18,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
 
   const handleAction = async (action: string) => {
     try {
+      
       setSelectedValue(action);
       const response = await axios.post("http://localhost:5000/api/auth/acceptordeclinefriend", {
         userId: user?.userId,
@@ -26,12 +27,12 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
       });
       console.log(response.data);
       
-      setUser(response.data)
-
       if(response.status===200){
         getCurrentUser();
       }
-      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,selectedValue,user?.username);
+
+      
+      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,response.data,action,user?.username,user?.profilePic);
       
     } catch (error) {
       console.error(error);

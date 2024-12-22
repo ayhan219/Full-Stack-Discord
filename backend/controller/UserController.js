@@ -206,7 +206,7 @@ const acceptOrDecline = async (req, res) => {
     await findUser.save();
     await findFriend.save();
 
-    return res.status(200).json(findUser);
+    return res.status(200).json(findFriend._id);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

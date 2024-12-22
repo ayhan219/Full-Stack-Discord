@@ -140,7 +140,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       socket.on(
         "friendRequestNotification",
         (senderId: string, username: string, profilePic: string) => {
-          console.log("Notification received:", senderId, profilePic);
+          console.log("Notification received:", senderId);
           setUser((prev: User | null) => {
             if (!prev) return prev;
 
@@ -165,6 +165,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           profilePic: string
         ) => {
           console.log("Notification received:", senderId);
+
           if (selectedValue === "accept") {
             setUser((prev: User | null) => {
               if (!prev) return prev;
@@ -190,6 +191,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return () => {
       if (socket) {
         socket.off("friendRequestNotification");
+        socket.off("sendReceiverIdToUser")
       }
     };
   }, [socket]);

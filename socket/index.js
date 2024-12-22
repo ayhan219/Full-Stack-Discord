@@ -33,10 +33,12 @@ io.on('connection', (socket) => {
       }
     });
 
-    socket.on("sendAcceptOrDecNotificationToUser",(senderId,receiverId)=>{
+    socket.on("sendAcceptOrDecNotificationToUser",(senderId,receiverId,selectedValue,username,profilePic)=>{
+      console.log(senderId,receiverId,selectedValue,username,profilePic);
+      
       if(onlineUsers[receiverId]){
         console.log(senderId,receiverId);
-      io.to(onlineUsers[receiverId]).emit("sendReceiverIdToUser",receiverId);
+      io.to(onlineUsers[receiverId]).emit("sendReceiverIdToUser",senderId,selectedValue,username,profilePic);
       console.log(`notification sended to ${receiverId}`);
       }
       else{
