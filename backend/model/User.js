@@ -20,6 +20,7 @@ const UserSchema = new mongoose.Schema({
         type:String,
         required:true
     },
+    profilePic: { type: String, default: "" },
     ownChannel: [
         {
             type: mongoose.Schema.Types.ObjectId,
