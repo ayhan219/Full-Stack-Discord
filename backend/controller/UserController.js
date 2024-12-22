@@ -22,6 +22,7 @@ const signup = async (req, res) => {
       displayName,
       username,
       password: hashedPW,
+      profilePic:"/uploads/discorddefault.png"
     });
     await newUser.save();
 

@@ -13,6 +13,7 @@ type User = {
   email: string;
   displayName: string;
   username: string;
+  profilePic:string;
   friends: Friend[];
   pendingFriend: Friend[];
   menuChat:Friend[];

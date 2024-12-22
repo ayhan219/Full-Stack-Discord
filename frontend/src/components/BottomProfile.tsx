@@ -36,7 +36,7 @@ const BottomProfile = () => {
         <div className="flex gap-3 items-center">
           <img
             className="w-10 h-10 rounded-full border-2 border-gray-600"
-            src="https://i.pinimg.com/1200x/98/1d/6b/981d6b2e0ccb5e968a0618c8d47671da.jpg"
+            src={`http://localhost:5000${user?.profilePic}`}
             alt="user-avatar"
           />
           <p className="text-white text-base font-medium">{user?.username}</p>
