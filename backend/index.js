@@ -6,6 +6,7 @@ const cors = require("cors");
 const UserRoutes = require("./router/UserRouter");
 const ChannelRoutes = require("./router/ChannelRouter")
 const cookieParser = require("cookie-parser")
+const path = require("path");
 dotenv.config();
 
 
@@ -16,6 +17,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth",UserRoutes);
 app.use("/api/channel",ChannelRoutes)
 
