@@ -39,8 +39,8 @@ const login = async (req, res) => {
     return res.status(400).json({ message: "provide all area" });
   }
   try {
-    const findUser = await User.findOne({ email }).populate("friends", "username")
-    .populate("pendingFriend", "username")
+    const findUser = await User.findOne({ email }).populate("friends", "username profilePic")
+    .populate("pendingFriend", "username profilePic")
     .populate("menuChat","username")
     if (!findUser) {
       return res.status(400).json({ message: "user not found" });
@@ -103,13 +103,15 @@ const getCurrentUser = async (req, res) => {
   try {
     // Hem 'friends' hem de 'pendingFriend' alanlarını populate et
     const user = await User.findById(userId)
-      .populate("friends", "username")
-      .populate("pendingFriend", "username")
+      .populate("friends", "username profilePic")
+      .populate("pendingFriend", "username profilePic")
       .populate("menuChat","username")
 
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
+    console.log(user);
+    
 
     return res.status(200).json({
       userId: user._id,
