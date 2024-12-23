@@ -12,32 +12,77 @@ type PendingFriendProps = {
   }
 };
 
+type User = {
+  userId: string;
+  email: string;
+  displayName: string;
+  username: string;
+  profilePic: string;
+  friends: Friend[];
+  pendingFriend: Friend[];
+  menuChat: Friend[];
+};
+
+interface Friend {
+  username: string;
+  _id: string;
+  profilePic: string;
+}
+
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
   const { user,socket,setUser,getCurrentUser } = useUserContext();
 
   const handleAction = async (action: string) => {
     try {
-      
       setSelectedValue(action);
+  
       const response = await axios.post("http://localhost:5000/api/auth/acceptordeclinefriend", {
         userId: user?.userId,
         request: action,
-        friendUserId: item, 
+        friendUserId: item._id,
       });
-      console.log(response.data);
-      
-      if(response.status===200){
-        getCurrentUser();
-      }
+  
+      if (response.status === 200) {
+        setUser((prev: User | null) => {
+          if (!prev) {
+            return prev;
+          }
 
-      
-      socket.emit("sendAcceptOrDecNotificationToUser",user?.userId,response.data,action,user?.username,user?.profilePic);
-      
+          const updatedPendingFriends = prev.pendingFriend.filter(
+            (friend) => friend._id !== item._id
+          );
+
+          if (action === "accept") {
+            return {
+              ...prev,
+              friends: [...prev.friends, response.data], 
+              pendingFriend: updatedPendingFriends, 
+            };
+          }
+  
+          
+          return {
+            ...prev,
+            pendingFriend: updatedPendingFriends, 
+          };
+        });
+  
+        
+        socket.emit(
+          "sendAcceptOrDecNotificationToUser",
+          user?.userId,
+          response.data._id,
+          action,
+          user?.username,
+          user?.profilePic
+        );
+      }
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const show = ()=>{
     console.log(item);

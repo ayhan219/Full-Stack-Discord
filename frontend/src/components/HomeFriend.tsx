@@ -7,6 +7,7 @@ type HomeFriendProps = {
   item: {
     username: string;
     _id: string;
+    profilePic:string;
   };
 };
 
@@ -58,6 +59,11 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
     }
   };
 
+  const show = ()=>{
+    console.log(item);
+    
+  }
+
   return (
     <div
       onClick={() => {
@@ -69,7 +75,8 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
       <div className="flex justify-center items-center gap-4">
         <div className="relative">
           <img
-            src="https://m.media-amazon.com/images/I/61GU80tkXwL._AC_UF894,1000_QL80_.jpg"
+          onClick={()=>show()}
+            src={`http://localhost:5000${item.profilePic}`}
             alt={`${item}'s profile`}
             className="w-10 h-10 rounded-full object-cover border-2 border-gray-500"
           />

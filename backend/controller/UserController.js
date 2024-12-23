@@ -169,9 +169,7 @@ const addFriend = async(req,res)=>{
 const acceptOrDecline = async (req, res) => {
   const { userId, request, friendUserId } = req.body;
 
-  console.log(userId,request,friendUserId);
   
-
   if (!userId || !request || !friendUserId) {
     return res.status(400).json({ message: "Provide all fields" });
   }
@@ -192,8 +190,12 @@ const acceptOrDecline = async (req, res) => {
       findUser.pendingFriend.pull(friendUserId);
 
       if (!findFriend.friends.includes(userId) && !findUser.friends.includes(friendUserId)) {
-        findFriend.friends.push(userId);
-        findUser.friends.push(friendUserId);
+        // const datasToAdd = {username:findFriend.username,_id:findFriend._id,profilePic:findFriend.profilePic}
+        // const datasToAdd2 = {username:findUser.username,_id:findUser._id,profilePic:findUser.profilePic}
+        findFriend.friends.push(findUser._id);
+
+        
+        findUser.friends.push(findFriend._id);
       } else {
         return res.status(400).json({ message: "Already friends" });
       }
@@ -206,7 +208,7 @@ const acceptOrDecline = async (req, res) => {
     await findUser.save();
     await findFriend.save();
 
-    return res.status(200).json(findFriend._id);
+    return res.status(200).json({username:findFriend.username,_id:findFriend._id,profilePic:findFriend.profilePic});
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
