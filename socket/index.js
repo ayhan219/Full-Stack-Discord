@@ -6,30 +6,29 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5173", // İzin verilen domain
+    origin: "http://localhost:5173", 
     methods: ['GET', 'POST'],
   }
 });
 
 
-let onlineUsers = {}; // Aktif kullanıcıları tutmak için bir obje
+let onlineUsers = {}; 
 
-// Socket.IO bağlantısı
+
 io.on('connection', (socket) => {
-    console.log('Bir kullanıcı bağlandı:', socket.id);
+    console.log('A user connected:', socket.id);
 
     // Kullanıcı aktif olduğunda kaydetmek
     socket.on('userOnline', (userId) => {
-        onlineUsers[userId] = socket.id;  // userId'yi socket.id ile eşleştir
-        console.log(`${userId} aktif oldu`);        
+        onlineUsers[userId] = socket.id;  
+        console.log(`${userId} has connected`);        
     });
 
     socket.on('friendRequest', (senderId, receiverId,username,profilePic) => {
       if (onlineUsers[receiverId]) {
         io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId,username,profilePic);
-        console.log(`Aktif kullanıcıya bildirim gönderildi: ${receiverId}`);
       } else {
-        console.log(`${receiverId} şu anda çevrimdışı, bildirim önümüzdeki bağlantısında görünecek.`);
+        console.log(`${receiverId} has offline. The notification will send after connected`);
       }
     });
 
@@ -47,13 +46,11 @@ io.on('connection', (socket) => {
       
     })
 
-    // Kullanıcı bağlantıyı kestiğinde
     socket.on('disconnect', () => {
-        // Bağlantıyı kesen kullanıcıyı aktif listeden sil
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {
                 delete onlineUsers[userId];
-                console.log(`${userId} çıkış yaptı`);
+                console.log(`${userId} has disconnected`);
                 break;
             }
         }
@@ -63,5 +60,5 @@ io.on('connection', (socket) => {
 // Diğer API endpoint'leriniz burada olacak
 
 server.listen(3001, () => {
-    console.log('Sunucu 3001 portunda çalışıyor');
+    console.log('running on port 3001');
 });
