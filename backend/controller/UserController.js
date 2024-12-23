@@ -234,7 +234,7 @@ const addToMenuChat = async(req,res)=>{
       return;
     }
 
-    const datasToAdd = {username:findFriend.username,_id:findFriend._id}
+    const datasToAdd = {username:findFriend.username,_id:findFriend._id,profilePic:findFriend.profilePic}
 
     findUser.menuChat.unshift(datasToAdd);
     await findUser.save();
