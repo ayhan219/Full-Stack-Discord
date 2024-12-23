@@ -41,7 +41,7 @@ const login = async (req, res) => {
   try {
     const findUser = await User.findOne({ email }).populate("friends", "username profilePic")
     .populate("pendingFriend", "username profilePic")
-    .populate("menuChat","username")
+    .populate("menuChat","username profilePic")
     if (!findUser) {
       return res.status(400).json({ message: "user not found" });
     }
@@ -105,7 +105,7 @@ const getCurrentUser = async (req, res) => {
     const user = await User.findById(userId)
       .populate("friends", "username profilePic")
       .populate("pendingFriend", "username profilePic")
-      .populate("menuChat","username")
+      .populate("menuChat","username profilePic")
 
     if (!user) {
       return res.status(400).json({ message: "user not found" });
