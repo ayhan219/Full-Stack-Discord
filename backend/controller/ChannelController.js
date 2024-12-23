@@ -23,7 +23,7 @@ const createChannel = async(req,res)=>{
             channelName:channelName
         })
 
-        newChannel.channelUsers.push(findUser.username);
+        newChannel.channelUsers.unshift(findUser.username);
         findUser.ownChannel.push(newChannel._id);
         findUser.joinedChannel.push(newChannel._id);
 
@@ -57,9 +57,10 @@ const getChannel = async(req,res)=>{
         if(!findUser){
             return res.status(400).json({message:"user not found"})
         }
+        const reversedChannels = findUser.joinedChannel.reverse();
         return res.status(200).json({
             message: "Channels retrieved successfully",
-            channels: findUser.joinedChannel,
+            channels: reversedChannels
           });
         
     } catch (error) {

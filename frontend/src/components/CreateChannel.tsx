@@ -23,7 +23,7 @@ const CreateChannel = () => {
       if(response.status===201){
         setSingleChannel(response.data);
         setChannels((prev:Channel[])=>{
-          return [...prev, response.data];
+          return [response.data,...prev];
         })
         setOpenCreateChannel(!openCreateChannel)
         

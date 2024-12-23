@@ -50,8 +50,6 @@ const login = async (req, res) => {
       return res.status(400).json({ message: "password doesn't match" });
     }
 
-    
-
     const token = jwt.sign(
       {
         userId: findUser._id,
