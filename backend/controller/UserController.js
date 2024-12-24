@@ -22,7 +22,7 @@ const signup = async (req, res) => {
       displayName,
       username,
       password: hashedPW,
-      profilePic:"/uploads/discorddefault.png"
+      profilePic: "/uploads/discorddefault.png",
     });
     await newUser.save();
 
@@ -39,9 +39,10 @@ const login = async (req, res) => {
     return res.status(400).json({ message: "provide all area" });
   }
   try {
-    const findUser = await User.findOne({ email }).populate("friends", "username profilePic")
-    .populate("pendingFriend", "username profilePic")
-    .populate("menuChat","username profilePic")
+    const findUser = await User.findOne({ email })
+      .populate("friends", "username profilePic")
+      .populate("pendingFriend", "username profilePic")
+      .populate("menuChat", "username profilePic");
     if (!findUser) {
       return res.status(400).json({ message: "user not found" });
     }
@@ -56,10 +57,10 @@ const login = async (req, res) => {
         email: findUser.email,
         displayName: findUser.displayName,
         username: findUser.username,
-        friends:findUser.friends,
-        pendingFriend:findUser.pendingFriend,
-        menuChat:findUser.menuChat,
-        profilePic:findUser.profilePic
+        friends: findUser.friends,
+        pendingFriend: findUser.pendingFriend,
+        menuChat: findUser.menuChat,
+        profilePic: findUser.profilePic,
       },
       process.env.JWT_SECRET,
       {
@@ -81,10 +82,10 @@ const login = async (req, res) => {
       email: findUser.email,
       displayName: findUser.displayName,
       username: findUser.username,
-      friends:findUser.friends,
-      pendingFriend:findUser.pendingFriend,
-      menuChat:findUser.menuChat,
-      profilePic:findUser.profilePic
+      friends: findUser.friends,
+      pendingFriend: findUser.pendingFriend,
+      menuChat: findUser.menuChat,
+      profilePic: findUser.profilePic,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -103,73 +104,69 @@ const getCurrentUser = async (req, res) => {
     const user = await User.findById(userId)
       .populate("friends", "username profilePic")
       .populate("pendingFriend", "username profilePic")
-      .populate("menuChat","username profilePic")
+      .populate("menuChat", "username profilePic");
 
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
     console.log(user);
-    
 
     return res.status(200).json({
       userId: user._id,
       email: user.email,
       displayName: user.displayName,
       username: user.username,
-      friends: user.friends, 
-      pendingFriend: user.pendingFriend, 
-      menuChat:user.menuChat,
-      profilePic:user.profilePic
+      friends: user.friends,
+      pendingFriend: user.pendingFriend,
+      menuChat: user.menuChat,
+      profilePic: user.profilePic,
     });
   } catch (error) {
     return res.status(500).json({ message: "server error", error });
   }
 };
 
-
 const logout = async (req, res) => {
   res.clearCookie("token");
   return res.status(200).json({ message: "logout successfull" });
 };
 
+const addFriend = async (req, res) => {
+  const { userId, friendName } = req.body;
 
-
-const addFriend = async(req,res)=>{
-  const {userId,friendName} = req.body;
-  
-
-  
-  if(!userId | !friendName){
-    return res.status(400).json({message:"provide all area"})
+  if (!userId | !friendName) {
+    return res.status(400).json({ message: "provide all area" });
   }
   try {
     const findUser = await User.findById(userId);
-    if(!findUser){
-      return res.status(400).json({message:"user not found"})
+    if (!findUser) {
+      return res.status(400).json({ message: "user not found" });
     }
-   
-    const findFriend = await User.findOne({username:friendName});
-    
 
-    if(findFriend.pendingFriend.includes(findUser._id)){
-      return res.status(400).json({message:"request already sended"})
+    const findFriend = await User.findOne({ username: friendName });
+
+    if (findFriend.pendingFriend.includes(findUser._id)) {
+      return res.status(400).json({ message: "request already sended" });
     }
-    const friend = {username:findUser.username,_id:findUser._id,profilePic:findUser.profilePic}
+    const friend = {
+      username: findUser.username,
+      _id: findUser._id,
+      profilePic: findUser.profilePic,
+    };
     findFriend.pendingFriend.push(friend);
-    
+
     await findUser.save();
     await findFriend.save();
-    
-    res.status(200).json(findFriend._id)
+
+    res.status(200).json(findFriend._id);
   } catch (error) {
     return res.status(500).json(error);
   }
-}
+};
 
 const acceptOrDecline = async (req, res) => {
   const { userId, request, friendUserId } = req.body;
 
-  
   if (!userId || !request || !friendUserId) {
     return res.status(400).json({ message: "Provide all fields" });
   }
@@ -189,12 +186,14 @@ const acceptOrDecline = async (req, res) => {
     if (request === "accept") {
       findUser.pendingFriend.pull(friendUserId);
 
-      if (!findFriend.friends.includes(userId) && !findUser.friends.includes(friendUserId)) {
+      if (
+        !findFriend.friends.includes(userId) &&
+        !findUser.friends.includes(friendUserId)
+      ) {
         // const datasToAdd = {username:findFriend.username,_id:findFriend._id,profilePic:findFriend.profilePic}
         // const datasToAdd2 = {username:findUser.username,_id:findUser._id,profilePic:findUser.profilePic}
         findFriend.friends.push(findUser._id);
 
-        
         findUser.friends.push(findFriend._id);
       } else {
         return res.status(400).json({ message: "Already friends" });
@@ -208,47 +207,54 @@ const acceptOrDecline = async (req, res) => {
     await findUser.save();
     await findFriend.save();
 
-    return res.status(200).json({username:findFriend.username,_id:findFriend._id,profilePic:findFriend.profilePic});
+    return res
+      .status(200)
+      .json({
+        username: findFriend.username,
+        _id: findFriend._id,
+        profilePic: findFriend.profilePic,
+      });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
-const addToMenuChat = async(req,res)=>{
-  const {userId,friendUserId} = req.body;
+const addToMenuChat = async (req, res) => {
+  const { userId, friendUserId } = req.body;
 
-  if(!userId || !friendUserId){
-    return res.status(400).json({message:"provide all area"})
+  if (!userId || !friendUserId) {
+    return res.status(400).json({ message: "provide all area" });
   }
   try {
     const findUser = await User.findById(userId);
     const findFriend = await User.findById(friendUserId);
 
-    if(!findFriend){
-      return res.status(400).json({message:"friend not found"})
+    if (!findFriend) {
+      return res.status(400).json({ message: "friend not found" });
     }
 
-    if(!findUser){
-      return res.status(400).json({message:"user not found"})
+    if (!findUser) {
+      return res.status(400).json({ message: "user not found" });
     }
 
-    if(findUser.menuChat.includes(friendUserId)){
+    if (findUser.menuChat.includes(friendUserId)) {
       return;
     }
 
-    const datasToAdd = {username:findFriend.username,_id:findFriend._id,profilePic:findFriend.profilePic}
+    const datasToAdd = {
+      username: findFriend.username,
+      _id: findFriend._id,
+      profilePic: findFriend.profilePic,
+    };
 
     findUser.menuChat.unshift(datasToAdd);
     await findUser.save();
 
-    return res.status(200).json(datasToAdd)
-    
-
+    return res.status(200).json(datasToAdd);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
-}
-
+};
 
 const uploadProfilePicture = async (req, res) => {
   const { userId } = req.body;
@@ -258,7 +264,11 @@ const uploadProfilePicture = async (req, res) => {
 
   const filePath = `/uploads/${req.file.filename}`;
   try {
-    const user = await User.findByIdAndUpdate(userId, { profilePic: filePath }, { new: true });
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { profilePic: filePath },
+      { new: true }
+    );
     if (!user) return res.status(404).json({ message: "User not found" });
 
     res.status(200).json({
@@ -271,8 +281,38 @@ const uploadProfilePicture = async (req, res) => {
   }
 };
 
+const editUserProfile = async(req,res)=>{
+  const {userId,editedPartName,newParam} = req.body;
 
+  if(!userId){
+    return res.status(400).json({message:"user not found"})
+  }
+  try {
+    const findUser = await User.findById(userId);
 
+    if(!findUser){
+      return res.status(400).json({message:"user not found"})
+    }
+    if(editedPartName === "displayName"){
+      const newDisplayName = newParam;
+      findUser.displayName = newDisplayName;
+    }
+    else if(editedPartName ==="username"){
+      const newUsername = newParam;
+      findUser.username = newUsername
+    }
+    else if(editedPartName==="email"){
+      const newEmail = newParam;
+      findUser.email = newEmail
+    }
+
+    await findUser.save();
+
+    res.status(200).json({message:"user updated"})
+  } catch (error) {
+    return res.status(500).json({message:"server error"})
+  }
+}
 
 module.exports = {
   signup,
@@ -282,5 +322,6 @@ module.exports = {
   addFriend,
   acceptOrDecline,
   addToMenuChat,
-  uploadProfilePicture
+  uploadProfilePicture,
+  editUserProfile
 };
