@@ -281,38 +281,56 @@ const uploadProfilePicture = async (req, res) => {
   }
 };
 
-const editUserProfile = async(req,res)=>{
-  const {userId,editedPartName,newParam} = req.body;
+const editUserProfile = async (req, res) => {
+  const { userId, editedPartName, newParam } = req.body;
 
-  if(!userId){
-    return res.status(400).json({message:"user not found"})
+  if (!userId) {
+    return res.status(400).json({ message: "User ID is required." });
   }
+
   try {
     const findUser = await User.findById(userId);
 
-    if(!findUser){
-      return res.status(400).json({message:"user not found"})
+    if (!findUser) {
+      return res.status(404).json({ message: "User not found." });
     }
-    if(editedPartName === "displayName"){
-      const newDisplayName = newParam;
-      findUser.displayName = newDisplayName;
+
+    const validFields = ["displayName", "username", "email"];
+    if (!validFields.includes(editedPartName)) {
+      return res.status(400).json({ message: "Invalid field name." });
     }
-    else if(editedPartName ==="username"){
-      const newUsername = newParam;
-      findUser.username = newUsername
-    }
-    else if(editedPartName==="email"){
-      const newEmail = newParam;
-      findUser.email = newEmail
+
+    if (editedPartName === "displayName") {
+      findUser.displayName = newParam;
+    } else if (editedPartName === "username") {
+      const existingUser = await User.findOne({ username: newParam });
+      if (existingUser && existingUser._id.toString() !== userId) {
+        return res.status(400).json({ message: "Username is already taken." });
+      }
+      findUser.username = newParam;
+    } else if (editedPartName === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(newParam)) {
+        return res.status(400).json({ message: "Invalid email format." });
+      }
+
+      const existingEmail = await User.findOne({ email: newParam });
+      if (existingEmail && existingEmail._id.toString() !== userId) {
+        return res.status(400).json({ message: "Email is already in use." });
+      }
+
+      findUser.email = newParam;
     }
 
     await findUser.save();
 
-    res.status(200).json({message:"user updated"})
+
+    res.status(200).json({ message: "User updated successfully.", user: findUser });
   } catch (error) {
-    return res.status(500).json({message:"server error"})
+    console.error(error);
+    return res.status(500).json({ message: "Server error." });
   }
-}
+};
 
 module.exports = {
   signup,
