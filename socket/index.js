@@ -33,10 +33,8 @@ io.on('connection', (socket) => {
     });
 
     socket.on("sendAcceptOrDecNotificationToUser",(senderId,receiverId,selectedValue,username,profilePic)=>{
-      console.log(senderId,receiverId,selectedValue,username,profilePic);
       
       if(onlineUsers[receiverId]){
-        console.log(senderId,receiverId);
       io.to(onlineUsers[receiverId]).emit("sendReceiverIdToUser",senderId,selectedValue,username,profilePic);
       console.log(`notification sended to ${receiverId}`);
       }
@@ -46,12 +44,11 @@ io.on('connection', (socket) => {
       
     })
 
-    socket.on("send_message",(senderId,receiverId,message)=>{
-      console.log(senderId,receiverId,message);
+    socket.on("send_message",(data)=>{
       
-      if(onlineUsers[receiverId]){
-        io.to(onlineUsers[receiverId]).emit("receive_message",(senderId,message));
-        console.log(`message sended to ${receiverId}`);
+      if(onlineUsers[data.receiverId]){
+        io.to(onlineUsers[data.receiverId]).emit("receive_message",data);
+        console.log(`message sended to ${data.receiverId}`);
       }
       else{
         console.log(`${receiverId} now is offline`);

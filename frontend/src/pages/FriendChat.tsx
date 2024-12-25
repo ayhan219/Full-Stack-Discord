@@ -10,18 +10,29 @@ import "../index.css"
 import { useEffect, useState } from "react";
 
 
+interface Message {
+  senderId:string
+  username:string,
+  receiverId:string,
+  profilePic:string,
+  message:string,
+  time:string,
+}
+
 const FriendChat = () => {
   const{user,socket,friendId} = useUserContext();
 
   const { activeMenu, setActiveMenu } = useUserContext();
   const [message,setMessage] = useState<string>("");
-  const [messages,setMessages] = useState<string[]>([]);
+  const [messages,setMessages] = useState<Message[]>([]);
 
 
 
   useEffect(() => {
-    socket.on("receive_message", (senderId,message) => {
-      console.log("data got from user: ");
+    socket.on("receive_message", (data) => {
+      setMessages((prev:Message[])=>{
+        return [...prev,data];
+      })
       
     });
 
@@ -33,11 +44,19 @@ const FriendChat = () => {
 
   const sendMessage = () => {
     if (message.trim() === "") return;
-    const receiverId = friendId;
     
-    console.log(friendId);
+    const dataMessage: Message = {
+      senderId: user?.userId || "", 
+      receiverId: localStorage.getItem("friendId") || "", 
+      username: user?.username || "",
+      profilePic: user?.profilePic || "",
+      message: message,
+      time: new Date().toLocaleTimeString(),
+    };
     
-    socket.emit("send_message", user?.userId,receiverId,message); 
+    socket.emit("send_message", dataMessage); 
+    setMessages((prevMessages) => [...prevMessages, dataMessage]);
+    setMessage(""); 
     
   };
 
@@ -51,10 +70,10 @@ const FriendChat = () => {
           <div className="flex items-center gap-3">
             <img
               className="w-10 h-10 rounded-full object-cover"
-              src="https://sabalawfirm.org/wp-content/uploads/2022/05/default-profile.png"
+              src={`http://localhost:5000${localStorage.getItem("profilePic")}` || "default-profile-pic.jpg"}
               alt="Profile"
             />
-            <h3 className="text-white font-semibold text-lg">Username</h3>
+            <h3 className="text-white font-semibold text-lg">{localStorage.getItem("username")}</h3>
           </div>
 
           {/* Icons Section */}
@@ -80,7 +99,9 @@ const FriendChat = () => {
         <div className="flex-1 bg-[#2F3136] text-gray-400 flex flex-col custom-scrollbar overflow-y-auto">
           {/* Messages Container */}
           <div className="flex-1 p-4">
-            
+          {messages.map((item, index) => (
+             <PrivateChat key={index} item={item} />
+            ))}
 
           </div>
         </div>
