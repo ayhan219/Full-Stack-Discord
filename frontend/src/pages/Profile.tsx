@@ -85,7 +85,7 @@ const Profile = () => {
     }
   };
 
-  const handleUpdateProfile = async (editedPartName: React.EventHandler<HTMLInputElement>) => {
+  const handleUpdateProfile = async (editedPartName:string) => {
     setOpenEditArea(!openEditArea);
     try {
       const response = await axios.post(
