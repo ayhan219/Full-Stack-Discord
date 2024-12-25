@@ -1,106 +1,118 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
 import { IoIosCloseCircle } from "react-icons/io";
+import axios from "axios";
 
 const Profile = () => {
-  const { user } = useUserContext();
+  const { user,setUser } = useUserContext();
 
   const [userEmailWithPrivate, setUserEmailWithPrivate] = useState<string>("");
   const [editSection, setEditSection] = useState<string | null>(null);
   const [newParam, setNewParam] = useState<string>("");
 
   const handleEmail = () => {
-    if (!user?.email) {
-      return;
-    }
+    if (!user?.email) return;
 
     const index = user.email.indexOf("@");
-    const getPartOfEmail = user.email.slice(0, index);
-    const result = getPartOfEmail?.replace(/./g, "*");
-
-    const findAfterAt = user.email.slice(index, user?.email.length);
-    const finalValue = result.concat(findAfterAt);
-    setUserEmailWithPrivate(finalValue);
+    const obfuscated = user.email.slice(0, index).replace(/./g, "*");
+    setUserEmailWithPrivate(obfuscated + user.email.slice(index));
   };
 
   useEffect(() => {
-    if (user) {
-      handleEmail();
-    }
+    if (user) handleEmail();
   }, [user]);
 
-  
+  const handleEditProfile = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/edituserprofile", {
+        userId: user?.userId,
+        editedPartName: editSection,
+        newParam,
+      });
+     
+      
+      if(response.status===200){
+        setUser(response.data.user)
+      }
+      setEditSection(null);
+    } catch (error) {
+      console.log(user?.userId,editSection,newParam);
+      console.error(error);
+
+    }
+  };
 
   return (
-    <div className="w-full h-screen bg-[#313338] flex flex-col items-center p-10 gap-10">
-      <div className="flex justify-center w-full text-2xl font-bold text-white">
-        <h3>My Account</h3>
-      </div>
-      <div className="w-[600px] h-[600px] bg-[#1E1F22] flex flex-col items-center rounded-lg">
-        <div className="flex items-center justify-between w-full h-auto p-8">
-          <div className="flex items-center w-64 h-auto gap-5">
+    <div className="w-full h-screen bg-[#2B2D31] flex flex-col items-center p-10 gap-10">
+      <h3 className="text-3xl font-bold text-white">My Account</h3>
+      <div className="w-[600px] h-auto bg-[#2F3136] flex flex-col items-center rounded-lg shadow-lg p-8">
+        {/* Profile Picture */}
+        <div className="flex items-center justify-between w-full mb-6">
+          <div className="flex items-center gap-5">
             <div
-              className="flex items-center justify-center w-20 h-20 bg-gray-800 rounded-full cursor-pointer"
+              className="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center overflow-hidden cursor-pointer relative hover:ring-2 hover:ring-blue-500"
               onClick={() => document.getElementById("fileInput")?.click()}
             >
               <img
-                className="w-16 h-16 rounded-full"
+                className="w-full h-full object-cover"
                 src={`http://localhost:5000${user?.profilePic}`}
-                alt=""
+                alt="Profile"
               />
+              <input type="file" id="fileInput" className="hidden" />
             </div>
-            <input type="file" id="fileInput" className="hidden" />
-            <div className="font-bold text-white">
-              <h2>{user?.username}</h2>
-            </div>
+            <h2 className="text-xl font-semibold text-white">{user?.username}</h2>
           </div>
         </div>
 
-        <div className="w-[95%] h-[72%] bg-[#2B2D31] rounded-lg flex flex-col gap-3 justify-evenly">
+        {/* Editable Fields */}
+        <div className="w-full bg-[#393C43] rounded-lg p-6 space-y-4">
           {[
-            { label: "DISPLAY NAME", value: user?.displayName, key: "displayName" },
-            { label: "USERNAME", value: user?.username, key: "username" },
-            { label: "EMAIL", value: userEmailWithPrivate, key: "email" },
+            { label: "Display Name", value: user?.displayName, key: "displayName" },
+            { label: "Username", value: user?.username, key: "username" },
+            { label: "Email", value: userEmailWithPrivate, key: "email" },
           ].map((item) => (
-            <div
-              key={item.key}
-              className="flex items-center justify-between w-full h-16 p-5"
-            >
-              <div className="flex flex-col w-auto gap-3">
-                <div className="text-[#A8BAC1] font-semibold">
-                  <p>{item.label}</p>
-                </div>
-                <div className="text-white">
-                  {editSection === item.key ? (
-                    <div className="relative w-full flex items-center">
-                      <input
-                        className="w-full h-10 bg-[#1E1F22] outline-none text-white p-3 font-semibold border border-gray-500 rounded-md focus:ring-2 focus:ring-blue-500"
-                        type="text"
-                        placeholder={item.value}
-                        onChange={(e) => setNewParam(e.target.value)}
-                        value={newParam}
-                      />
-                      <IoIosCloseCircle
-                        className="absolute right-2 text-xl text-red-500 cursor-pointer hover:text-red-600"
-                        onClick={() => setEditSection(null)}
-                      />
-                    </div>
-                  ) : (
-                    <h3>{item.value}</h3>
-                  )}
-                </div>
+            <div key={item.key} className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-400 text-sm font-medium">{item.label}</p>
+                {editSection === item.key ? (
+                  <input
+                    type="text"
+                    className="w-72 mt-1 p-2 text-white bg-[#202225] rounded border border-gray-500 focus:ring-2 focus:ring-blue-500 outline-none"
+                    value={newParam}
+                    onChange={(e) => setNewParam(e.target.value)}
+                    placeholder={`Enter new ${item.label.toLowerCase()}`}
+                  />
+                ) : (
+                  <p className="text-white mt-1">{item.value}</p>
+                )}
               </div>
-              <div className="flex items-center w-auto h-full">
-                <button
-                  onClick={() =>
-                    setEditSection(editSection === item.key ? null : item.key)
-                  }
-                  className={`w-16 h-10 ${
-                    editSection === item.key ? "bg-red-500" : "bg-gray-600"
-                  } text-white rounded-sm hover:opacity-80`}
-                >
-                  {editSection === item.key ? "Close" : "Edit"}
-                </button>
+              <div className="flex items-center space-x-2">
+                {editSection === item.key ? (
+                  <>
+                    <button
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      onClick={handleEditProfile}
+                    >
+                      Save
+                    </button>
+                    <button
+                      className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                      onClick={() => setEditSection(null)}
+                    >
+                      Cancel
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-blue-500"
+                    onClick={() => {
+                      setEditSection(item.key);
+                      setNewParam(item.value || "");
+                    }}
+                  >
+                    Edit
+                  </button>
+                )}
               </div>
             </div>
           ))}
