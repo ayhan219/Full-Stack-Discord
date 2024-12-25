@@ -59,24 +59,25 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
     }
   };
 
-  const show = ()=>{
-    console.log(item);
-    
-  }
+ const setFriend = async()=>{
+  setFriendId(item._id);
+  localStorage.setItem("friendId",item._id);
+  localStorage.setItem("profilePic",item.profilePic);
+  localStorage.setItem("username",item.username);
+ }
 
   return (
     <div
       onClick={() => {
         navigate("/friendchat");
         addToMenuChat();
-        setFriendId(item._id)
+        setFriend();
       }}
       className="w-full h-14 text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all"
     >
       <div className="flex justify-center items-center gap-4">
         <div className="relative">
           <img
-          onClick={()=>show()}
             src={`http://localhost:5000${item.profilePic}`}
             alt={`${item}'s profile`}
             className="w-10 h-10 rounded-full object-cover border-2 border-gray-500"
