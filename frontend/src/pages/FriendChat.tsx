@@ -8,6 +8,7 @@ import { CiSearch } from "react-icons/ci";
 import PrivateChat from "../components/PrivateChat";
 import "../index.css"
 import { useEffect, useState } from "react";
+import { useRef } from "react";
 
 
 interface Message {
@@ -25,6 +26,7 @@ const FriendChat = () => {
   const { activeMenu, setActiveMenu } = useUserContext();
   const [message,setMessage] = useState<string>("");
   const [messages,setMessages] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
 
 
@@ -59,6 +61,10 @@ const FriendChat = () => {
     setMessage(""); 
     
   };
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
@@ -98,11 +104,11 @@ const FriendChat = () => {
         {/* Chat Area */}
         <div className="flex-1 bg-[#2F3136] text-gray-400 flex flex-col custom-scrollbar overflow-y-auto">
           {/* Messages Container */}
-          <div className="flex-1 p-4">
+          <div className="flex-1 p-4 flex flex-col justify-end">
           {messages.map((item, index) => (
              <PrivateChat key={index} item={item} />
             ))}
-
+            <div ref={messagesEndRef} />
           </div>
         </div>
          {/* Message Input Section */}

@@ -1,5 +1,5 @@
-import React from "react";
-import { useUserContext } from "../context/UserContext"; // UserContext'ten kullanıcıyı alıyoruz
+
+import { useUserContext } from "../context/UserContext"; 
 
 interface Message {
   senderId: string;
@@ -7,7 +7,7 @@ interface Message {
   receiverId: string;
   profilePic: string;
   message: string;
-  time:string
+  time: string;
 }
 
 interface PrivateChatProps {
@@ -15,17 +15,17 @@ interface PrivateChatProps {
 }
 
 const PrivateChat = ({ item }: PrivateChatProps) => {
-  const { user } = useUserContext(); 
+  const { user } = useUserContext();
 
-  const isOwnMessage = item.senderId === user?.userId; 
+  const isOwnMessage = item.senderId === user?.userId;
 
   return (
     <div
-      className={`flex items-start gap-3 mb-4 ${
+      className={`flex items-center gap-3 mb-4 ${
         isOwnMessage ? "justify-end" : "justify-start"
       }`}
     >
-      {!isOwnMessage && ( 
+      {!isOwnMessage && (
         <img
           className="w-8 h-8 rounded-full object-cover"
           src={`http://localhost:5000${item.profilePic}`}
@@ -34,6 +34,11 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
       )}
 
       <div className={`flex flex-col ${isOwnMessage ? "items-end" : ""}`}>
+        {!isOwnMessage && (
+          <div>
+            <p>{item.username}</p>
+          </div>
+        )}
         <div
           className={`bg-[#40444B] text-white p-3 rounded-lg max-w-xs ${
             isOwnMessage ? "ml-2" : "mr-2"
@@ -44,7 +49,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
         <span className="text-xs text-gray-500 mt-1">{item.time} PM</span>
       </div>
 
-      {isOwnMessage && ( 
+      {isOwnMessage && (
         <img
           className="w-8 h-8 rounded-full object-cover"
           src={`http://localhost:5000${item.profilePic}`}
