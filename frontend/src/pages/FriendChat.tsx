@@ -7,9 +7,39 @@ import { LiaUserFriendsSolid } from "react-icons/lia";
 import { CiSearch } from "react-icons/ci";
 import PrivateChat from "../components/PrivateChat";
 import "../index.css"
+import { useEffect, useState } from "react";
+
 
 const FriendChat = () => {
+  const{user,socket,friendId} = useUserContext();
+
   const { activeMenu, setActiveMenu } = useUserContext();
+  const [message,setMessage] = useState<string>("");
+  const [messages,setMessages] = useState<string[]>([]);
+
+
+
+  useEffect(() => {
+    socket.on("receive_message", (senderId,message) => {
+      console.log("data got from user: ");
+      
+    });
+
+    return () => {
+      socket.off("receive_message");
+    };
+  }, [socket]);
+
+
+  const sendMessage = () => {
+    if (message.trim() === "") return;
+    const receiverId = friendId;
+    
+    console.log(friendId);
+    
+    socket.emit("send_message", user?.userId,receiverId,message); 
+    
+  };
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
@@ -50,18 +80,8 @@ const FriendChat = () => {
         <div className="flex-1 bg-[#2F3136] text-gray-400 flex flex-col custom-scrollbar overflow-y-auto">
           {/* Messages Container */}
           <div className="flex-1 p-4">
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
-            <PrivateChat />
+            
+
           </div>
         </div>
          {/* Message Input Section */}
@@ -71,8 +91,10 @@ const FriendChat = () => {
                 className="w-full bg-[#40444B] text-white rounded-lg p-3 focus:outline-none focus:ring-2"
                 placeholder="Type a message..."
                 type="text"
+                onChange={(e)=>setMessage(e.target.value)}
+                value={message}
               />
-              <button className="text-blue-500">Send</button>
+              <button onClick={()=>sendMessage()} className="text-blue-500">Send</button>
             </div>
           </div>
       </div>

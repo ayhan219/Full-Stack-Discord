@@ -31,7 +31,7 @@ interface Friend {
 const HomeFriend = ({ item }: HomeFriendProps) => {
   const navigate = useNavigate();
 
-  const { user, setUser } = useUserContext();
+  const { user, setUser,setFriendId } = useUserContext();
 
   const addToMenuChat = async () => {
     try {
@@ -69,6 +69,7 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
       onClick={() => {
         navigate("/friendchat");
         addToMenuChat();
+        setFriendId(item._id)
       }}
       className="w-full h-14 text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all"
     >

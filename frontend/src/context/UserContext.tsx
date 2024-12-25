@@ -43,6 +43,8 @@ interface UserContextType {
   setActiveMenu: (activeMenu: string) => void;
   socket: Socket;
   getCurrentUser: () => void;
+  friendId:string;
+  setFriendId:(friendId:string)=>void;
 }
 
 interface Friend {
@@ -91,6 +93,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [selectedChatRoom, setSelectedChatRoom] = useState<string>("");
   const [channels, setChannels] = useState<Channel[]>([]);
   const [activeMenu, setActiveMenu] = useState<string>("friends");
+  const [friendId,setFriendId] = useState<string>("");
 
   const getCurrentUser = async () => {
     try {
@@ -222,6 +225,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setActiveMenu,
         socket,
         getCurrentUser,
+        friendId,
+        setFriendId
       }}
     >
       {children}

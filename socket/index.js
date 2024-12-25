@@ -46,6 +46,19 @@ io.on('connection', (socket) => {
       
     })
 
+    socket.on("send_message",(senderId,receiverId,message)=>{
+      console.log(senderId,receiverId,message);
+      
+      if(onlineUsers[receiverId]){
+        io.to(onlineUsers[receiverId]).emit("receive_message",(senderId,message));
+        console.log(`message sended to ${receiverId}`);
+      }
+      else{
+        console.log(`${receiverId} now is offline`);
+      }
+      
+    })
+
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {
