@@ -5,6 +5,7 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const UserRoutes = require("./router/UserRouter");
 const ChannelRoutes = require("./router/ChannelRouter")
+const MessageRoutes = require("./router/MessageRouter")
 const cookieParser = require("cookie-parser")
 const path = require("path");
 dotenv.config();
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth",UserRoutes);
 app.use("/api/channel",ChannelRoutes)
+app.use("/api/message",MessageRoutes)
 
 
 const connectToDB = async()=>{
