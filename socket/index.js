@@ -44,11 +44,10 @@ io.on('connection', (socket) => {
       
     })
 
-    socket.on("send_message",(data)=>{
-      
-      if(onlineUsers[data.receiverId]){
-        io.to(onlineUsers[data.receiverId]).emit("receive_message",data);
-        console.log(`message sended to ${data.receiverId}`);
+    socket.on("send_message",(newMessage)=>{
+      if(onlineUsers[newMessage.receiverId]){
+        io.to(onlineUsers[newMessage.receiverId]).emit("receive_message",newMessage);
+        console.log(`message sended to ${newMessage.receiverId}`);
       }
       else{
         console.log(`${receiverId} now is offline`);

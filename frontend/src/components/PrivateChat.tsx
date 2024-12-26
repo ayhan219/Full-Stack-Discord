@@ -2,12 +2,9 @@
 import { useUserContext } from "../context/UserContext"; 
 
 interface Message {
-  senderId: string;
-  username: string;
-  receiverId: string;
-  profilePic: string;
-  message: string;
-  time: string;
+  senderId?:string,
+  receiverId:string | null,
+  message:string
 }
 
 interface PrivateChatProps {
@@ -28,7 +25,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
       {!isOwnMessage && (
         <img
           className="w-8 h-8 rounded-full object-cover"
-          src={`http://localhost:5000${item.profilePic}`}
+          src={`http://localhost:5000${localStorage.getItem("profilePic")}`}
           alt="Sender"
         />
       )}
@@ -36,7 +33,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
       <div className={`flex flex-col ${isOwnMessage ? "items-end" : ""}`}>
         {!isOwnMessage && (
           <div>
-            <p>{item.username}</p>
+            <p>{localStorage.getItem("username")}</p>
           </div>
         )}
         <div
@@ -46,13 +43,13 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
         >
           <p>{item.message}</p>
         </div>
-        <span className="text-xs text-gray-500 mt-1">{item.time} PM</span>
+        <span className="text-xs text-gray-500 mt-1">12.50 PM</span>
       </div>
 
       {isOwnMessage && (
         <img
           className="w-8 h-8 rounded-full object-cover"
-          src={`http://localhost:5000${item.profilePic}`}
+          src={`http://localhost:5000${user?.profilePic}`}
           alt="Sender"
         />
       )}

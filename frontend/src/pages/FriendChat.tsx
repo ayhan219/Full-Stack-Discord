@@ -9,15 +9,12 @@ import PrivateChat from "../components/PrivateChat";
 import "../index.css"
 import { useEffect, useState } from "react";
 import { useRef } from "react";
-
+import axios from "axios";
 
 interface Message {
-  senderId:string
-  username:string,
-  receiverId:string,
-  profilePic:string,
-  message:string,
-  time:string,
+  senderId?:string,
+  receiverId:string | null,
+  message:string
 }
 
 const FriendChat = () => {
@@ -31,35 +28,54 @@ const FriendChat = () => {
 
 
   useEffect(() => {
-    socket.on("receive_message", (data) => {
+    socket.on("receive_message", (newMessage) => {
+      console.log("you got message from",newMessage.senderId);
+      
       setMessages((prev:Message[])=>{
-        return [...prev,data];
+        return [...prev,newMessage];
       })
       
     });
 
     return () => {
       socket.off("receive_message");
+      
     };
   }, [socket]);
 
 
+  const saveMessagesToDB = async()=>{
+    try {
+      const response = await axios.post("http://localhost:5000/api/message/savechat",{
+        senderId:user?.userId,
+        receiverId:localStorage.getItem("friendId"),
+        message
+      })
+      console.log(response);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+ 
+
   const sendMessage = () => {
     if (message.trim() === "") return;
+  
+    const newMessage = {
+      senderId:user?.userId,
+      receiverId:localStorage.getItem("friendId") || null,
+      message
+    }
     
-    const dataMessage: Message = {
-      senderId: user?.userId || "", 
-      receiverId: localStorage.getItem("friendId") || "", 
-      username: user?.username || "",
-      profilePic: user?.profilePic || "",
-      message: message,
-      time: new Date().toLocaleTimeString(),
-    };
-    
-    socket.emit("send_message", dataMessage); 
-    setMessages((prevMessages) => [...prevMessages, dataMessage]);
+    socket.emit("send_message",newMessage); 
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    saveMessagesToDB();
     setMessage(""); 
-    
+
+
   };
 
   useEffect(() => {
