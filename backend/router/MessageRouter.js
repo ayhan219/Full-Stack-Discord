@@ -4,6 +4,6 @@ const router = express.Router();
 const {saveChat} = require("../controller/MessageController");
 
 
-router.post("/savechat");
+router.post("/savechat",saveChat);
 
 module.exports = router;
