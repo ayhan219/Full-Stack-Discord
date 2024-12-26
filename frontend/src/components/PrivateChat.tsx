@@ -4,7 +4,8 @@ import { useUserContext } from "../context/UserContext";
 interface Message {
   senderId?:string,
   receiverId:string | null,
-  message:string
+  message:string,
+  time:string
 }
 
 interface PrivateChatProps {
@@ -43,7 +44,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
         >
           <p>{item.message}</p>
         </div>
-        <span className="text-xs text-gray-500 mt-1">12.50 PM</span>
+        <span className="text-xs text-gray-500 mt-1">{item.time} PM</span>
       </div>
 
       {isOwnMessage && (

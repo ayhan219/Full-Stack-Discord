@@ -15,6 +15,7 @@ interface Message {
   senderId?:string,
   receiverId:string | null,
   message:string
+  time: string
 }
 
 const FriendChat = () => {
@@ -67,12 +68,13 @@ const FriendChat = () => {
     const newMessage = {
       senderId:user?.userId,
       receiverId:localStorage.getItem("friendId") || null,
-      message
+      message,
+      time: new Date().toLocaleTimeString(),
     }
     
     socket.emit("send_message",newMessage); 
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    saveMessagesToDB();
+    // saveMessagesToDB();
     setMessage(""); 
 
 
