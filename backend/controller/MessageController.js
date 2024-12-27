@@ -24,7 +24,7 @@ const saveChat = async(req,res)=>{
 }
 
 const getMessages = async (req, res) => {
-    const { senderId, receiverId } = req.body;
+    const { senderId, receiverId } = req.query;
 
     if (!senderId || !receiverId) {
         return res.status(400).json({ message: "Provide all required fields" });
