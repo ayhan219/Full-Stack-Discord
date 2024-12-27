@@ -72,6 +72,7 @@ const FriendChat = () => {
           senderId: user?.userId,
           receiverId: localStorage.getItem("friendId"),
           message,
+          time:new Date().toLocaleTimeString(),
         }
       );
       console.log(response);
@@ -92,7 +93,7 @@ const FriendChat = () => {
 
     socket.emit("send_message", newMessage);
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    saveMessagesToDB();
+    // saveMessagesToDB();
     setMessage("");
   };
 

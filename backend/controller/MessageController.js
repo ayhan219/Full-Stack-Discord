@@ -4,17 +4,18 @@ const Message = require("../model/Message");
 
 
 const saveChat = async(req,res)=>{
-    const {senderId,receiverId,message} = req.body;
+    const {senderId,receiverId,message,time} = req.body;
     
 
-    if(!senderId || !receiverId || !message){
+    if(!senderId || !receiverId || !message || !time){
         return res.status(400).json({message:"provide all area"})
     }
     try {
         const newMessage = new Message({
             senderId,
             receiverId,
-            message
+            message,
+            time
         })
         await newMessage.save();
         return res.status(200).json({message:"successfully saved"})
