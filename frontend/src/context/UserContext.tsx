@@ -188,6 +188,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           }
         }
       );
+
     }
 
     // Temizleme işlemi
@@ -226,7 +227,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket,
         getCurrentUser,
         friendId,
-        setFriendId
+        setFriendId,
       }}
     >
       {children}

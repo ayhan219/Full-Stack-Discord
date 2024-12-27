@@ -12,7 +12,7 @@ const io = socketIo(server, {
 });
 
 
-let onlineUsers = {}; 
+let onlineUsers = {};
 
 
 io.on('connection', (socket) => {
@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
         onlineUsers[userId] = socket.id;  
         console.log(`${userId} has connected`);        
     });
+    
 
     socket.on('friendRequest', (senderId, receiverId,username,profilePic) => {
       if (onlineUsers[receiverId]) {
@@ -44,16 +45,19 @@ io.on('connection', (socket) => {
       
     })
 
-    socket.on("send_message",(newMessage)=>{
-      if(onlineUsers[newMessage.receiverId]){
-        io.to(onlineUsers[newMessage.receiverId]).emit("receive_message",newMessage);
-        console.log(`message sended to ${newMessage.receiverId}`);
+    socket.on('send_message', (newMessage) => {
+      const receiverSocketId = onlineUsers[newMessage.receiverId];
+      if (receiverSocketId) {
+        const isInCurrentChat = onlineUsers[receiverSocketId] === newMessage.chatId;
+        io.to(receiverSocketId).emit('receive_message', newMessage);
+        if (!isInCurrentChat) {
+          io.to(receiverSocketId).emit('new_message_notification', newMessage);
+        }
+        console.log(`Message sent to ${newMessage.receiverId}`);
+      } else {
+        console.log(`${newMessage.receiverId} is now offline`);
       }
-      else{
-        console.log(`${receiverId} now is offline`);
-      }
-      
-    })
+    });
 
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {

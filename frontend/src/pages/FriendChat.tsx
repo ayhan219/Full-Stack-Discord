@@ -19,12 +19,13 @@ interface Message {
 }
 
 const FriendChat = () => {
-  const { user, socket } = useUserContext();
+  const { user, socket,friendId,setFriendId } = useUserContext();
 
   const { activeMenu, setActiveMenu } = useUserContext();
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  
 
   useEffect(() => {
     socket.on("receive_message", (newMessage) => {
@@ -40,7 +41,11 @@ const FriendChat = () => {
     };
   }, [socket]);
 
+
+ 
+
   const getMessages = async () => {
+    setMessages([]);
     try {
       const response = await axios.get(
         "http://localhost:5000/api/message/getmessages",
@@ -51,7 +56,6 @@ const FriendChat = () => {
           },
         }
       );
-      console.log(response);
       setMessages(response.data);
     } catch (error) {
       console.log(error);
@@ -100,6 +104,8 @@ const FriendChat = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
