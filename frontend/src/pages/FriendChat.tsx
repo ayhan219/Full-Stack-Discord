@@ -97,7 +97,7 @@ const FriendChat = () => {
 
     socket.emit("send_message", newMessage);
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    saveMessagesToDB();
+    // saveMessagesToDB();
     setMessage("");
   };
 

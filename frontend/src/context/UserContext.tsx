@@ -188,7 +188,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           }
         }
       );
-
     }
 
     // Temizleme işlemi
@@ -196,6 +195,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (socket) {
         socket.off("friendRequestNotification");
         socket.off("sendReceiverIdToUser")
+        socket.off("new_message_notification");
       }
     };
   }, [socket]);
