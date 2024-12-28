@@ -18,8 +18,25 @@ interface Message {
   time: string;
 }
 
+type User = {
+  userId: string;
+  email: string;
+  displayName: string;
+  username: string;
+  profilePic: string;
+  friends: Friend[];
+  pendingFriend: Friend[];
+  menuChat: Friend[];
+};
+
+interface Friend {
+  username: string;
+  _id: string;
+  profilePic: string;
+}
+
 const FriendChat = () => {
-  const { user, socket,friendId,setFriendId } = useUserContext();
+  const { user, socket,setUser } = useUserContext();
 
   const { activeMenu, setActiveMenu } = useUserContext();
   const [message, setMessage] = useState<string>("");
@@ -79,7 +96,8 @@ const FriendChat = () => {
           time:new Date().toLocaleTimeString(),
         }
       );
-      console.log(response);
+      console.log(response.data);
+      
     } catch (error) {
       console.log(error);
     }
@@ -97,7 +115,7 @@ const FriendChat = () => {
 
     socket.emit("send_message", newMessage);
     setMessages((prevMessages) => [...prevMessages, newMessage]);
-    // saveMessagesToDB();
+    saveMessagesToDB();
     setMessage("");
   };
 

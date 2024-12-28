@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 const Message = require("../model/Message");
+const User = require("../model/User")
 
 
 
 const saveChat = async(req,res)=>{
     const {senderId,receiverId,message,time} = req.body;
+    
     
 
     if(!senderId || !receiverId || !message || !time){
@@ -17,8 +19,21 @@ const saveChat = async(req,res)=>{
             message,
             time
         })
+
+        
+
+        const findUser = await User.findById(senderId);
+        if(!findUser){
+            return res.status(400).json({message:"user not found"})
+        }
+        
+        findUser.menuChat = findUser.menuChat.filter(chat => chat.toString() !== receiverId);
+        findUser.menuChat.unshift(receiverId);
+      
+        await findUser.save();
         await newMessage.save();
-        return res.status(200).json({message:"successfully saved"})
+        
+        return res.status(200).json(receiverId)
     } catch (error) {
         return res.status(500).json({message:"server error"})
     }
