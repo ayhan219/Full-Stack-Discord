@@ -31,7 +31,7 @@ interface Friend {
 
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
-  const { user,socket,setUser,getCurrentUser } = useUserContext();
+  const { user,socket,setUser } = useUserContext();
 
   const handleAction = async (action: string) => {
     try {
@@ -48,7 +48,6 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
           if (!prev) {
             return prev;
           }
-
           const updatedPendingFriends = prev.pendingFriend.filter(
             (friend) => friend._id !== item._id
           );
@@ -61,7 +60,6 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
             };
           }
   
-          
           return {
             ...prev,
             pendingFriend: updatedPendingFriends, 

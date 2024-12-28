@@ -13,7 +13,7 @@ type SidebarInterface = {
 };
 
 const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
-  const { user, channels, setChannels } = useUserContext();
+  const { user, channels, setChannels,notificationNumber } = useUserContext();
 
   const { openCreateChannel, setOpenCreateChannel } = useUserContext();
 
@@ -61,7 +61,7 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
             />
           </Link>
           <div className="absolute bottom-0 right-0 w-5 h-5 bg-red-600 rounded-full flex items-center justify-center">
-            <p className="text-white text-xs font-bold">7</p>
+            <p className="text-white text-xs font-bold">{notificationNumber}</p>
           </div>
         </div>
       </div>

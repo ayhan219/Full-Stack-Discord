@@ -45,6 +45,8 @@ interface UserContextType {
   getCurrentUser: () => void;
   friendId:string;
   setFriendId:(friendId:string)=>void;
+  notificationNumber:number;
+  setNotificationNumber:(notificationNumber:number)=>void
 }
 
 interface Friend {
@@ -94,6 +96,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [activeMenu, setActiveMenu] = useState<string>("friends");
   const [friendId,setFriendId] = useState<string>("");
+  const [notificationNumber,setNotificationNumber] = useState<number>(0);
 
   const getCurrentUser = async () => {
     try {
@@ -143,6 +146,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       socket.on(
         "friendRequestNotification",
         (senderId: string, username: string, profilePic: string) => {
+          setNotificationNumber(notificationNumber+1);
           console.log("Notification received:", senderId);
           setUser((prev: User | null) => {
             if (!prev) return prev;
@@ -168,6 +172,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           profilePic: string
         ) => {
           console.log("Notification received:", senderId);
+          setNotificationNumber(notificationNumber+1);
 
           if (selectedValue === "accept") {
             setUser((prev: User | null) => {
@@ -228,6 +233,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         getCurrentUser,
         friendId,
         setFriendId,
+        notificationNumber,
+        setNotificationNumber
       }}
     >
       {children}
