@@ -36,13 +36,12 @@ interface Friend {
 }
 
 const FriendChat = () => {
-  const { user, socket,setUser } = useUserContext();
+  const { user, socket, setUser } = useUserContext();
 
   const { activeMenu, setActiveMenu } = useUserContext();
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  
 
   useEffect(() => {
     socket.on("receive_message", (newMessage) => {
@@ -56,9 +55,6 @@ const FriendChat = () => {
     };
   }, [socket]);
 
-
- 
-
   const getMessages = async () => {
     try {
       const response = await axios.get(
@@ -70,7 +66,7 @@ const FriendChat = () => {
           },
         }
       );
-      
+
       setMessages(response.data);
     } catch (error) {
       console.log(error);
@@ -92,23 +88,22 @@ const FriendChat = () => {
           senderId: user?.userId,
           receiverId: localStorage.getItem("friendId"),
           message,
-          time:new Date().toLocaleTimeString(),
+          time: new Date().toLocaleTimeString(),
         }
       );
       console.log(response.data);
-      
-      if(response.status===200){
-        setUser((prev: User | null)=>{
-          if(!prev){
+
+      if (response.status === 200) {
+        setUser((prev: User | null) => {
+          if (!prev) {
             return prev;
           }
           return {
             ...prev,
-            menuChat:response.data
-          }
-        })
+            menuChat: response.data,
+          };
+        });
       }
-      
     } catch (error) {
       console.log(error);
     }
@@ -133,8 +128,6 @@ const FriendChat = () => {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
@@ -180,10 +173,23 @@ const FriendChat = () => {
         <div className="flex-1 bg-[#2F3136] text-gray-400 flex flex-col custom-scrollbar overflow-y-auto">
           {/* Messages Container */}
           <div className="flex-1 p-4 flex flex-col justify-end">
-            {messages.map((item, index) => (
-              <PrivateChat key={index} item={item} />
-            ))}
-            <div ref={messagesEndRef} />
+            {messages.length <= 0 ? (
+              <div className="flex items-center justify-center h-full bg-gradient-to-r  rounded-lg text-center text-white p-6 shadow-lg">
+                <div className="space-y-4">
+                  <h2 className="text-3xl font-semibold">No Messages Yet!</h2>
+                  <p className="text-lg opacity-80">
+                    Start a conversation with your friend.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <>
+                {messages.map((item, index) => (
+                  <PrivateChat key={index} item={item} />
+                ))}
+                <div ref={messagesEndRef} />
+              </>
+            )}
           </div>
         </div>
         {/* Message Input Section */}
