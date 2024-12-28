@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { MdClose } from "react-icons/md";
+import axios from "axios";
 
 type MenuFriendProps = {
   item: {
@@ -10,7 +11,26 @@ type MenuFriendProps = {
   };
 };
 
+
+interface Friend {
+  username: string;
+  _id: string;
+  profilePic: string;
+}
+
+type User = {
+  userId: string;
+  email: string;
+  displayName: string;
+  username: string;
+  profilePic: string;
+  friends: Friend[];
+  pendingFriend: Friend[];
+  menuChat: Friend[];
+};
+
 const MenuFriends = ({ item }: MenuFriendProps) => {
+  const { user,setUser } = useUserContext();
   const navigate = useNavigate();
   const { setFriendId } = useUserContext();
 
@@ -19,6 +39,34 @@ const MenuFriends = ({ item }: MenuFriendProps) => {
     localStorage.setItem("friendId", item._id);
     localStorage.setItem("profilePic", item.profilePic);
     localStorage.setItem("username", item.username);
+  };
+
+  const deleteMenuFriend = async () => {
+    try {
+      const response = await axios.delete(
+        "http://localhost:5000/api/auth/deletemenuchat",
+        {
+          data: {
+            userId: user?.userId,
+            friendId: item._id,
+          },
+        }
+      );
+      if(response.status===200){
+        setUser((prev:User | null)=>{
+          if(!prev){
+            return prev
+          }
+          return{
+            ...prev,
+            menuChat:response.data
+            
+          }
+        })
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -44,8 +92,8 @@ const MenuFriends = ({ item }: MenuFriendProps) => {
           </div>
         </div>
 
-        <div className="absolute right-3 opacity-0 group-hover:opacity-100  text-gray-600 font-semibold text-xl">
-          <MdClose className="cursor-pointer" />
+        <div onClick={()=>deleteMenuFriend()} className="absolute right-3 opacity-0 group-hover:opacity-100  text-gray-600 font-semibold text-xl">
+          <MdClose className="cursor-pointer"  />
         </div>
       </div>
     </div>

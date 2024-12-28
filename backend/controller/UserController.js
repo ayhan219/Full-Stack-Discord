@@ -421,13 +421,15 @@ const deleteMenuChat = async(req,res)=>{
       return res.status(404).json({ message: "User not found" });
     }
 
-    const deletedMenuChat = findUser.menuChat.find((item)=>item.toString()===friendId)
     const filteredMenuChat = findUser.menuChat.filter((item)=>item.toString()!==friendId);
     findUser.menuChat = filteredMenuChat;
 
     await findUser.save();
 
-    res.status(200).json(deletedMenuChat)
+    const updatedUser = await User.findById(userId).populate("menuChat", "username profilePic _id");
+
+
+    res.status(200).json(updatedUser.menuChat)
   } catch (error) {
     return res.status(500).json({message:"server error"})
   }
