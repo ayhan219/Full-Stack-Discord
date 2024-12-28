@@ -102,7 +102,6 @@ const getCurrentUser = async (req, res) => {
   }
 
   try {
-    // Hem 'friends' hem de 'pendingFriend' alanlarını populate et
     const user = await User.findById(userId)
       .populate("friends", "username profilePic")
       .populate("pendingFriend", "username profilePic")
@@ -111,7 +110,6 @@ const getCurrentUser = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: "user not found" });
     }
-    console.log(user);
 
     return res.status(200).json({
       userId: user._id,
@@ -122,7 +120,7 @@ const getCurrentUser = async (req, res) => {
       pendingFriend: user.pendingFriend,
       menuChat: user.menuChat,
       profilePic: user.profilePic,
-      notificationNumber:findUser.notificationNumber
+      notificationNumber:user.notificationNumber
     });
   } catch (error) {
     return res.status(500).json({ message: "server error", error });
@@ -353,15 +351,16 @@ const addNotification = async(req,res)=>{
     }
 
     await findUser.save();
+    const updatedUser = await User.findById(userId)
 
-    return res.status(200).json(findUser.notificationNumber)
+    return res.status(200).json(updatedUser.notificationNumber)
   } catch (error) {
     return res.status(500).json({message:"server error"})
   }
 }
 
 const getNotification = async(req,res)=>{
-  const {userId} = req.body;
+  const {userId} = req.query;
 
   if(!userId){
     return res.status(400).json({message:"no user id"})
@@ -380,6 +379,35 @@ const getNotification = async(req,res)=>{
   }
 }
 
+const deleteNotification = async(req,res)=>{
+  const {userId} = req.body;
+
+  if(!userId){
+    return res.status(400).json({message:"no user id"})
+  }
+  try {
+    const findUser = await User.findById(userId);
+
+    if (!findUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (findUser.notificationNumber <= 0) {
+      return res.status(400).json({ message: "Notification number is already zero" });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { notificationNumber: -1 } },
+      { new: true }
+    );
+
+    return res.status(200).json(updatedUser.notificationNumber);
+  } catch (error) {
+    return res.status(500).json({message:"server error"})
+  }
+}
+
 module.exports = {
   signup,
   login,
@@ -391,5 +419,6 @@ module.exports = {
   uploadProfilePicture,
   editUserProfile,
   addNotification,
-  getNotification
+  getNotification,
+  deleteNotification
 };

@@ -31,7 +31,7 @@ interface Friend {
 
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
-  const { user,socket,setUser } = useUserContext();
+  const { user,socket,setUser,deleteNotification } = useUserContext();
 
   const handleAction = async (action: string) => {
     try {
@@ -44,6 +44,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
       });
   
       if (response.status === 200) {
+        deleteNotification();
         setUser((prev: User | null) => {
           if (!prev) {
             return prev;

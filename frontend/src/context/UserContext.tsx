@@ -43,10 +43,11 @@ interface UserContextType {
   setActiveMenu: (activeMenu: string) => void;
   socket: Socket;
   getCurrentUser: () => void;
-  friendId:string;
-  setFriendId:(friendId:string)=>void;
-  notificationNumber:number;
-  setNotificationNumber:(notificationNumber:number)=>void
+  friendId: string;
+  setFriendId: (friendId: string) => void;
+  notificationNumber: number;
+  setNotificationNumber: (notificationNumber: number) => void;
+  deleteNotification:() =>void
 }
 
 interface Friend {
@@ -95,8 +96,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [selectedChatRoom, setSelectedChatRoom] = useState<string>("");
   const [channels, setChannels] = useState<Channel[]>([]);
   const [activeMenu, setActiveMenu] = useState<string>("friends");
-  const [friendId,setFriendId] = useState<string>("");
-  const [notificationNumber,setNotificationNumber] = useState<number>(0);
+  const [friendId, setFriendId] = useState<string>("");
+  const [notificationNumber, setNotificationNumber] = useState<number>(0);
 
   const getCurrentUser = async () => {
     try {
@@ -141,12 +142,66 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
+  const addNotification = async () => {
+    
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/addnotification",
+        {
+          userId: user?.userId,
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteNotification = async()=>{
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/deletenotification",
+        {
+          userId: user?.userId,
+        }
+      );
+      console.log(response);
+      setNotificationNumber(response.data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getNotification = async()=>{
+    try {
+      const response = await axios.get("http://localhost:5000/api/auth/getnotification",{
+        params:{
+          userId:user?.userId
+        }
+      })
+      setNotificationNumber(response.data)
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+
+  useEffect(()=>{
+    if(user){
+      getNotification();
+    }
+
+  },[user])
+
   useEffect(() => {
     if (socket) {
       socket.on(
         "friendRequestNotification",
         (senderId: string, username: string, profilePic: string) => {
-          setNotificationNumber(notificationNumber+1);
+          setNotificationNumber((prevNotificationNumber) => prevNotificationNumber + 1);
+          if (user?.userId) {
+            addNotification();
+          }
           console.log("Notification received:", senderId);
           setUser((prev: User | null) => {
             if (!prev) return prev;
@@ -172,8 +227,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           profilePic: string
         ) => {
           console.log("Notification received:", senderId);
-          setNotificationNumber(notificationNumber+1);
-
           if (selectedValue === "accept") {
             setUser((prev: User | null) => {
               if (!prev) return prev;
@@ -199,11 +252,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     return () => {
       if (socket) {
         socket.off("friendRequestNotification");
-        socket.off("sendReceiverIdToUser")
+        socket.off("sendReceiverIdToUser");
         socket.off("new_message_notification");
       }
     };
-  }, [socket]);
+  }, [socket,user]);
 
   return (
     <UserContext.Provider
@@ -234,7 +287,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         friendId,
         setFriendId,
         notificationNumber,
-        setNotificationNumber
+        setNotificationNumber,
+        deleteNotification,
       }}
     >
       {children}
