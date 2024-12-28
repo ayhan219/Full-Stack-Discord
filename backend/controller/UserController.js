@@ -335,6 +335,51 @@ const editUserProfile = async (req, res) => {
   }
 };
 
+const addNotification = async(req,res)=>{
+  const {userId} = req.body;
+
+  if(!userId){
+    return res.status(400).json({message:"no user id"})
+  }
+  try {
+    const findUser = await User.findByIdAndUpdate(
+      userId,
+      { $inc: { notificationNumber: 1 } }, 
+      { new: true }
+    );
+
+    if(!findUser){
+      return res.status(404).json({message:"user not found"})
+    }
+
+    await findUser.save();
+
+    return res.status(200).json(findUser.notificationNumber)
+  } catch (error) {
+    return res.status(500).json({message:"server error"})
+  }
+}
+
+const getNotification = async(req,res)=>{
+  const {userId} = req.body;
+
+  if(!userId){
+    return res.status(400).json({message:"no user id"})
+  }
+
+  try {
+    const findUser = await User.findById(userId);
+
+    if(!findUser){
+      return res.status(404).json({message:"user not found"})
+    }
+    return res.status(200).json(findUser.notificationNumber)
+
+  } catch (error) {
+    return res.status(500).json({message:"server error"})
+  }
+}
+
 module.exports = {
   signup,
   login,
@@ -344,5 +389,7 @@ module.exports = {
   acceptOrDecline,
   addToMenuChat,
   uploadProfilePicture,
-  editUserProfile
+  editUserProfile,
+  addNotification,
+  getNotification
 };
