@@ -46,8 +46,6 @@ const FriendChat = () => {
 
   useEffect(() => {
     socket.on("receive_message", (newMessage) => {
-      console.log("you got message from", newMessage.senderId);
-
       setMessages((prev: Message[]) => {
         return [...prev, newMessage];
       });
@@ -62,7 +60,6 @@ const FriendChat = () => {
  
 
   const getMessages = async () => {
-    setMessages([]);
     try {
       const response = await axios.get(
         "http://localhost:5000/api/message/getmessages",
@@ -73,9 +70,11 @@ const FriendChat = () => {
           },
         }
       );
+      
       setMessages(response.data);
     } catch (error) {
       console.log(error);
+      setMessages([]);
     }
   };
 
@@ -97,6 +96,18 @@ const FriendChat = () => {
         }
       );
       console.log(response.data);
+      
+      if(response.status===200){
+        setUser((prev: User | null)=>{
+          if(!prev){
+            return prev;
+          }
+          return {
+            ...prev,
+            menuChat:response.data
+          }
+        })
+      }
       
     } catch (error) {
       console.log(error);

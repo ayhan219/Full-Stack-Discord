@@ -29,11 +29,20 @@ const saveChat = async(req,res)=>{
         
         findUser.menuChat = findUser.menuChat.filter(chat => chat.toString() !== receiverId);
         findUser.menuChat.unshift(receiverId);
+
+         
       
         await findUser.save();
         await newMessage.save();
+        const user = await User.findById(senderId)
+  .populate({
+    path: "menuChat",
+    select: "username profilePic _id", 
+  });
+
+const menuChat = user?.menuChat;
         
-        return res.status(200).json(receiverId)
+        return res.status(200).json(menuChat)
     } catch (error) {
         return res.status(500).json({message:"server error"})
     }
