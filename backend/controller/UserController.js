@@ -408,6 +408,31 @@ const deleteNotification = async(req,res)=>{
   }
 }
 
+const deleteMenuChat = async(req,res)=>{
+  const {userId,friendId} = req.body;
+
+  if(!userId || !friendId){
+    return res.status(400).json({message:"provide all area"})
+  }
+
+  try {
+    const findUser = await User.findById(userId);
+    if (!findUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const deletedMenuChat = findUser.menuChat.find((item)=>item.toString()===friendId)
+    const filteredMenuChat = findUser.menuChat.filter((item)=>item.toString()!==friendId);
+    findUser.menuChat = filteredMenuChat;
+
+    await findUser.save();
+
+    res.status(200).json(deletedMenuChat)
+  } catch (error) {
+    return res.status(500).json({message:"server error"})
+  }
+}
+
 module.exports = {
   signup,
   login,
@@ -420,5 +445,6 @@ module.exports = {
   editUserProfile,
   addNotification,
   getNotification,
-  deleteNotification
+  deleteNotification,
+  deleteMenuChat
 };

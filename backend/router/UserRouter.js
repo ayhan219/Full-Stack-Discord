@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const AuthMiddleware = require("../middleware/AuthMiddleware")
 const upload = require("../middleware/MulterMiddleware")
-const {signup,login,getCurrentUser,logout,addFriend,acceptOrDecline,addToMenuChat,uploadProfilePicture,editUserProfile,addNotification,getNotification,deleteNotification} = require("../controller/UserController");
+const {signup,login,getCurrentUser,logout,addFriend,acceptOrDecline,addToMenuChat,uploadProfilePicture,editUserProfile,addNotification,getNotification,deleteNotification,deleteMenuChat} = require("../controller/UserController");
 
 
 router.post("/signup",signup)
@@ -18,6 +18,7 @@ router.post("/edituserprofile",editUserProfile)
 router.post("/addnotification",addNotification)
 router.post("/deletenotification",deleteNotification)
 router.get("/getnotification",getNotification)
+router.delete("/deletemenuchat",deleteMenuChat)
 
 
 
