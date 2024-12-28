@@ -61,6 +61,7 @@ const login = async (req, res) => {
         pendingFriend: findUser.pendingFriend,
         menuChat: findUser.menuChat,
         profilePic: findUser.profilePic,
+        notificationNumber:findUser.notificationNumber
       },
       process.env.JWT_SECRET,
       {
@@ -86,6 +87,7 @@ const login = async (req, res) => {
       pendingFriend: findUser.pendingFriend,
       menuChat: findUser.menuChat,
       profilePic: findUser.profilePic,
+      notificationNumber:findUser.notificationNumber
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
@@ -120,6 +122,7 @@ const getCurrentUser = async (req, res) => {
       pendingFriend: user.pendingFriend,
       menuChat: user.menuChat,
       profilePic: user.profilePic,
+      notificationNumber:findUser.notificationNumber
     });
   } catch (error) {
     return res.status(500).json({ message: "server error", error });
