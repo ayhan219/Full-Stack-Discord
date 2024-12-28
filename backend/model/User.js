@@ -55,7 +55,12 @@ const UserSchema = new mongoose.Schema({
             ref:"User",
             default:null 
         }
-    ]
+    ],
+    notificationNumber:{
+        type:Number,
+        default:0
+
+    }
 
 });
 
