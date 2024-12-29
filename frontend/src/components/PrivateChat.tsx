@@ -1,4 +1,5 @@
 
+import axios from "axios";
 import { useUserContext } from "../context/UserContext"; 
 
 interface Message {
@@ -8,14 +9,40 @@ interface Message {
   time:string
 }
 
+interface Channel {
+  _id: string;
+  channelName: string;
+}
+
+
 interface PrivateChatProps {
   item: Message;
 }
 
 const PrivateChat = ({ item }: PrivateChatProps) => {
-  const { user } = useUserContext();
+  const { user,setChannels } = useUserContext();
 
   const isOwnMessage = item.senderId === user?.userId;
+
+  const handleJoinChannel = async(part:string)=>{
+    try {
+      const response = await axios.get(`http://localhost:5000/api/channel/join/${part.split("/")[4]}`,{
+        params:{
+          userId:user?.userId
+        }
+      })
+      if(response.status===200){
+       setChannels((prev: Channel[])=>{
+        return [...prev,response.data]
+       })
+      }
+      
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
 
   const parseMessage = (message: string) => {
@@ -24,10 +51,9 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
       urlRegex.test(part) ? (
         <a
           key={index}
-          href={part}
-          target="_blank"
           rel="noopener noreferrer"
           className="text-blue-500 underline hover:text-blue-700"
+          onClick={()=>handleJoinChannel(part)}
         >
           {part}
         </a>

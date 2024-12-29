@@ -181,8 +181,8 @@ const createInvite = async(req,res)=>{
 
 const joinChannel = async (req, res) => {
     const { token } = req.params;
-    const userId = req.body.userId;
-    console.log("joinchannel worked");
+    const {userId} = req.query;
+    console.log("joinchannel worked",userId);
   
     const invite = invitations[token];
   
@@ -195,7 +195,8 @@ const joinChannel = async (req, res) => {
   
     try {
       await addUserToChannel(userId, channelId);
-      return res.json({ message: 'Successfully joined the channel', channelId });
+      const channel = await Channel.findById(channelId);
+      return res.json(channel);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: 'Server error' });
