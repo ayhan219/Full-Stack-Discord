@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
-const {createChannel,getChannel,getChannelSingle,createChatRoom,createVoiceRoom,createInvite} = require("../controller/ChannelController")
+const {createChannel,getChannel,getChannelSingle,createChatRoom,createVoiceRoom,createInvite,joinChannel} = require("../controller/ChannelController")
 const router = express.Router();
 
 
@@ -11,5 +11,6 @@ router.get("/getchannelsingle",getChannelSingle)
 router.post("/createchatroom",createChatRoom)
 router.post("/createvoiceroom",createVoiceRoom)
 router.post("/createinvite",createInvite)
+router.get("/join/:token",joinChannel)
 
 module.exports = router;
