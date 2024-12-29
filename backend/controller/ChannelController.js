@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../model/User")
 const Channel = require("../model/Channel")
+const crypto = require("crypto");
 
 
 
@@ -159,10 +160,30 @@ const createVoiceRoom = async(req,res)=>{
     }
 }
 
+const invitations = {};
+
+const createInvite = async(req,res)=>{
+    const { channelId } = req.body;
+
+  if (!channelId) {
+    return res.status(400).send('Channel ID is required');
+  }
+
+  const token = crypto.randomBytes(16).toString('hex');
+  invitations[token] = { channelId, expiresAt: Date.now() + 60 * 60 * 1000 }; // 1 saat geçerli
+
+  const inviteLink = `${req.protocol}://${req.get('host')}/join/${token}`;
+  res.json({ inviteLink });
+}
+
+
+
+
 module.exports ={
 createChannel,
 getChannel,
 getChannelSingle,
 createChatRoom,
-createVoiceRoom
+createVoiceRoom,
+createInvite
 }
