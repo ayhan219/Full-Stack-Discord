@@ -70,15 +70,11 @@ interface SingleChannel {
   _id: string;
   channelName: string;
   chatChannel: ChatChannel[];
-  voiceChannel: ChannelMember[];
+  voiceChannel: string[];
   channelUsers: [];
 }
 
-interface ChannelMember {
-  _id:string,
-  profilePic:string,
-  username:string,
-}
+
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
