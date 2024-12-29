@@ -70,8 +70,14 @@ interface SingleChannel {
   _id: string;
   channelName: string;
   chatChannel: ChatChannel[];
-  voiceChannel: string[];
+  voiceChannel: ChannelMember[];
   channelUsers: [];
+}
+
+interface ChannelMember {
+  _id:string,
+  profilePic:string,
+  username:string,
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -136,6 +142,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           },
         }
       );
+      console.log("channel:",response.data);
+      
       setSingleChannel(response.data);
     } catch (error) {
       console.log(error);

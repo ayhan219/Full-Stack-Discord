@@ -40,6 +40,7 @@ const ChannelSchema = new mongoose.Schema({
     channelUsers:[
         {
             type:mongoose.Schema.Types.ObjectId,
+            ref: 'User',
             default:null
         }
     ]

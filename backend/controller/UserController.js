@@ -42,7 +42,7 @@ const login = async (req, res) => {
     const findUser = await User.findOne({ email })
       .populate("friends", "username profilePic")
       .populate("pendingFriend", "username profilePic")
-      .populate("menuChat", "username profilePic");
+      .populate("menuChat", "username profilePic")
     if (!findUser) {
       return res.status(400).json({ message: "user not found" });
     }

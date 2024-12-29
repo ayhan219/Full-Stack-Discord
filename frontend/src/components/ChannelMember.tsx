@@ -1,17 +1,21 @@
 
 
 type ChannelMemberProps ={
-  name:string
+ item:{
+  _id:string,
+  profilePic:string,
+  username:string
+ }
 }
 
-const ChannelMember = ({name}: ChannelMemberProps) => {
+const ChannelMember = ({item}: ChannelMemberProps) => {
   return (
     <div className="flex items-center gap-4 p-2 px-4 rounded-md hover:bg-gray-700 hover:text-white cursor-pointer transition-all">
       {/* Avatar Container */}
       <div className="relative">
         <img
           className="w-10 h-10 rounded-full"
-          src="https://i.pinimg.com/1200x/98/1d/6b/981d6b2e0ccb5e968a0618c8d47671da.jpg"
+          src={`http://localhost:5000${item.profilePic}`}
           alt="Avatar"
         />
         <div
@@ -26,7 +30,7 @@ const ChannelMember = ({name}: ChannelMemberProps) => {
       </div>
 
       {/* Username */}
-      <h3 className="text-base font-medium text-gray-400">{name}</h3>
+      <h3 className="text-base font-medium text-gray-400">{item.username}</h3>
     </div>
   );
 };
