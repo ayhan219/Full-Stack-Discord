@@ -17,6 +17,27 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
 
   const isOwnMessage = item.senderId === user?.userId;
 
+
+  const parseMessage = (message: string) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    return message.split(urlRegex).map((part, index) =>
+      urlRegex.test(part) ? (
+        <a
+          key={index}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-500 underline hover:text-blue-700"
+        >
+          {part}
+        </a>
+      ) : (
+        <span key={index}>{part}</span>
+      )
+    );
+  };
+  
+
   return (
     <div
       className={`flex items-center gap-3 mb-4 ${
@@ -42,7 +63,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
             isOwnMessage ? "ml-2" : "mr-2"
           }`}
         >
-          <p>{item.message}</p>
+           <p>{parseMessage(item.message)}</p>
         </div>
         <span className="text-xs text-gray-500 mt-1">{item.time} PM</span>
       </div>
