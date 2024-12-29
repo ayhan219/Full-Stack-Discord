@@ -39,7 +39,7 @@ const ChannelSchema = new mongoose.Schema({
     ],
     channelUsers:[
         {
-            type:String,
+            type:mongoose.Schema.Types.ObjectId,
             default:null
         }
     ]

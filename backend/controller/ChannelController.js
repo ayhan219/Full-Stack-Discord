@@ -177,6 +177,60 @@ const createInvite = async(req,res)=>{
 }
 
 
+const joinChannel = async(req,res)=>{
+    const { token } = req.params;
+    const userId = req.body.userId;
+    console.log("joinchannel worked");
+    
+
+    const invite = invitations[token];
+  
+    if (!invite || invite.expiresAt < Date.now()) {
+      return res.status(400).send('Invalid or expired invite');
+    }
+  
+    const channelId = invite.channelId;
+    delete invitations[token]; 
+
+    try {
+        await addUserToChannel(userId, channelId);
+
+        res.json({ message: 'Successfully joined the channel', channelId });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
+    }
+  
+    res.json({ message: 'Successfully joined the channel', channelId });
+}
+
+async function addUserToChannel(userId, channelId) {
+    try {
+
+        const channel = await Channel.findById(channelId);
+        const user = await User.findById(userId);
+
+        if (!channel) throw new Error('Channel not found');
+        if (!user) throw new Error('User not found');
+        if (!channel.channelUsers.some(u => u.toString() === user._id)) {
+            channel.channelUsers.push({
+                _id: user._id,
+                username: user.username,
+                profilePic: user.profilePic,
+            });
+        }
+
+
+        if (!user.joinedChannel.includes(channelId)) {
+            user.joinedChannel.push(channelId);
+        }
+
+        await channel.save();
+        await user.save();
+    } catch (error) {
+        throw error; 
+    }
+}
 
 
 module.exports ={
@@ -185,5 +239,6 @@ getChannel,
 getChannelSingle,
 createChatRoom,
 createVoiceRoom,
-createInvite
+createInvite,
+joinChannel
 }
