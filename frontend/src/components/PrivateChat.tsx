@@ -24,7 +24,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tokenForInv, setTokenForInv] = useState<string>("");
   const [channelURL, setChannelURL] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false); // Add loading state
+  const [loading, setLoading] = useState<boolean>(false);
 
   const isOwnMessage = item.senderId === user?.userId;
 
@@ -115,6 +115,12 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
           className={`bg-[#40444B] text-white p-3 rounded-lg max-w-xs ${
             isOwnMessage ? "ml-2" : "mr-2"
           }`}
+          style={{
+            maxWidth: "70%", 
+            wordWrap: "break-word", 
+            whiteSpace: "pre-wrap", 
+            overflowWrap: "break-word", 
+          }}
         >
           <p>{parseMessage(item.message)}</p>
         </div>
