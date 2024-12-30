@@ -9,6 +9,7 @@ import CreateVoiceRoom from "./CreateVoiceRoom";
 import { useState } from "react";
 import axios from "axios";
 
+
 const ChannelMenu = () => {
   const {
     singleChannel,
@@ -21,6 +22,7 @@ const ChannelMenu = () => {
   const [openChannelSettingArea, setOpenChannelSettingArea] =
     useState<boolean>(false);
     const [isSucces,setIsSucces] = useState<boolean | null>(false || null);
+    const {user} = useUserContext();
 
     const getLink = async()=>{
       try {
@@ -44,20 +46,18 @@ const ChannelMenu = () => {
         <div className="font-bold text-[#D6D9DC] text-xl  ">
           {singleChannel?.channelName}
         </div>
-        <div
-          onClick={() => setOpenChannelSettingArea(!openChannelSettingArea)}
-          className="text-white text-xl font-semibold"
-        >
-          <IoIosArrowDown />
-        </div>
+        
       </div>
       <div className="w-full h-auto">
         <div className="w-full text-gray-400 flex items-center justify-between p-5 font-bold">
           <p className="hover:text-gray-200 cursor-pointer">Chat Channel</p>
+         {
+          user?.userId === singleChannel?.admin[0] &&
           <GoPlus
-            onClick={() => setOpenCreateRoom(!openCreateRoom)}
-            className="hover:text-gray-200 cursor-pointer"
-          />
+          onClick={() => setOpenCreateRoom(!openCreateRoom)}
+          className="hover:text-gray-200 cursor-pointer"
+        />
+         }
         </div>
 
         <div className="w-full h-auto flex flex-col gap-5">
@@ -68,10 +68,13 @@ const ChannelMenu = () => {
 
         <div className="w-full text-gray-400 flex items-center justify-between p-5 font-bold mt-5">
           <p className="hover:text-gray-200 cursor-pointer">Voice Channel</p>
+         {
+          user?.userId === singleChannel?.admin[0] &&
           <GoPlus
-            onClick={() => setOpenCreateVoiceRoom(!openCreateVoiceRoom)}
-            className="hover:text-gray-200 cursor-pointer"
-          />
+          onClick={() => setOpenCreateVoiceRoom(!openCreateVoiceRoom)}
+          className="hover:text-gray-200 cursor-pointer"
+        />
+         }
         </div>
 
         <div className="w-full h-auto flex flex-col gap-3">
@@ -80,7 +83,7 @@ const ChannelMenu = () => {
           ))}
         </div>
       </div>
-      {openChannelSettingArea && (
+      {openChannelSettingArea &&  (
         <div className="w-full h-64 bg-[#2D2F33] absolute top-14 rounded-lg shadow-lg">
           {/* Header Section */}
           <div className="w-full p-4 border-b border-gray-600 flex items-center justify-between">
