@@ -172,9 +172,9 @@ const createInvite = async(req,res)=>{
   }
 
   const token = crypto.randomBytes(16).toString('hex');
-  invitations[token] = { channelId, expiresAt: Date.now() + 60 * 60 * 1000 }; // 1 saat geçerli
+  invitations[token] = { channelId, expiresAt: Date.now() + 60 * 60 * 1000 }; 
 
-  const inviteLink = `${req.protocol}://${req.get('host')}/join/${token}`;
+  const inviteLink = `${req.protocol}://${req.get('host')}/join/${channelId}/${token}`;
   res.json({ inviteLink });
 }
 
