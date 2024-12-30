@@ -8,7 +8,6 @@ const crypto = require("crypto");
 const createChannel = async(req,res)=>{
     const {userId,channelName} = req.body;
     
-
     if(!userId){
         return res.status(200).json({message:"user not authenticated"})
     }
@@ -27,6 +26,7 @@ const createChannel = async(req,res)=>{
         newChannel.channelUsers.unshift(findUser._id);
         findUser.ownChannel.push(newChannel._id);
         findUser.joinedChannel.push(newChannel._id);
+        newChannel.admin.push(findUser._id);
 
         await findUser.save();
         await newChannel.save();

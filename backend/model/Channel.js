@@ -6,11 +6,12 @@ const ChannelSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    admin:{
-        type:mongoose.Schema.Types.ObjectId,
+    admin:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
         ref:"User",
-        default:null
-    },
+        }
+    ],
     chatChannel: [
         {
             roomName: {
