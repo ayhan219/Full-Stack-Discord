@@ -1,3 +1,5 @@
+import { useUserContext } from "../context/UserContext";
+import { FaCrown } from "react-icons/fa";
 
 
 type ChannelMemberProps ={
@@ -9,6 +11,7 @@ type ChannelMemberProps ={
 }
 
 const ChannelMember = ({item}: ChannelMemberProps) => {
+  const {user,singleChannel} = useUserContext();
   return (
     <div className="flex items-center gap-4 p-2 px-4 rounded-md hover:bg-gray-700 hover:text-white cursor-pointer transition-all">
       {/* Avatar Container */}
@@ -27,6 +30,10 @@ const ChannelMember = ({item}: ChannelMemberProps) => {
           </div>
 
         </div>
+        {
+          singleChannel?.admin?.includes(item._id) && 
+          <div className="absolute -top-5 left-2 text-3xl text-yellow-500"><FaCrown /></div>
+        }
       </div>
 
       {/* Username */}
