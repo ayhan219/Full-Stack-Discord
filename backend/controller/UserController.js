@@ -259,6 +259,8 @@ const addToMenuChat = async (req, res) => {
 
 const uploadProfilePicture = async (req, res) => {
   const { userId } = req.body;
+  console.log(userId);
+  
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded!" });
   }

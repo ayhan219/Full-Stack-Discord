@@ -3,12 +3,30 @@ import { useUserContext } from "../context/UserContext";
 import { IoIosCloseCircle } from "react-icons/io";
 import axios from "axios";
 
+type User = {
+  userId: string;
+  email: string;
+  displayName: string;
+  username: string;
+  profilePic: string;
+  friends: Friend[];
+  pendingFriend: Friend[];
+  menuChat: Friend[];
+};
+
+interface Friend {
+  username: string;
+  _id: string;
+  profilePic: string;
+}
+
 const Profile = () => {
   const { user,setUser } = useUserContext();
 
   const [userEmailWithPrivate, setUserEmailWithPrivate] = useState<string>("");
   const [editSection, setEditSection] = useState<string | null>(null);
   const [newParam, setNewParam] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleEmail = () => {
     if (!user?.email) return;
@@ -42,6 +60,43 @@ const Profile = () => {
     }
   };
 
+  const handleProfilePicChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("profilePic", file);
+    formData.append("userId", user?.userId || "");
+
+    setLoading(true);
+    try {
+      const response = await axios.post("http://localhost:5000/api/auth/upload-profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      },
+    );
+
+      if (response.status === 200) {
+        setUser((prev: User | null)=>{
+          if(!prev){
+            return prev
+          }
+          return{
+            ...prev,
+            profilePic:response.data.profilePic
+          }
+        })
+      }
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  
+
   return (
     <div className="w-full h-screen bg-[#2B2D31] flex flex-col items-center p-10 gap-10">
       <h3 className="text-3xl font-bold text-white">My Account</h3>
@@ -58,7 +113,7 @@ const Profile = () => {
                 src={`http://localhost:5000${user?.profilePic}`}
                 alt="Profile"
               />
-              <input type="file" id="fileInput" className="hidden" />
+              <input type="file" id="fileInput" className="hidden" onChange={handleProfilePicChange} />
             </div>
             <h2 className="text-xl font-semibold text-white">{user?.username}</h2>
           </div>
