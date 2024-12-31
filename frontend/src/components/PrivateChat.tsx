@@ -116,7 +116,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
             isOwnMessage ? "ml-2" : "mr-2"
           }`}
           style={{
-            maxWidth: "70%", 
+            maxWidth: "100%", 
             wordWrap: "break-word", 
             whiteSpace: "pre-wrap", 
             overflowWrap: "break-word", 
