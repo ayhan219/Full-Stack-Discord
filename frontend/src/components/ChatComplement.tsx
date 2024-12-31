@@ -1,17 +1,62 @@
+import { useUserContext } from "../context/UserContext";
 
-const ChatComplement = () => {
-  return (
-    <div className='flex gap-4'>
-    <img className='w-12 h-12 rounded-full' src="https://i.pinimg.com/1200x/98/1d/6b/981d6b2e0ccb5e968a0618c8d47671da.jpg" alt="Avatar" />
-    <div className='text-gray-200'>
-      <div className='flex items-center gap-3'>
-        <h3 className='font-semibold'>Ayhan</h3>
-        <p className='text-gray-400 text-sm'>15:53 PM</p>
-      </div>
-      <p className='text-gray-300'>Hey! What's up?</p>
-    </div>
-  </div>
-  )
+interface ChatComplementProps {
+  item: {
+    channelName: string;
+    message: string;
+    serverName: string;
+    username: string;
+    profilePic: string;
+    time: string;
+    userId: string;
+  };
 }
 
-export default ChatComplement
+const ChatComplement = ({ item }: ChatComplementProps) => {
+  const { user } = useUserContext();
+
+  const formatTime = (timeString: string) => {
+    const date = new Date(timeString);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  const isUserMessage = item.userId === user?.userId;
+
+  return (
+    <div
+      className={`flex items-start gap-4 ${
+        isUserMessage ? "justify-end text-right" : "justify-start text-left"
+      }`}
+    >
+      {!isUserMessage && (
+        <img
+          className="w-10 h-10 rounded-full object-cover border border-gray-500"
+          src={`http://localhost:5000${item.profilePic}`}
+          alt="Avatar"
+        />
+      )}
+      <div
+        className={`max-w-xs p-3 rounded-lg ${
+          isUserMessage
+            ? "bg-gray-600 text-white self-end"
+            : "bg-gray-600 text-gray-200"
+        }`}
+      >
+        <div className="flex items-center gap-2">
+          <h3 className="font-semibold text-sm">{item.username}</h3>
+          <p className="text-xs text-gray-400">{formatTime(item.time)}</p>
+        </div>
+        <p className="text-sm">{item.message}</p>
+      </div>
+      {isUserMessage && (
+        <img
+          className="w-10 h-10 rounded-full object-cover border border-gray-500"
+          src={`http://localhost:5000${item.profilePic}`}
+          alt="Avatar"
+        />
+      )}
+    </div>
+  );
+};
+
+export default ChatComplement;

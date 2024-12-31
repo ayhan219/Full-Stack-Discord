@@ -4,9 +4,27 @@ import "../index.css";
 import { useUserContext } from "../context/UserContext";
 import { useEffect, useState } from "react";
 
+interface Message {
+  channelName: string;
+  message: string;
+  serverName: string;
+  username:string;
+  profilePic:string;
+  time: string;
+  userId: string;
+}
+
 const ChatArea = () => {
-  const { singleChannel, selectedChatRoom } = useUserContext();
+  const { singleChannel, selectedChatRoom, socket, user } = useUserContext();
   const [containsMessage, setContainsMessage] = useState<boolean>(false);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState<string>("");
+
+
+  useEffect(() => {
+    setContainsMessage(messages.length > 0);
+  }, [messages]);
+
 
   const handleActiveRoom = () => {
     const activeChatRoom = singleChannel?.chatChannel.find(
@@ -29,6 +47,30 @@ const ChatArea = () => {
     handleActiveRoom();
   }, [selectedChatRoom, singleChannel]);
 
+
+  const handleSend = () => {
+    if (message.trim() !== "") {
+      socket.emit("sendMessageToChat", singleChannel?.channelName, selectedChatRoom, user?.userId,user?.username,user?.profilePic, message);
+      setMessage(""); 
+    }
+  };
+
+
+  useEffect(() => {
+    socket.on("sendMessageToChatArea", (newMessage: Message) => {
+      console.log("Message received:", newMessage);
+      setMessages((prevMessages) => [...prevMessages, newMessage]); 
+    });
+
+    return () => {
+      socket.off("sendMessageToChatArea"); 
+    };
+  }, [socket]);
+
+  useEffect(()=>{
+    setMessages([]);
+  },[selectedChatRoom])
+
   return (
     <div className="w-[70%] h-screen bg-[#313338] flex flex-col">
       <div className="w-full h-14 bg-[#313338] text-white text-base font-semibold flex gap-3 items-center px-5 border-b border-gray-700">
@@ -39,7 +81,6 @@ const ChatArea = () => {
       <div className="w-full h-full flex flex-col gap-6 overflow-hidden overflow-y-auto custom-scrollbar p-5">
         {!containsMessage ? (
           <div className="flex flex-col items-center justify-center space-y-4 text-gray-400">
-
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-20 w-20 text-gray-500"
@@ -62,18 +103,30 @@ const ChatArea = () => {
             </div>
           </div>
         ) : (
-          <ChatComplement />
+          <>
+            {messages.map((item, index) => (
+              <ChatComplement key={index} item={item} />
+            ))}
+          </>
         )}
       </div>
 
       {/* Message Input */}
-      <div className="w-full h-16 bg-[#2B2D31] flex items-center px-5">
+      {
+        selectedChatRoom!=="" &&
+        <div className="w-full h-16 bg-[#2B2D31] flex items-center px-5">
         <input
           type="text"
           placeholder="Type a message..."
           className="w-full h-10 bg-[#40444B] text-gray-200 rounded-md px-4 focus:outline-none"
+          onChange={(e) => setMessage(e.target.value)}
+          value={message}
         />
+        <button onClick={handleSend} className="text-blue-500">
+          Send
+        </button>
       </div>
+      }
     </div>
   );
 };

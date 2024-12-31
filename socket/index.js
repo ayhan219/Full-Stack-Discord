@@ -111,6 +111,45 @@ io.on('connection', (socket) => {
       }
     });
 
+    socket.on("sendMessageToChat", (serverName, channelName, userId,username,profilePic, message) => {
+      console.log("Message received from frontend:", serverName, channelName, userId, message);
+  
+      if (servers[serverName]) {
+          if (!serverRooms[serverName]) {
+              serverRooms[serverName] = {}; 
+          }
+          if (!serverRooms[serverName][channelName]) {
+              serverRooms[serverName][channelName] = []; 
+          }
+  
+          const newMessage = { userId, message, timestamp: new Date() };
+          serverRooms[serverName][channelName].push(newMessage);
+  
+          servers[serverName].members.forEach((memberUserId) => {
+              const memberSocketId = onlineUsers[memberUserId];
+              console.log("exist?",memberSocketId);
+              
+              if (memberSocketId) {
+                  io.to(memberSocketId).emit("sendMessageToChatArea", {
+                      serverName,
+                      channelName,
+                      userId,
+                      username,
+                      profilePic,
+                      message,
+                      time: new Date().toISOString(),
+                  });
+              }
+          });
+  
+          console.log(`Message sent to channel "${channelName}" in server "${serverName}"`);
+      } else {
+          socket.emit("serverError", `Server "${serverName}" does not exist.`);
+      }
+  });
+
+    
+
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {
