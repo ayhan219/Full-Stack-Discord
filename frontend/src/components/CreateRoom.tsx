@@ -12,7 +12,8 @@ interface SingleChannel {
   _id: string;
   channelName: string;
   chatChannel: ChatChannel[];
-  voiceChannel: [];
+  voiceChannel: string[];
+  admin:string[],
   channelUsers: [];
 }
 

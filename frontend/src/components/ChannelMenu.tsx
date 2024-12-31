@@ -41,12 +41,21 @@ const ChannelMenu = () => {
     }
 
   return (
+    <>
     <div className="w-[270px] h-screen bg-[#2B2D31] flex flex-col relative">
       <div className="w-full h-16 flex items-center border-b border-gray-800 justify-between px-5">
         <div className="font-bold text-[#D6D9DC] text-xl  ">
           {singleChannel?.channelName}
         </div>
-        
+        {
+          user?.userId === singleChannel?.admin[0] &&
+          <div
+          onClick={() => setOpenChannelSettingArea(!openChannelSettingArea)}
+          className="text-white text-xl font-semibold"
+        >
+          <IoIosArrowDown />
+        </div>
+        }
       </div>
       <div className="w-full h-auto">
         <div className="w-full text-gray-400 flex items-center justify-between p-5 font-bold">
@@ -111,11 +120,11 @@ const ChannelMenu = () => {
           </div>
         </div>
       )}
-
       <BottomProfile />
-      {openCreateRoom && <CreateRoom />}
-      {openCreateVoiceRoom && <CreateVoiceRoom />}
     </div>
+    {openCreateRoom && <CreateRoom />}
+      {openCreateVoiceRoom && <CreateVoiceRoom />}
+    </>
   );
 };
 
