@@ -13,14 +13,14 @@ interface SingleChannel {
   channelName: string;
   chatChannel: ChatChannel[];
   voiceChannel: string[];
-  admin:string[],
+  admin: string[];
   channelUsers: [];
 }
 
 const CreateRoom = () => {
   const { openCreateRoom, setOpenCreateRoom } = useUserContext();
   const [chatRoomName, setChatRoomName] = useState<string>("");
-  const { user, singleChannel, setSingleChannel } = useUserContext();
+  const { user, singleChannel, setSingleChannel, socket } = useUserContext();
 
   const handleAddChatRoom = async () => {
     try {
@@ -35,8 +35,6 @@ const CreateRoom = () => {
 
       if (response.status === 200) {
         const newChatRoom = response.data;
-
-        console.log(newChatRoom);
 
         setSingleChannel((prev: SingleChannel | null) => {
           if (!prev) return prev;
@@ -53,6 +51,10 @@ const CreateRoom = () => {
 
         setChatRoomName("");
         setOpenCreateRoom(false);
+        socket.emit("sendDataToChannelUsers", {
+          serverName: singleChannel?.channelName,
+          chatRoom: newChatRoom,
+        });
       }
     } catch (error) {
       console.log("Error while adding chat room:", error);

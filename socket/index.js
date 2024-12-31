@@ -27,7 +27,7 @@ io.on('connection', (socket) => {
     });
     socket.on('createServer', (serverName, userId) => {     
       if (!servers[serverName]) {
-          servers[serverName] = { owner: userId, members: [socket.id] }; 
+          servers[serverName] = { owner: userId, members: [userId] }; 
           serverRooms[serverName] = []; 
           console.log(`Server "${serverName}" has been created by ${userId}`);
           socket.emit('serverCreated', `Server "${serverName}" created successfully.`);
@@ -36,15 +36,27 @@ io.on('connection', (socket) => {
       }
   });
 
-  socket.on('sendDataToChannelUsers', (serverName, data) => {
+  socket.on('sendDataToChannelUsers', (data) => {
+    const { serverName, chatRoom } = data;
+    console.log(serverName, chatRoom);
+
+    console.log("server:", servers);
+    console.log("rooms:", serverRooms);
+    
     if (servers[serverName]) {
-        servers[serverName].members.forEach(memberSocketId => {
-            io.to(memberSocketId).emit('receive_message', {
-                senderId: socket.id,  
-                data:data
-            });
+        const ownerUserId = servers[serverName].owner; 
+        servers[serverName].members.forEach(memberUserId => {
+            if (memberUserId !== ownerUserId) { 
+                const memberSocketId = onlineUsers[memberUserId]; 
+                if (memberSocketId) {
+                    io.to(memberSocketId).emit('dataToServer', {
+                        roomName: chatRoom,
+                        messages: [],
+                    });
+                }
+            }
         });
-        console.log(`data sent to all members of the server "${serverName}"`);
+        console.log(`Data sent to all members of the server "${serverName}" except the owner`);
     } else {
         socket.emit('serverError', `Server "${serverName}" does not exist.`);
     }
@@ -55,8 +67,8 @@ io.on('connection', (socket) => {
     
     if (servers[serverName]) {
 
-        if (!servers[serverName].members.includes(socket.id)) {
-            servers[serverName].members.push(socket.id); 
+        if (!servers[serverName].members.includes(userId)) {
+            servers[serverName].members.push(userId); 
             console.log(`${userId} has joined the server "${serverName}"`);
             socket.emit('serverJoined', `You have joined the server "${serverName}" successfully.`);
         } else {

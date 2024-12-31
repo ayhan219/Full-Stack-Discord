@@ -125,7 +125,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   // Register user with socket after they are fetched
   useEffect(() => {
     if (user?.userId) {
-      socket.emit("userOnline", user.userId);
+      socket.emit("userOnline", user?.userId);
     }
   }, [user]); // Only run this effect when the user is available
 
@@ -251,6 +251,24 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           }
         }
       );
+      socket.on("dataToServer",(data)=>{
+        const {roomName,messages} = data
+        console.log("data getted from serverAdmin ",roomName,messages);
+        setSingleChannel((prev:SingleChannel | null)=>{
+          if(!prev){
+            return prev
+          }
+          const fixedChatRoom = {
+            ...roomName,
+            roomName: roomName,
+          };
+          return{
+            ...prev,
+            chatChannel:[...prev.chatChannel,fixedChatRoom]
+
+          }
+        })
+      })
     }
 
     // Temizleme işlemi
@@ -259,6 +277,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("friendRequestNotification");
         socket.off("sendReceiverIdToUser");
         socket.off("new_message_notification");
+        socket.off("dataToServer");
       }
     };
   }, [socket,user]);
