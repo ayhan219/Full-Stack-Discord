@@ -19,7 +19,7 @@ interface Channel {
 }
 
 const PrivateChat = ({ item }: PrivateChatProps) => {
-  const { user, setChannels, getSingleChannel, singleChannel } =
+  const { user, setChannels, getSingleChannel, singleChannel,socket } =
     useUserContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tokenForInv, setTokenForInv] = useState<string>("");
@@ -83,6 +83,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
           return [...prev, response.data];
         });
         setIsModalOpen(false);
+        socket.emit("joinServer",singleChannel?.channelName,user?.userId);
       }
     } catch (error) {
       console.log(error);

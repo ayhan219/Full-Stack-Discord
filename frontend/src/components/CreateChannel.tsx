@@ -4,34 +4,41 @@ import axios from "axios";
 import { useState } from "react";
 
 interface Channel {
-  _id:string,
-  channelName:string,
-  
-  }
+  _id: string;
+  channelName: string;
+}
 
 const CreateChannel = () => {
-  const { setOpenCreateChannel, openCreateChannel,user,setSingleChannel,setChannels, } = useUserContext();
-  const [channelName,setChannelName] = useState<string>("");
+  const {
+    setOpenCreateChannel,
+    openCreateChannel,
+    user,
+    setSingleChannel,
+    setChannels,
+    socket,
+  } = useUserContext();
+  const [channelName, setChannelName] = useState<string>("");
 
-
-  const handleCreateChannel = async() => {
+  const handleCreateChannel = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/channel/createchannel",{
-        channelName,
-        userId:user?.userId
-      })
-      if(response.status===201){
+      const response = await axios.post(
+        "http://localhost:5000/api/channel/createchannel",
+        {
+          channelName,
+          userId: user?.userId,
+        }
+      );
+      if (response.status === 201) {
         setSingleChannel(response.data);
-        setChannels((prev:Channel[])=>{
-          return [response.data,...prev];
-        })
-        setOpenCreateChannel(!openCreateChannel)
-        
+        setChannels((prev: Channel[]) => {
+          return [response.data, ...prev];
+        });
+        setOpenCreateChannel(!openCreateChannel);
       }
-      
+
+      socket.emit("createServer", channelName, user?.userId);
     } catch (error) {
       console.log(error);
-      
     }
   };
 
@@ -40,7 +47,9 @@ const CreateChannel = () => {
       <div className="w-[500px] bg-[#2c2f33] rounded-lg shadow-lg relative">
         {/* Header */}
         <div className="bg-[#202225] p-4 rounded-t-lg flex justify-between items-center">
-          <h2 className="text-white text-lg font-semibold">Create a New Server</h2>
+          <h2 className="text-white text-lg font-semibold">
+            Create a New Server
+          </h2>
           <IoCloseCircle
             onClick={() => setOpenCreateChannel(!openCreateChannel)}
             className="text-3xl cursor-pointer text-gray-400 hover:text-gray-300"
@@ -56,13 +65,12 @@ const CreateChannel = () => {
             <input
               id="serverName"
               type="text"
-              onChange={(e)=>setChannelName(e.target.value)}
+              onChange={(e) => setChannelName(e.target.value)}
               value={channelName}
               className="w-full px-4 py-2 rounded-lg bg-[#23272a] text-white border border-[#202225] focus:ring-2 focus:ring-blue-500 outline-none"
               placeholder="Enter the server name"
             />
           </div>
-          
         </div>
 
         {/* Buttons */}

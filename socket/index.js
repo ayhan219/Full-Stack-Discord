@@ -14,15 +14,58 @@ const io = socketIo(server, {
 
 let onlineUsers = {};
 
+let servers = {};
+let serverRooms = {};
+
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
-    // Kullanıcı aktif olduğunda kaydetmek
     socket.on('userOnline', (userId) => {
         onlineUsers[userId] = socket.id;  
         console.log(`${userId} has connected`);        
     });
+    socket.on('createServer', (serverName, userId) => {     
+      if (!servers[serverName]) {
+          servers[serverName] = { owner: userId, members: [socket.id] }; 
+          serverRooms[serverName] = []; 
+          console.log(`Server "${serverName}" has been created by ${userId}`);
+          socket.emit('serverCreated', `Server "${serverName}" created successfully.`);
+      } else {
+          socket.emit('serverError', `Server "${serverName}" already exists.`);
+      }
+  });
+
+  socket.on('sendDataToChannelUsers', (serverName, data) => {
+    if (servers[serverName]) {
+        servers[serverName].members.forEach(memberSocketId => {
+            io.to(memberSocketId).emit('receive_message', {
+                senderId: socket.id,  
+                data:data
+            });
+        });
+        console.log(`data sent to all members of the server "${serverName}"`);
+    } else {
+        socket.emit('serverError', `Server "${serverName}" does not exist.`);
+    }
+});
+
+  socket.on('joinServer', (serverName, userId) => {
+    console.log(serverName,userId);
+    
+    if (servers[serverName]) {
+
+        if (!servers[serverName].members.includes(socket.id)) {
+            servers[serverName].members.push(socket.id); 
+            console.log(`${userId} has joined the server "${serverName}"`);
+            socket.emit('serverJoined', `You have joined the server "${serverName}" successfully.`);
+        } else {
+            socket.emit('serverError', `You are already a member of "${serverName}".`);
+        }
+    } else {
+        socket.emit('serverError', `Server "${serverName}" does not exist.`);
+    }
+});
     
 
     socket.on('friendRequest', (senderId, receiverId,username,profilePic) => {
@@ -67,7 +110,6 @@ io.on('connection', (socket) => {
     });
 });
 
-// Diğer API endpoint'leriniz burada olacak
 
 server.listen(3001, () => {
     console.log('running on port 3001');
