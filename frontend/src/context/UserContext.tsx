@@ -127,7 +127,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     if (user?.userId) {
       socket.emit("userOnline", user?.userId);
     }
-  }, [user]); // Only run this effect when the user is available
+  }, [user?.userId]); // Only run this effect when the user is available
 
   const getSingleChannel = async (id: string) => {
     try {

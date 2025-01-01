@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useRef } from "react";
 import axios from "axios";
 
+
 interface Message {
   senderId?: string;
   receiverId: string | null;
@@ -42,6 +43,7 @@ const FriendChat = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  
 
   useEffect(() => {
     socket.on("receive_message", (newMessage) => {
@@ -78,7 +80,7 @@ const FriendChat = () => {
     if (user && localStorage.getItem("friendId")) {
       getMessages();
     }
-  }, [user, localStorage.getItem("friendId")]);
+  }, [user,localStorage.getItem("friendId")]);
 
   const saveMessagesToDB = async () => {
     try {
