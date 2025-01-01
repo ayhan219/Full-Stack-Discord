@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const server = http.createServer(app);
@@ -11,124 +12,124 @@ const io = socketIo(server, {
   }
 });
 
-
 let onlineUsers = {};
-
-let servers = {};
-let serverRooms = {};
-
+let servers = {};  
+let serverRooms = {}; 
+let serverNamesWithUUID = {}; 
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
+ 
     socket.on('userOnline', (userId) => {
         onlineUsers[userId] = socket.id;  
         console.log(`${userId} has connected`);        
     });
-    socket.on('createServer', (serverName, userId) => {     
-      if (!servers[serverName]) {
-          servers[serverName] = { owner: userId, members: [userId] }; 
-          serverRooms[serverName] = []; 
-          console.log(`Server "${serverName}" has been created by ${userId}`);
-          socket.emit('serverCreated', `Server "${serverName}" created successfully.`);
-      } else {
+
+   
+    socket.on('createServer', (serverName, userId) => {
+      if (serverNamesWithUUID[serverName]) {
           socket.emit('serverError', `Server "${serverName}" already exists.`);
-      }
-  });
-
-  socket.on('sendDataToChannelUsers', (data) => {
-    const { serverName, chatRoom } = data;
-    console.log(serverName, chatRoom);
-
-    console.log("server:", servers);
-    console.log("rooms:", serverRooms);
-    
-    if (servers[serverName]) {
-        const ownerUserId = servers[serverName].owner; 
-        servers[serverName].members.forEach(memberUserId => {
-            if (memberUserId !== ownerUserId) { 
-                const memberSocketId = onlineUsers[memberUserId]; 
-                if (memberSocketId) {
-                    io.to(memberSocketId).emit('dataToServer', {
-                        roomName: chatRoom,
-                        messages: [],
-                    });
-                }
-            }
-        });
-        console.log(`Data sent to all members of the server "${serverName}" except the owner`);
-    } else {
-        socket.emit('serverError', `Server "${serverName}" does not exist.`);
-    }
-});
-
-  socket.on('joinServer', (serverName, userId) => {
-    console.log(serverName,userId);
-    
-    if (servers[serverName]) {
-
-        if (!servers[serverName].members.includes(userId)) {
-            servers[serverName].members.push(userId); 
-            console.log(`${userId} has joined the server "${serverName}"`);
-            socket.emit('serverJoined', `You have joined the server "${serverName}" successfully.`);
-        } else {
-            socket.emit('serverError', `You are already a member of "${serverName}".`);
-        }
-    } else {
-        socket.emit('serverError', `Server "${serverName}" does not exist.`);
-    }
-});
-    
-
-    socket.on('friendRequest', (senderId, receiverId,username,profilePic) => {
-      if (onlineUsers[receiverId]) {
-        io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId,username,profilePic);
       } else {
-        console.log(`${receiverId} has offline. The notification will send after connected`);
+          const uniqueServerName = `${serverName}-${uuidv4()}`;
+          servers[uniqueServerName] = { owner: userId, members: [userId] };
+          serverRooms[uniqueServerName] = {}; 
+          serverNamesWithUUID[serverName] = uniqueServerName; 
+          console.log(`Server "${uniqueServerName}" has been created by ${userId}`);
+          socket.emit('serverCreated', `Server "${uniqueServerName}" created successfully.`);
       }
     });
 
-    socket.on("sendAcceptOrDecNotificationToUser",(senderId,receiverId,selectedValue,username,profilePic)=>{
-      
-      if(onlineUsers[receiverId]){
-      io.to(onlineUsers[receiverId]).emit("sendReceiverIdToUser",senderId,selectedValue,username,profilePic);
-      console.log(`notification sended to ${receiverId}`);
+    
+    socket.on('sendDataToChannelUsers', (data) => {
+      const { serverName, chatRoom } = data;
+      console.log(serverName, chatRoom);
+
+      const uniqueServerName = serverNamesWithUUID[serverName]; 
+
+      if (servers[uniqueServerName]) {
+          const ownerUserId = servers[uniqueServerName].owner;
+          servers[uniqueServerName].members.forEach(memberUserId => {
+              if (memberUserId !== ownerUserId) {
+                  const memberSocketId = onlineUsers[memberUserId];
+                  if (memberSocketId) {
+                      io.to(memberSocketId).emit('dataToServer', {
+                          roomName: chatRoom,
+                          messages: [],
+                      });
+                  }
+              }
+          });
+          console.log(`Data sent to all members of the server "${uniqueServerName}" except the owner`);
+      } else {
+          socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
       }
-      else{
-        console.log(`${receiverId} now is offline`);
+    });
+
+   
+    socket.on('joinServer', (serverName, userId) => {
+      const uniqueServerName = serverNamesWithUUID[serverName];  
+      console.log(serverName, userId);
+
+      if (servers[uniqueServerName]) {
+          if (!servers[uniqueServerName].members.includes(userId)) {
+              servers[uniqueServerName].members.push(userId);
+              console.log(`${userId} has joined the server "${uniqueServerName}"`);
+              socket.emit('serverJoined', `You have joined the server "${uniqueServerName}" successfully.`);
+          } else {
+              socket.emit('serverError', `You are already a member of "${uniqueServerName}".`);
+          }
+      } else {
+          socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
       }
-      
-    })
+    });
+
+
+    socket.on('friendRequest', (senderId, receiverId, username, profilePic) => {
+      if (onlineUsers[receiverId]) {
+          io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId, username, profilePic);
+      } else {
+          console.log(`${receiverId} is offline. The notification will be sent after they reconnect.`);
+      }
+    });
+
+    socket.on("sendAcceptOrDecNotificationToUser", (senderId, receiverId, selectedValue, username, profilePic) => {
+      if (onlineUsers[receiverId]) {
+          io.to(onlineUsers[receiverId]).emit("sendReceiverIdToUser", senderId, selectedValue, username, profilePic);
+          console.log(`Notification sent to ${receiverId}`);
+      } else {
+          console.log(`${receiverId} is offline.`);
+      }
+    });
 
     socket.on('send_message', (newMessage) => {
       const receiverSocketId = onlineUsers[newMessage.receiverId];
       if (receiverSocketId) {
-      
-        io.to(receiverSocketId).emit('receive_message', newMessage);
-        console.log(`Message sent to ${newMessage.receiverId}`);
+          io.to(receiverSocketId).emit('receive_message', newMessage);
+          console.log(`Message sent to ${newMessage.receiverId}`);
       } else {
-        console.log(`${newMessage.receiverId} is now offline`);
+          console.log(`${newMessage.receiverId} is offline.`);
       }
     });
 
-    socket.on("sendMessageToChat", (serverName, channelName, userId,username,profilePic, message) => {
-      console.log("Message received from frontend:", serverName, channelName, userId, message);
-  
-      if (servers[serverName]) {
-          if (!serverRooms[serverName]) {
-              serverRooms[serverName] = {}; 
+    socket.on("sendMessageToChat", (serverName, channelName, userId, username, profilePic, message) => {
+      console.log("Message received:", serverName, channelName, userId, message);
+
+      const uniqueServerName = serverNamesWithUUID[serverName]; 
+
+      if (servers[uniqueServerName]) {
+          if (!serverRooms[uniqueServerName]) {
+              serverRooms[uniqueServerName] = {};
           }
-          if (!serverRooms[serverName][channelName]) {
-              serverRooms[serverName][channelName] = []; 
+          if (!serverRooms[uniqueServerName][channelName]) {
+              serverRooms[uniqueServerName][channelName] = [];
           }
-  
+
           const newMessage = { userId, message, timestamp: new Date() };
-          serverRooms[serverName][channelName].push(newMessage);
-  
-          servers[serverName].members.forEach((memberUserId) => {
+          serverRooms[uniqueServerName][channelName].push(newMessage);
+
+          servers[uniqueServerName].members.forEach((memberUserId) => {
               const memberSocketId = onlineUsers[memberUserId];
-              console.log("exist?",memberSocketId);
-              
               if (memberSocketId) {
                   io.to(memberSocketId).emit("sendMessageToChatArea", {
                       serverName,
@@ -141,14 +142,12 @@ io.on('connection', (socket) => {
                   });
               }
           });
-  
-          console.log(`Message sent to channel "${channelName}" in server "${serverName}"`);
-      } else {
-          socket.emit("serverError", `Server "${serverName}" does not exist.`);
-      }
-  });
 
-    
+          console.log(`Message sent to channel "${channelName}" in server "${uniqueServerName}"`);
+      } else {
+          socket.emit("serverError", `Server "${uniqueServerName}" does not exist.`);
+      }
+    });
 
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
@@ -160,7 +159,6 @@ io.on('connection', (socket) => {
         }
     });
 });
-
 
 server.listen(3001, () => {
     console.log('running on port 3001');
