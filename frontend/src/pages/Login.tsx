@@ -73,7 +73,7 @@ const Login = () => {
 
           <div className="w-full h-auto flex justify-center py-4">
             <button onClick={()=>handleLogin()} className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300">
-              Sign Up
+              Login
             </button>
           </div>
 
@@ -81,7 +81,7 @@ const Login = () => {
             <p>
               You don't have an account?{" "}
               <a href="/signup" className="text-blue-400 hover:underline">
-                Login
+                Sign up
               </a>
             </p>
           </div>
