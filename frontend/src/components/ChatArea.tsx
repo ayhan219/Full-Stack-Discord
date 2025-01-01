@@ -8,8 +8,8 @@ interface Message {
   channelName: string;
   message: string;
   serverName: string;
-  username:string;
-  profilePic:string;
+  username: string;
+  profilePic: string;
   time: string;
   userId: string;
 }
@@ -20,11 +20,9 @@ const ChatArea = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
 
-
   useEffect(() => {
     setContainsMessage(messages.length > 0);
   }, [messages]);
-
 
   const handleActiveRoom = () => {
     const activeChatRoom = singleChannel?.chatChannel.find(
@@ -47,29 +45,36 @@ const ChatArea = () => {
     handleActiveRoom();
   }, [selectedChatRoom, singleChannel]);
 
-
   const handleSend = () => {
     if (message.trim() !== "") {
-      socket.emit("sendMessageToChat", singleChannel?.channelName, selectedChatRoom, user?.userId,user?.username,user?.profilePic, message);
-      setMessage(""); 
+      socket.emit(
+        "sendMessageToChat",
+        singleChannel?.channelName,
+        selectedChatRoom,
+        user?.userId,
+        user?.username,
+        user?.profilePic,
+        message
+      );
+      setMessage("");
     }
   };
 
-
   useEffect(() => {
-    socket.on("sendMessageToChatArea", (newMessage: Message) => {
-      console.log("Message received:", newMessage);
-      setMessages((prevMessages) => [...prevMessages, newMessage]); 
+    socket.on("sendMessageToChatArea", (newMessage) => {
+      if (newMessage.channelName === selectedChatRoom) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
     });
 
     return () => {
-      socket.off("sendMessageToChatArea"); 
+      socket.off("sendMessageToChatArea");
     };
-  }, [socket]);
+  }, [socket,selectedChatRoom]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setMessages([]);
-  },[selectedChatRoom])
+  }, [selectedChatRoom]);
 
   return (
     <div className="w-[70%] h-screen bg-[#313338] flex flex-col">
@@ -112,21 +117,20 @@ const ChatArea = () => {
       </div>
 
       {/* Message Input */}
-      {
-        selectedChatRoom!=="" &&
+      {selectedChatRoom !== "" && (
         <div className="w-full h-16 bg-[#2B2D31] flex items-center px-5">
-        <input
-          type="text"
-          placeholder="Type a message..."
-          className="w-full h-10 bg-[#40444B] text-gray-200 rounded-md px-4 focus:outline-none"
-          onChange={(e) => setMessage(e.target.value)}
-          value={message}
-        />
-        <button onClick={handleSend} className="text-blue-500">
-          Send
-        </button>
-      </div>
-      }
+          <input
+            type="text"
+            placeholder="Type a message..."
+            className="w-full h-10 bg-[#40444B] text-gray-200 rounded-md px-4 focus:outline-none"
+            onChange={(e) => setMessage(e.target.value)}
+            value={message}
+          />
+          <button onClick={handleSend} className="text-blue-500">
+            Send
+          </button>
+        </div>
+      )}
     </div>
   );
 };

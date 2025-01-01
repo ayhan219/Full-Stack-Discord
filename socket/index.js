@@ -13,8 +13,7 @@ const io = socketIo(server, {
 });
 
 let onlineUsers = {};
-let servers = {};  
-let serverRooms = {}; 
+let servers = {};   
 let serverNamesWithUUID = {}; 
 
 io.on('connection', (socket) => {
@@ -32,8 +31,7 @@ io.on('connection', (socket) => {
           socket.emit('serverError', `Server "${serverName}" already exists.`);
       } else {
           const uniqueServerName = `${serverName}-${uuidv4()}`;
-          servers[uniqueServerName] = { owner: userId, members: [userId] };
-          serverRooms[uniqueServerName] = {}; 
+          servers[uniqueServerName] = { owner: userId, members: [userId] }; 
           serverNamesWithUUID[serverName] = uniqueServerName; 
           console.log(`Server "${uniqueServerName}" has been created by ${userId}`);
           socket.emit('serverCreated', `Server "${uniqueServerName}" created successfully.`);
@@ -46,6 +44,20 @@ io.on('connection', (socket) => {
       console.log(serverName, chatRoom);
 
       const uniqueServerName = serverNamesWithUUID[serverName]; 
+
+      if (!servers[uniqueServerName].chatRooms) {
+        servers[uniqueServerName].chatRooms = []; 
+    }
+   
+    
+
+    if (!servers[uniqueServerName].chatRooms.includes(chatRoom)) {
+        servers[uniqueServerName].chatRooms.push(chatRoom);
+        console.log(`Chat room "${chatRoom}" added to the server "${uniqueServerName}"`);
+    } else {
+        console.log(`Chat room "${chatRoom}" already exists in server "${uniqueServerName}"`);
+    }
+    console.log(servers);
 
       if (servers[uniqueServerName]) {
           const ownerUserId = servers[uniqueServerName].owner;
@@ -113,40 +125,34 @@ io.on('connection', (socket) => {
     });
 
     socket.on("sendMessageToChat", (serverName, channelName, userId, username, profilePic, message) => {
-      console.log("Message received:", serverName, channelName, userId, message);
-
-      const uniqueServerName = serverNamesWithUUID[serverName]; 
-
-      if (servers[uniqueServerName]) {
-          if (!serverRooms[uniqueServerName]) {
-              serverRooms[uniqueServerName] = {};
-          }
-          if (!serverRooms[uniqueServerName][channelName]) {
-              serverRooms[uniqueServerName][channelName] = [];
-          }
-
-          const newMessage = { userId, message, timestamp: new Date() };
-          serverRooms[uniqueServerName][channelName].push(newMessage);
-
-          servers[uniqueServerName].members.forEach((memberUserId) => {
-              const memberSocketId = onlineUsers[memberUserId];
-              if (memberSocketId) {
-                  io.to(memberSocketId).emit("sendMessageToChatArea", {
-                      serverName,
-                      channelName,
-                      userId,
-                      username,
-                      profilePic,
-                      message,
-                      time: new Date().toISOString(),
-                  });
-              }
-          });
-
-          console.log(`Message sent to channel "${channelName}" in server "${uniqueServerName}"`);
-      } else {
-          socket.emit("serverError", `Server "${uniqueServerName}" does not exist.`);
-      }
+        console.log("Message received:", serverName, channelName, userId, message);
+    
+        const uniqueServerName = serverNamesWithUUID[serverName]; 
+    
+        if (servers[uniqueServerName]) {
+            servers[uniqueServerName].members.forEach((memberUserId) => {
+                const memberSocketId = onlineUsers[memberUserId]; 
+                console.log("Member Socket ID:", memberSocketId);
+    
+                console.log(memberSocketId);
+                
+                if (memberSocketId) {
+                    io.to(memberSocketId).emit("sendMessageToChatArea", {
+                        serverName,
+                        channelName,
+                        userId,
+                        username,
+                        profilePic,
+                        message,
+                        time: new Date().toISOString(),
+                    });
+                }
+            });
+    
+            console.log(`Message sent to channel "${channelName}" in server "${uniqueServerName}"`);
+        } else {
+            socket.emit("serverError", `Server "${uniqueServerName}" does not exist.`);
+        }
     });
 
     socket.on('disconnect', () => {
