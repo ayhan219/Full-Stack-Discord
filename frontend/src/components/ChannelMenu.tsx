@@ -8,6 +8,8 @@ import CreateRoom from "./CreateRoom";
 import CreateVoiceRoom from "./CreateVoiceRoom";
 import { useState } from "react";
 import axios from "axios";
+import { ImConnection } from "react-icons/im";
+import { PiPhoneDisconnectFill } from "react-icons/pi";
 
 
 const ChannelMenu = () => {
@@ -24,6 +26,8 @@ const ChannelMenu = () => {
   const [openChannelSettingArea, setOpenChannelSettingArea] =
     useState<boolean>(false);
     const [isSucces,setIsSucces] = useState<boolean | null>(false || null);
+    const [connectToVoice,setConnectToVoice] = useState<boolean>(false);
+
     const {user} = useUserContext();
 
     const getLink = async()=>{
@@ -90,7 +94,7 @@ const ChannelMenu = () => {
 
         <div className="w-full h-auto flex flex-col gap-3">
           {singleChannel?.voiceChannel.map((item, index) => (
-            <ChannelVoiceItem key={index} item={item} />
+            <ChannelVoiceItem key={index} item={item} connectToVoice={connectToVoice} setConnectToVoice={setConnectToVoice}  />
           ))}
         </div>
       </div>
@@ -122,6 +126,17 @@ const ChannelMenu = () => {
           </div>
         </div>
       )}
+      {
+        connectToVoice &&  <div className="absolute bottom-16 p-4 w-full h-auto text-white bg-[#313338] flex justify-between py-2">
+        <div className="text-green-600 text-2xl flex gap-2">
+          <ImConnection />
+          <p className="text-sm">connected</p>
+        </div>
+        <div className="text-red-600 font-semibold text-2xl cursor-pointer ">
+          <PiPhoneDisconnectFill onClick={()=>setConnectToVoice(false)}  />
+        </div>
+      </div>
+      }
       <BottomProfile />
     </div>
     {openCreateRoom && <CreateRoom />}
