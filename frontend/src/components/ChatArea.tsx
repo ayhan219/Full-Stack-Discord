@@ -85,10 +85,12 @@ const ChatArea = () => {
 
       <div className="w-full h-full flex flex-col gap-6 overflow-hidden overflow-y-auto custom-scrollbar p-5">
         {!containsMessage ? (
-          <div className="flex flex-col items-center justify-center space-y-4 text-gray-400">
+          <div className="flex flex-col items-center justify-center h-screen bg-[#313338] text-gray-100">
+          {/* Channel Icon */}
+          <div className="flex items-center justify-center w-24 h-24 rounded-full bg-gray-600">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-20 w-20 text-gray-500"
+              className="h-12 w-12 text-indigo-500"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -100,13 +102,20 @@ const ChatArea = () => {
                 d="M15 10l4.5-4.5M15 10l-4.5-4.5M15 10h6m-6 0l-4.5 4.5M15 10l-4.5 4.5M9 14H3m6 0h6m6 0h-6"
               />
             </svg>
-
-            {/* Empty state message */}
-            <div className="text-xl font-semibold">No messages yet</div>
-            <div className="text-center text-gray-500">
-              Start the conversation and send the first message
-            </div>
           </div>
+        
+          {/* Welcome Message */}
+          <div className="mt-6 text-center">
+            <h1 className="text-2xl font-bold">
+              Welcome to the <span className="text-indigo-400">#{singleChannel?.channelName}</span>!
+            </h1>
+            <p className="mt-2 text-gray-400">
+              Feel free to start the conversation or explore what others are saying.
+            </p>
+          </div>
+        
+        </div>
+        
         ) : (
           <>
             {messages.map((item, index) => (
