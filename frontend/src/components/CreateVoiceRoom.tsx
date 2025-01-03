@@ -11,11 +11,17 @@ interface ChatChannel {
   messages: string[];
 }
 
+interface VoiceChannel {
+  voiceRoomName: string;
+  voiceUsers: string[]; 
+  _id: string;
+}
+
 interface SingleChannel {
   _id: string;
   channelName: string;
   chatChannel: ChatChannel[];
-  voiceChannel: string[];
+  voiceChannel: VoiceChannel[];
   admin:string[],
   channelUsers: [];
 }

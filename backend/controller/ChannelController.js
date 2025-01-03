@@ -133,6 +133,8 @@ const createChatRoom = async (req, res) => {
 const createVoiceRoom = async(req,res)=>{
     const {channelId,userId,voiceRoomName} = req.body;
 
+    console.log(channelId,userId,voiceRoomName);
+    
     if(!channelId | !userId){
       return res.status(400).json({message:"provide all area"})
     }
@@ -152,13 +154,17 @@ const createVoiceRoom = async(req,res)=>{
       if(!isUserOwner){
           return res.status(400).json({message:"only channel admin can add channel"})
       }
-      findChannel.voiceChannel.push(voiceRoomName);
+      const newVoiceRoom = {
+        voiceRoomName: voiceRoomName,
+        voiceUsers: [], 
+      };
+      findChannel.voiceChannel.push(newVoiceRoom);
       await findChannel.save();
   
       res.status(200).json(voiceRoomName)
   
     } catch (error) {
-      return res.status(500).json({message:"server error"})
+      return res.status(500).json(error)
     }
 }
 

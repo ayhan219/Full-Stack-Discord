@@ -19,6 +19,8 @@ const ChannelMenu = () => {
     openCreateVoiceRoom,
   } = useUserContext();
 
+
+
   const [openChannelSettingArea, setOpenChannelSettingArea] =
     useState<boolean>(false);
     const [isSucces,setIsSucces] = useState<boolean | null>(false || null);
@@ -88,7 +90,7 @@ const ChannelMenu = () => {
 
         <div className="w-full h-auto flex flex-col gap-3">
           {singleChannel?.voiceChannel.map((item, index) => (
-            <ChannelVoiceItem key={index} voiceName={item} />
+            <ChannelVoiceItem key={index} item={item} />
           ))}
         </div>
       </div>

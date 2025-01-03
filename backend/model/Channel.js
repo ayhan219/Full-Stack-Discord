@@ -38,11 +38,21 @@ const ChannelSchema = new mongoose.Schema({
        
     ],
     voiceChannel:[
-       {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"User",
-            default:null
-       }
+        {
+            voiceRoomName:{
+                type:String,
+                default:null
+            },
+            voiceUsers:[
+                {
+                    type:String,
+                    default:null
+                    
+                }
+            ]
+                    
+                    
+        }
     ],
     channelUsers:[
         {
