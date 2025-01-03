@@ -62,7 +62,7 @@ const ChatArea = () => {
 
   useEffect(() => {
     socket.on("sendMessageToChatArea", (newMessage) => {
-      if (newMessage.channelName === selectedChatRoom) {
+      if (newMessage.channelName === selectedChatRoom && newMessage.serverName === singleChannel?.channelName) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
     });
