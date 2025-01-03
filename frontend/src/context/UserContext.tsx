@@ -275,6 +275,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         })
       })
       socket.on("dataToServerVoice",(voiceRoom)=>{
+        console.log(voiceRoom);
+        
         setSingleChannel((prev:SingleChannel | null)=>{
           if(!prev){
             return prev

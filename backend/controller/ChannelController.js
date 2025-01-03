@@ -161,7 +161,7 @@ const createVoiceRoom = async(req,res)=>{
       findChannel.voiceChannel.push(newVoiceRoom);
       await findChannel.save();
   
-      res.status(200).json(voiceRoomName)
+      res.status(200).json(newVoiceRoom)
   
     } catch (error) {
       return res.status(500).json(error)
