@@ -2,6 +2,8 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const { v4: uuidv4 } = require('uuid');
+const path = './serverData.json';
+const fs = require('fs').promises;
 
 const app = express();
 const server = http.createServer(app);
@@ -16,13 +18,51 @@ let onlineUsers = {};
 let servers = {};   
 let serverNamesWithUUID = {}; 
 
+
+
+async function loadDataFromFile() {
+    try {
+        await fs.access(path); // Check if the file exists
+        const data = await fs.readFile(path, 'utf-8');
+        const parsedData = JSON.parse(data);
+        onlineUsers = parsedData.onlineUsers || {};
+        servers = parsedData.servers || {};
+        serverNamesWithUUID = parsedData.serverNamesWithUUID || {};
+        console.log('Data loaded from file');
+    } catch (err) {
+        if (err.code === 'ENOENT') {
+            console.log('File not found, creating a new one.');
+            await fs.writeFile(path, JSON.stringify({ onlineUsers: {}, servers: {}, serverNamesWithUUID: {} }, null, 2), 'utf-8');
+        } else {
+            console.error('Error reading file:', err);
+        }
+    }
+}
+
+  async function saveDataToFile() {
+    const data = {
+        onlineUsers,
+      servers,
+      serverNamesWithUUID
+    };
+  
+    try {
+      await fs.writeFile(path, JSON.stringify(data, null, 2), 'utf-8');
+      console.log('Data saved to file');
+    } catch (err) {
+      console.error('Error saving data:', err);
+    }
+  }
+
+
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
 
  
     socket.on('userOnline', (userId) => {
         onlineUsers[userId] = socket.id;  
-        console.log(`${userId} has connected`);        
+        console.log(`${userId} is now online with socket ID ${socket.id}`);
+        saveDataToFile();        
     });
 
    
@@ -33,6 +73,7 @@ io.on('connection', (socket) => {
           const uniqueServerName = `${serverName}-${uuidv4()}`;
           servers[uniqueServerName] = { owner: userId, members: [userId] }; 
           serverNamesWithUUID[serverName] = uniqueServerName; 
+          saveDataToFile();
           console.log(`Server "${uniqueServerName}" has been created by ${userId}`);
           socket.emit('serverCreated', `Server "${uniqueServerName}" created successfully.`);
       }
@@ -86,6 +127,7 @@ io.on('connection', (socket) => {
       if (servers[uniqueServerName]) {
           if (!servers[uniqueServerName].members.includes(userId)) {
               servers[uniqueServerName].members.push(userId);
+              saveDataToFile();
               console.log(`${userId} has joined the server "${uniqueServerName}"`);
               socket.emit('serverJoined', `You have joined the server "${uniqueServerName}" successfully.`);
           } else {
@@ -159,6 +201,7 @@ io.on('connection', (socket) => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {
                 delete onlineUsers[userId];
+                saveDataToFile();
                 console.log(`${userId} has disconnected`);
                 break;
             }
@@ -168,4 +211,5 @@ io.on('connection', (socket) => {
 
 server.listen(3001, () => {
     console.log('running on port 3001');
+    loadDataFromFile();
 });
