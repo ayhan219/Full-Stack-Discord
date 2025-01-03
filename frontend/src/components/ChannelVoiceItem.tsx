@@ -3,6 +3,7 @@ import { useUserContext } from "../context/UserContext";
 import { PiMicrophoneSlashFill } from "react-icons/pi";
 import { FaHeadphones, FaMicrophone } from "react-icons/fa";
 import { TbHeadphonesOff } from "react-icons/tb";
+import axios from "axios";
 
 type ChannelVoiceItemProps = {
   item: {
@@ -19,12 +20,25 @@ const ChannelVoiceItem = ({
   setConnectToVoice,
   connectToVoice,
 }: ChannelVoiceItemProps) => {
-  const { user, turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff } =
+  const { user, turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff,singleChannel } =
     useUserContext();
 
 
     const handleConnectToVoice = async()=>{
-      setConnectToVoice(true)
+      try {
+        const response = await axios.post("http://localhost:5000/api/channel/addusertovoicechannel",{
+          userId:user?.userId,
+          channelId:singleChannel?._id,
+          voiceRoomName:item.voiceRoomName
+
+        })
+        if(response.status ===200){
+          setConnectToVoice(true)
+        }
+        
+      } catch (error) {
+        console.log(error);
+      }
     }
   return (
     <div
