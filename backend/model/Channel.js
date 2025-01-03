@@ -38,10 +38,11 @@ const ChannelSchema = new mongoose.Schema({
        
     ],
     voiceChannel:[
-        {
-            type:String,
+       {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"User",
             default:null
-        }
+       }
     ],
     channelUsers:[
         {
