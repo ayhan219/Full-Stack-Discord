@@ -45,7 +45,8 @@ const ChannelSchema = new mongoose.Schema({
             },
             voiceUsers:[
                 {
-                    type:String,
+                    type:mongoose.Schema.Types.ObjectId,
+                    ref:"User",
                     default:null
                     
                 }

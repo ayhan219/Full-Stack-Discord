@@ -233,6 +233,72 @@ const joinChannel = async (req, res) => {
   }
   
 
+  const addUserToVoiceChannel = async (req, res) => {
+    const { userId, channelId, voiceRoomName } = req.body;
+  
+    try {
+      const findChannel = await Channel.findById(channelId);
+      if (!findChannel) {
+        return res.status(404).json({ message: "Channel not found" });
+      }
+  
+      const voiceRoom = findChannel.voiceChannel.find(
+        (room) => room.voiceRoomName === voiceRoomName
+      );
+      if (!voiceRoom) {
+        return res.status(404).json({ message: "Voice room not found" });
+      }
+
+      const isUserAlreadyInRoom = voiceRoom.voiceUsers.some(
+        (user) => user.toString() === userId
+      );
+      if (isUserAlreadyInRoom) {
+        return res.status(400).json({ message: "User is already in the voice channel" });
+      }
+  
+      const updatedChannel = await Channel.findOneAndUpdate(
+        {
+          _id: channelId,
+          "voiceChannel.voiceRoomName": voiceRoomName,
+        },
+        {
+          $push: { "voiceChannel.$.voiceUsers": userId },
+        },
+        { new: true }
+      )
+        .populate({
+          path: "voiceChannel.voiceUsers",  
+          select: "username profilePic _id", 
+        })
+        .populate({
+          path: "voiceChannel", 
+        });
+  
+      if (!updatedChannel) {
+        return res.status(404).json({ message: "Voice room not found" });
+      }
+  
+
+      const updatedVoiceRoom = updatedChannel.voiceChannel.find(
+        (room) => room.voiceRoomName === voiceRoomName
+      );
+  
+      const newUser = updatedVoiceRoom.voiceUsers.find(
+        (user) => user._id.toString() === userId
+      );
+  
+      if (!newUser) {
+        return res.status(404).json({ message: "New user not found" });
+      }
+  
+      return res.status(200).json(newUser);
+    } catch (error) {
+      console.error("Error:", error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  };
+  
+  
 
 module.exports ={
 createChannel,
@@ -241,5 +307,6 @@ getChannelSingle,
 createChatRoom,
 createVoiceRoom,
 createInvite,
-joinChannel
+joinChannel,
+addUserToVoiceChannel
 }
