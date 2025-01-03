@@ -16,8 +16,10 @@ interface SingleChannel {
   channelName: string;
   chatChannel: ChatChannel[];
   voiceChannel: string[];
+  admin:string[],
   channelUsers: [];
 }
+
 
 
 
@@ -25,7 +27,7 @@ const CreateVoiceRoom = () => {
 
     const {openCreateVoiceRoom,setOpenCreateVoiceRoom} = useUserContext();
     const [voiceRoomName,setVoiceRoomName] = useState<string>("");
-    const {user,singleChannel,setSingleChannel} = useUserContext();
+    const {user,singleChannel,setSingleChannel,socket} = useUserContext();
 
     const handleAddVoiceRoom = async()=>{
         try {
@@ -44,6 +46,10 @@ const CreateVoiceRoom = () => {
               }
             })
             setOpenCreateVoiceRoom(!openCreateVoiceRoom);
+            socket.emit("sendDataToChannelVoiceUsers",{
+              serverName: singleChannel?.channelName,
+              voiceRoom: voiceRoomName,
+            })
           
           }
         } catch (error) {

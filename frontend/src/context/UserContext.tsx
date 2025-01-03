@@ -253,7 +253,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       );
       socket.on("dataToServer",(data)=>{
         const {roomName,messages} = data
-        console.log("data getted from serverAdmin ",roomName,messages);
         setSingleChannel((prev:SingleChannel | null)=>{
           if(!prev){
             return prev
@@ -269,6 +268,18 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           }
         })
       })
+      socket.on("dataToServerVoice",(voiceRoom)=>{
+        setSingleChannel((prev:SingleChannel | null)=>{
+          if(!prev){
+            return prev
+          }
+          return {
+            ...prev,
+            voiceChannel:[...prev.voiceChannel,voiceRoom]
+          }
+        })
+        
+      })
     }
 
     // Temizleme işlemi
@@ -278,6 +289,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("sendReceiverIdToUser");
         socket.off("new_message_notification");
         socket.off("dataToServer");
+        socket.off("dataToServerVoice")
       }
     };
   }, [socket,user]);

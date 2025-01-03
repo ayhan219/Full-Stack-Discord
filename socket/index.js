@@ -89,9 +89,6 @@ io.on('connection', (socket) => {
       if (!servers[uniqueServerName].chatRooms) {
         servers[uniqueServerName].chatRooms = []; 
     }
-   
-    
-
     if (!servers[uniqueServerName].chatRooms.includes(chatRoom)) {
         servers[uniqueServerName].chatRooms.push(chatRoom);
         console.log(`Chat room "${chatRoom}" added to the server "${uniqueServerName}"`);
@@ -118,6 +115,39 @@ io.on('connection', (socket) => {
           socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
       }
     });
+
+
+    socket.on('sendDataToChannelVoiceUsers', (data) => {
+        const { serverName, voiceRoom } = data;
+        console.log(serverName, voiceRoom);
+  
+        const uniqueServerName = serverNamesWithUUID[serverName]; 
+  
+        if (!servers[uniqueServerName].voiceRoom) {
+          servers[uniqueServerName].voiceRoom = []; 
+      }
+      if (!servers[uniqueServerName].voiceRoom.includes(voiceRoom)) {
+          servers[uniqueServerName].voiceRoom.push(voiceRoom);
+          console.log(`Voice room "${voiceRoom}" added to the server "${uniqueServerName}"`);
+      } else {
+          console.log(`Voice room "${voiceRoom}" already exists in server "${uniqueServerName}"`);
+      }
+  
+        if (servers[uniqueServerName]) {
+            const ownerUserId = servers[uniqueServerName].owner;
+            servers[uniqueServerName].members.forEach(memberUserId => {
+                if (memberUserId !== ownerUserId) {
+                    const memberSocketId = onlineUsers[memberUserId];
+                    if (memberSocketId) {
+                        io.to(memberSocketId).emit('dataToServerVoice',voiceRoom);
+                    }
+                }
+            });
+            console.log(`Data sent to all members of the server "${uniqueServerName}" except the owner`);
+        } else {
+            socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
+        }
+      });
 
    
     socket.on('joinServer', (serverName, userId) => {
