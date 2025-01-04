@@ -46,6 +46,24 @@ const ChannelMenu = () => {
       }
     }
 
+    const handleDisconnectFromVoice = async()=>{
+      try {
+        const response = await axios.delete("http://localhost:5000/api/channel/deleteuserfromvoicechannel",{
+          data:{
+            userId:user?.userId,
+          channelId:singleChannel?._id,
+          }
+
+        })
+        if(response.status ===200){
+          setConnectToVoice(false)
+        }
+        
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
   return (
     <>
     <div className="w-[270px] h-screen bg-[#2B2D31] flex flex-col relative">
@@ -133,7 +151,7 @@ const ChannelMenu = () => {
           <p className="text-sm">connected</p>
         </div>
         <div className="text-red-600 font-semibold text-2xl cursor-pointer ">
-          <PiPhoneDisconnectFill onClick={()=>setConnectToVoice(false)}  />
+          <PiPhoneDisconnectFill onClick={()=>handleDisconnectFromVoice()}  />
         </div>
       </div>
       }

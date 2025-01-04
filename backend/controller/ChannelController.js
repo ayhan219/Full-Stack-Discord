@@ -299,7 +299,7 @@ const joinChannel = async (req, res) => {
   };
 
   const deleteUserFromVoiceChannel = async (req, res) => {
-    const { userId, channelId, voiceRoomName } = req.body;
+    const { userId, channelId } = req.body; // voiceRoomName'ı kaldırdık
   
     try {
       const findChannel = await Channel.findById(channelId);
@@ -307,62 +307,45 @@ const joinChannel = async (req, res) => {
         return res.status(404).json({ message: "Channel not found" });
       }
   
-      const voiceRoom = findChannel.voiceChannel.find(
-        (room) => room.voiceRoomName === voiceRoomName
-      );
-      if (!voiceRoom) {
-        return res.status(404).json({ message: "Voice room not found" });
+      // Kullanıcıyı bulunduğu her ses odasından silmek için
+      let userFound = false;
+      let removedUser;
+  
+      // Her bir voiceChannel'ı kontrol et
+      for (let room of findChannel.voiceChannel) {
+        const isUserInRoom = room.voiceUsers.some(
+          (user) => user.toString() === userId
+        );
+  
+        if (isUserInRoom) {
+          // Kullanıcıyı ses kanalından çıkar
+          room.voiceUsers = room.voiceUsers.filter(
+            (user) => user.toString() !== userId
+          );
+          userFound = true;
+  
+          // Silinen kullanıcıyı bul
+          removedUser = await User.findById(userId).select("username profilePic _id");
+          await removedUser.populate("profilePic");  // profilePic gibi ilişkili alanları populate et
+          break;  // Kullanıcıyı bulduktan sonra daha fazla aramaya gerek yok
+        }
       }
   
-
-      const isUserInRoom = voiceRoom.voiceUsers.some(
-        (user) => user.toString() === userId
-      );
-      if (!isUserInRoom) {
-        return res.status(400).json({ message: "User is not in the voice channel" });
+      // Eğer kullanıcı bulunmadıysa hata döndür
+      if (!userFound) {
+        return res.status(400).json({ message: "User is not in any voice channel" });
       }
   
-      const userToRemove = await User.findById(userId).select("username profilePic _id");
+      // Kanalı güncelle ve değişiklikleri kaydet
+      const updatedChannel = await findChannel.save(); // save() kullanarak değişiklikleri kaydet
   
-      if (!userToRemove) {
+      if (!removedUser) {
         return res.status(404).json({ message: "User not found" });
       }
   
-      const updatedChannel = await Channel.findOneAndUpdate(
-        {
-          _id: channelId,
-          "voiceChannel.voiceRoomName": voiceRoomName,
-        },
-        {
-          $pull: { "voiceChannel.$.voiceUsers": userId },
-        },
-        { new: true }
-      )
-        .populate({
-          path: "voiceChannel.voiceUsers",
-          select: "username profilePic _id",
-        })
-        .populate({
-          path: "voiceChannel",
-        });
-  
-      if (!updatedChannel) {
-        return res.status(404).json({ message: "Voice room not found" });
-      }
-  
-      const updatedVoiceRoom = updatedChannel.voiceChannel.find(
-        (room) => room.voiceRoomName === voiceRoomName
-      );
-  
-      const removedUser = updatedVoiceRoom.voiceUsers.find(
-        (user) => user._id.toString() === userId
-      );
-  
-      if (!removedUser) {
-        return res.status(200).json(userToRemove); 
-      } else {
-        return res.status(400).json({ message: "Failed to remove user from the voice channel" });
-      }
+      // Silinen kullanıcıyı ve güncellenmiş kanalı döndür
+      return res.status(200).json(
+        removedUser);
   
     } catch (error) {
       console.error("Error:", error);
