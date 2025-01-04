@@ -203,6 +203,11 @@ const FriendChat = () => {
               type="text"
               onChange={(e) => setMessage(e.target.value)}
               value={message}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  sendMessage(); 
+                }
+              }}
             />
             <button onClick={() => sendMessage()} className="text-blue-500">
               Send
