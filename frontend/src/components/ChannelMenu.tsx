@@ -146,16 +146,26 @@ const ChannelMenu = () => {
         </div>
       )}
       {
-        connectToVoice &&  <div className="absolute bottom-16 p-4 w-full h-auto text-white bg-[#313338] flex justify-between py-2">
-        <div className="text-green-600 text-2xl flex gap-2">
-          <ImConnection />
-          <p className="text-sm">connected</p>
+  connectToVoice && (
+    <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 p-4 w-11/12 max-w-sm bg-[#1E2124] rounded-2xl shadow-md text-white flex flex-col gap-4 items-center">
+      <div className="flex flex-col items-center gap-2">
+        <div className="bg-green-500 w-12 h-6 rounded-full flex items-center justify-center">
+          <ImConnection size={24} className="text-white" />
         </div>
-        <div className="text-red-600 font-semibold text-2xl cursor-pointer ">
-          <PiPhoneDisconnectFill onClick={()=>handleDisconnectFromVoice()}  />
-        </div>
+        <p className="text-sm font-bold">Connected to Voice</p>
       </div>
-      }
+
+      <button
+        onClick={() => handleDisconnectFromVoice()}
+        className="flex w-full h-8 items-center justify-center gap-2 px-6 py-3 bg-red-500 rounded-lg text-sm font-semibold hover:bg-red-600 active:scale-95 transition duration-200 ease-in-out"
+      >
+        <PiPhoneDisconnectFill size={20} className="text-white" />
+        Disconnect
+      </button>
+    </div>
+  )
+}
+
       <BottomProfile />
     </div>
     {openCreateRoom && <CreateRoom />}
