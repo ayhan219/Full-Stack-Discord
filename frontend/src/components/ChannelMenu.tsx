@@ -118,32 +118,53 @@ const ChannelMenu = () => {
         </div>
       </div>
       {openChannelSettingArea &&  (
-        <div className="w-full h-64 bg-[#2D2F33] absolute top-14 rounded-lg shadow-lg">
-          {/* Header Section */}
-          <div className="w-full p-4 border-b border-gray-600 flex items-center justify-between">
-            <h2 className="text-white text-lg font-semibold">
-              Channel Settings
-            </h2>
-            <button onClick={()=>setOpenChannelSettingArea(!openChannelSettingArea)} className="text-gray-400 hover:text-white transition">
-              ✖
-            </button>
-          </div>
-
-          {/* Content Section */}
-          <div className="w-full p-6 flex flex-col items-start gap-4">
-            <button onClick={()=>getLink()} className={`w-40 h-12 bg-blue-600 ${isSucces && "bg-green-500 hover:bg-green-500"} text-white font-medium rounded-md hover:bg-blue-700 transition`}>
-              {
-                isSucces ? "Link copied" : "get link"
-              }
-            </button>
-            <button className="w-40 h-12 bg-gray-600 text-white font-medium rounded-md hover:bg-gray-700 transition">
-              Edit Channel
-            </button>
-            <button className="w-40 h-12 bg-red-600 text-white font-medium rounded-md hover:bg-red-700 transition">
-              Delete Channel
-            </button>
-          </div>
+        <div className="w-full max-w-md h-auto bg-[#1F1F23] absolute top-0 rounded-lg shadow-xl overflow-hidden">
+        {/* Header Section */}
+        <div className="w-full p-4 bg-[#2D2F33] border-b border-gray-700 flex items-center justify-between">
+          <h2 className="text-white text-xl font-semibold">
+            Channel Settings
+          </h2>
+          <button
+            onClick={() => setOpenChannelSettingArea(!openChannelSettingArea)}
+            className="text-gray-400 hover:text-red-500 transition-colors duration-300"
+          >
+            ✖
+          </button>
         </div>
+      
+        {/* Content Section */}
+        <div className="w-full p-6 flex flex-col items-start gap-6">
+          <button
+            onClick={() => getLink()}
+            className={`w-full h-12 px-4 bg-gray-700 ${
+              isSucces && "bg-green-500 hover:bg-green-600"
+            } text-white font-medium rounded-md hover:bg-gray-600 transition-all duration-300 ease-in-out shadow-md`}
+          >
+            {isSucces ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="w-5 h-5 mr-2 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+                Link copied
+              </span>
+            ) : (
+              "Get Link"
+            )}
+          </button>
+        </div>
+      </div>
+      
       )}
       {
   connectToVoice && (
