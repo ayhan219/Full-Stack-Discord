@@ -15,7 +15,7 @@ type SidebarInterface = {
 const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
   const { user, channels, setChannels,notificationNumber } = useUserContext();
 
-  const { openCreateChannel, setOpenCreateChannel } = useUserContext();
+  const { openCreateChannel, setOpenCreateChannel,setSelectedChatRoom } = useUserContext();
 
   const getChannelInfo = async () => {
     try {
@@ -44,7 +44,10 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
         className={`relative flex items-center justify-center cursor-pointer ${
           activeChannel === "home" ? "group" : ""
         }`}
-        onClick={() => setActiveChannel("home")}
+        onClick={() =>{
+          setActiveChannel("home")
+          setSelectedChatRoom("");
+        } }
       >
         <div
           className={`absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-r-lg bg-white transition-all duration-300 ${

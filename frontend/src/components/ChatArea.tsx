@@ -83,10 +83,13 @@ const ChatArea = () => {
 
   return (
     <div className="w-[70%] h-screen bg-[#313338] flex flex-col">
-      <div className="w-full h-14 bg-[#313338] text-white text-base font-semibold flex gap-3 items-center px-5 border-b border-gray-700">
+      {
+        selectedChatRoom &&
+        <div className="w-full h-14 bg-[#313338] text-white text-base font-semibold flex gap-3 items-center px-5 border-b border-gray-700">
         <FaHashtag className="text-2xl text-gray-400" />
         <h3>{selectedChatRoom}</h3>
       </div>
+      }
 
       <div className="w-full h-full flex flex-col gap-6 overflow-hidden overflow-y-auto custom-scrollbar p-5">
         {!containsMessage ? (
