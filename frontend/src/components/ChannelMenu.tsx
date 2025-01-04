@@ -47,21 +47,22 @@ const ChannelMenu = () => {
     }
 
     const handleDisconnectFromVoice = async()=>{
-      try {
-        const response = await axios.delete("http://localhost:5000/api/channel/deleteuserfromvoicechannel",{
-          data:{
-            userId:user?.userId,
-          channelId:singleChannel?._id,
-          }
+      setConnectToVoice(false);
+      // try {
+      //   const response = await axios.delete("http://localhost:5000/api/channel/deleteuserfromvoicechannel",{
+      //     data:{
+      //       userId:user?.userId,
+      //     channelId:singleChannel?._id,
+      //     }
 
-        })
-        if(response.status ===200){
-          setConnectToVoice(false)
-        }
+      //   })
+      //   if(response.status ===200){
+      //     setConnectToVoice(false)
+      //   }
         
-      } catch (error) {
-        console.log(error);
-      }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
 
   return (

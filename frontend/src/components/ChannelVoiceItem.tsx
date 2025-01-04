@@ -25,20 +25,21 @@ const ChannelVoiceItem = ({
 
 
     const handleConnectToVoice = async()=>{
-      try {
-        const response = await axios.post("http://localhost:5000/api/channel/addusertovoicechannel",{
-          userId:user?.userId,
-          channelId:singleChannel?._id,
-          voiceRoomName:item.voiceRoomName
+      // try {
+      //   const response = await axios.post("http://localhost:5000/api/channel/addusertovoicechannel",{
+      //     userId:user?.userId,
+      //     channelId:singleChannel?._id,
+      //     voiceRoomName:item.voiceRoomName
 
-        })
-        if(response.status ===200){
-          setConnectToVoice(true)
-        }
+      //   })
+      //   if(response.status ===200){
+      //     setConnectToVoice(true)
+      //   }
         
-      } catch (error) {
-        console.log(error);
-      }
+      // } catch (error) {
+      //   console.log(error);
+      // }
+      setConnectToVoice(true)
     }
   return (
     <div
