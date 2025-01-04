@@ -2,7 +2,7 @@ import { FaHashtag } from "react-icons/fa6";
 import ChatComplement from "./ChatComplement";
 import "../index.css";
 import { useUserContext } from "../context/UserContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Message {
   channelName: string;
@@ -19,6 +19,7 @@ const ChatArea = () => {
   const [containsMessage, setContainsMessage] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setContainsMessage(messages.length > 0);
@@ -76,6 +77,10 @@ const ChatArea = () => {
     setMessages([]);
   }, [selectedChatRoom]);
 
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   return (
     <div className="w-[70%] h-screen bg-[#313338] flex flex-col">
       <div className="w-full h-14 bg-[#313338] text-white text-base font-semibold flex gap-3 items-center px-5 border-b border-gray-700">
@@ -121,25 +126,35 @@ const ChatArea = () => {
             {messages.map((item, index) => (
               <ChatComplement key={index} item={item} />
             ))}
+            <div ref={messagesEndRef} />
           </>
         )}
       </div>
 
       {/* Message Input */}
       {selectedChatRoom !== "" && (
-        <div className="w-full h-16 bg-[#2B2D31] flex items-center px-5">
-          <input
-            type="text"
-            placeholder="Type a message..."
-            className="w-full h-10 bg-[#40444B] text-gray-200 rounded-md px-4 focus:outline-none"
-            onChange={(e) => setMessage(e.target.value)}
-            value={message}
-          />
-          <button onClick={handleSend} className="text-blue-500">
-            Send
-          </button>
-        </div>
-      )}
+  <div className="w-full h-16 bg-[#2B2D31] flex items-center px-5 gap-3">
+    <input
+      type="text"
+      placeholder="Type a message..."
+      className="w-full h-10 bg-[#40444B] text-gray-200 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 placeholder-gray-400"
+      onChange={(e) => setMessage(e.target.value)}
+      value={message}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          handleSend(); 
+        }
+      }}
+    />
+    <button
+      onClick={handleSend}
+      className="h-10 px-6 bg-gray-500 text-white font-medium rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200"
+    >
+      Send
+    </button>
+  </div>
+)}
+
     </div>
   );
 };
