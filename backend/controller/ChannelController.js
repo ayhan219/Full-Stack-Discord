@@ -297,6 +297,78 @@ const joinChannel = async (req, res) => {
       return res.status(500).json({ message: "Server error" });
     }
   };
+
+  const deleteUserFromVoiceChannel = async (req, res) => {
+    const { userId, channelId, voiceRoomName } = req.body;
+  
+    try {
+      const findChannel = await Channel.findById(channelId);
+      if (!findChannel) {
+        return res.status(404).json({ message: "Channel not found" });
+      }
+  
+      const voiceRoom = findChannel.voiceChannel.find(
+        (room) => room.voiceRoomName === voiceRoomName
+      );
+      if (!voiceRoom) {
+        return res.status(404).json({ message: "Voice room not found" });
+      }
+  
+
+      const isUserInRoom = voiceRoom.voiceUsers.some(
+        (user) => user.toString() === userId
+      );
+      if (!isUserInRoom) {
+        return res.status(400).json({ message: "User is not in the voice channel" });
+      }
+  
+      const userToRemove = await User.findById(userId).select("username profilePic _id");
+  
+      if (!userToRemove) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      const updatedChannel = await Channel.findOneAndUpdate(
+        {
+          _id: channelId,
+          "voiceChannel.voiceRoomName": voiceRoomName,
+        },
+        {
+          $pull: { "voiceChannel.$.voiceUsers": userId },
+        },
+        { new: true }
+      )
+        .populate({
+          path: "voiceChannel.voiceUsers",
+          select: "username profilePic _id",
+        })
+        .populate({
+          path: "voiceChannel",
+        });
+  
+      if (!updatedChannel) {
+        return res.status(404).json({ message: "Voice room not found" });
+      }
+  
+      const updatedVoiceRoom = updatedChannel.voiceChannel.find(
+        (room) => room.voiceRoomName === voiceRoomName
+      );
+  
+      const removedUser = updatedVoiceRoom.voiceUsers.find(
+        (user) => user._id.toString() === userId
+      );
+  
+      if (!removedUser) {
+        return res.status(200).json(userToRemove); 
+      } else {
+        return res.status(400).json({ message: "Failed to remove user from the voice channel" });
+      }
+  
+    } catch (error) {
+      console.error("Error:", error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  };
   
   
 
@@ -308,5 +380,6 @@ createChatRoom,
 createVoiceRoom,
 createInvite,
 joinChannel,
-addUserToVoiceChannel
+addUserToVoiceChannel,
+deleteUserFromVoiceChannel
 }
