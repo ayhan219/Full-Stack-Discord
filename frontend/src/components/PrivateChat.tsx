@@ -19,7 +19,7 @@ interface Channel {
 }
 
 const PrivateChat = ({ item }: PrivateChatProps) => {
-  const { user, setChannels, getSingleChannel, singleChannel,socket } =
+  const { user, setChannels, getSingleChannel, singleChannel, socket } =
     useUserContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tokenForInv, setTokenForInv] = useState<string>("");
@@ -83,7 +83,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
           return [...prev, response.data];
         });
         setIsModalOpen(false);
-        socket.emit("joinServer",singleChannel?.channelName,user?.userId);
+        socket.emit("joinServer", singleChannel?.channelName, user?.userId);
       }
     } catch (error) {
       console.log(error);
@@ -117,10 +117,10 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
             isOwnMessage ? "ml-2" : "mr-2"
           }`}
           style={{
-            maxWidth: "100%", 
-            wordWrap: "break-word", 
-            whiteSpace: "pre-wrap", 
-            overflowWrap: "break-word", 
+            maxWidth: "100%",
+            wordWrap: "break-word",
+            whiteSpace: "pre-wrap",
+            overflowWrap: "break-word",
           }}
         >
           <p>{parseMessage(item.message)}</p>
@@ -140,12 +140,20 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
           <div className="bg-[#2F3136] p-6 rounded-lg shadow-lg w-[400px]">
-            <div className="flex items-center justify-center mb-4">
-              {/* Profile Image */}
-              <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer">
-                <span className="text-lg font-semibold text-[#2F3136]">
+            <div className="flex items-center justify-center mb-6 gap-6">
+              <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg cursor-pointer transition-transform transform hover:scale-105">
+                <span className="text-2xl font-bold text-white">
                   {initials}
                 </span>
+              </div>
+
+              <div className="text-white font-bold text-lg text-center">
+                <p className="text-2xl leading-none">
+                  {singleChannel?.channelUsers.length} User
+                </p>
+                <p className="text-sm font-normal text-gray-300">
+                  Active in this channel
+                </p>
               </div>
             </div>
 
@@ -172,12 +180,12 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
                   </p>
                 </div>
 
-                <p className="mt-4 text-white">
+                <p className="mt-4 text-white text-center">
                   Do you want to join this channel?
                 </p>
 
                 {!loading ? (
-                  <div className="mt-4 flex gap-4">
+                  <div className="mt-4 flex gap-6 justify-center">
                     <button
                       className="bg-blue-500 text-white py-2 px-4 rounded"
                       onClick={() => handleJoinChannel()}
