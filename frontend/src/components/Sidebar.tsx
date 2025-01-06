@@ -13,11 +13,12 @@ type SidebarInterface = {
 };
 
 const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
-  const { user, channels, setChannels,notificationNumber } = useUserContext();
+  const { user, channels, setChannels,notificationNumber,loading,setLoading } = useUserContext();
 
   const { openCreateChannel, setOpenCreateChannel,setSelectedChatRoom } = useUserContext();
 
   const getChannelInfo = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "http://localhost:5000/api/channel/getchannel",
@@ -31,6 +32,8 @@ const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
       console.log(response.data);
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false);
     }
   };
 
