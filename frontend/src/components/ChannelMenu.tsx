@@ -19,6 +19,7 @@ const ChannelMenu = () => {
     openCreateRoom,
     setOpenCreateVoiceRoom,
     openCreateVoiceRoom,
+    loading
   } = useUserContext();
 
 
@@ -68,7 +69,15 @@ const ChannelMenu = () => {
   return (
     <>
     <div className="w-[270px] h-screen bg-[#2B2D31] flex flex-col relative">
-      <div className="w-full h-16 flex items-center border-b border-gray-800 justify-between px-5">
+      {
+        loading ? <div className="flex items-center justify-center w-full h-full">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+          <p className="mt-4 text-white font-semibold">Loading...</p>
+        </div>
+      </div> :
+        <>
+        <div className="w-full h-16 flex items-center border-b border-gray-800 justify-between px-5">
         <div className="font-bold text-[#D6D9DC] text-xl  ">
           {singleChannel?.channelName}
         </div>
@@ -187,6 +196,9 @@ const ChannelMenu = () => {
   )
 }
 
+        </>
+        
+      }
       <BottomProfile />
     </div>
     {openCreateRoom && <CreateRoom />}

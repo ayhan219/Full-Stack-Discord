@@ -139,6 +139,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   }, [user?.userId]); // Only run this effect when the user is available
 
   const getSingleChannel = async (id: string) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "http://localhost:5000/api/channel/getchannelsingle",
@@ -153,6 +154,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       setSingleChannel(response.data);
     } catch (error) {
       console.log(error);
+    }finally{
+      setLoading(false);
     }
   };
 
