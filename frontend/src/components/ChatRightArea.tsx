@@ -4,10 +4,20 @@ import ChannelMember from './ChannelMember'
 
 const ChatRightArea = () => {
 
-  const {singleChannel} = useUserContext();
+  const {singleChannel,loading} = useUserContext();
   return (
     <div className='w-[270px] h-full bg-[#2B2D31]'>
-        <div className='w-full h-10 text-gray-400 p-4 text-xl font-semibold'>
+        {
+          loading ? <div className="flex items-center justify-center w-full h-full">
+          <div className="flex gap-2">
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce"></div>
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce delay-200"></div>
+            <div className="w-3 h-3 bg-white rounded-full animate-bounce delay-400"></div>
+          </div>
+        </div>
+         :
+          <>
+          <div className='w-full h-10 text-gray-400 p-4 text-xl font-semibold'>
             <h3>Members - {singleChannel?.channelUsers.length}</h3>
         </div>
         <div className='w-full h-auto pt-3'>
@@ -19,6 +29,8 @@ const ChatRightArea = () => {
 
 
         </div>
+          </>
+        }
     </div>
   )
 }
