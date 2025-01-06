@@ -48,6 +48,8 @@ interface UserContextType {
   notificationNumber: number;
   setNotificationNumber: (notificationNumber: number) => void;
   deleteNotification:() =>void
+  loading:boolean;
+  setLoading:(loading:boolean)=>void;
 }
 
 interface Friend {
@@ -107,6 +109,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState<string>("friends");
   const [friendId, setFriendId] = useState<string>("");
   const [notificationNumber, setNotificationNumber] = useState<number>(0);
+  const [loading,setLoading] = useState<boolean>(false);
 
   const getCurrentUser = async () => {
     try {
@@ -333,6 +336,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         notificationNumber,
         setNotificationNumber,
         deleteNotification,
+        loading,
+        setLoading
       }}
     >
       {children}
