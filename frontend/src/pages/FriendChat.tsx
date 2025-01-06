@@ -37,7 +37,7 @@ interface Friend {
 }
 
 const FriendChat = () => {
-  const { user, socket, setUser } = useUserContext();
+  const { user, socket, setUser,setLoading,loading } = useUserContext();
 
   const { activeMenu, setActiveMenu } = useUserContext();
   const [message, setMessage] = useState<string>("");
@@ -58,6 +58,7 @@ const FriendChat = () => {
   }, [socket]);
 
   const getMessages = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "http://localhost:5000/api/message/getmessages",
@@ -73,6 +74,8 @@ const FriendChat = () => {
     } catch (error) {
       console.log(error);
       setMessages([]);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -135,8 +138,16 @@ const FriendChat = () => {
     <div className="w-full h-screen flex bg-[#313338]">
       <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
       <div className="flex flex-col w-[calc(100%-270px)] h-full bg-[#2F3136]">
-        {/* Top Bar */}
-        <div className="w-full h-16 bg-[#292B2F] flex justify-between items-center px-4 border-b border-gray-700">
+       {
+        loading ? <div className="flex items-center justify-center w-full h-full ">
+        <div className="flex flex-col items-center">
+          <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+          <p className="mt-4 text-white font-semibold">Loading...</p>
+        </div>
+      </div> :
+        <>
+         {/* Top Bar */}
+         <div className="w-full h-16 bg-[#292B2F] flex justify-between items-center px-4 border-b border-gray-700">
           {/* Profile Section */}
           <div className="flex items-center gap-3">
             <img
@@ -214,6 +225,8 @@ const FriendChat = () => {
             </button>
           </div>
         </div>
+        </>
+       }
       </div>
     </div>
   );
