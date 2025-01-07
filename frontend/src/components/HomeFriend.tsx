@@ -2,7 +2,7 @@ import axios from "axios";
 import { IoChatbubble } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
-import { useEffect } from "react";
+import { IoCloseSharp } from "react-icons/io5";
 
 type HomeFriendProps = {
   item: {
@@ -17,7 +17,7 @@ type User = {
   email: string;
   displayName: string;
   username: string;
-  profilePic:string;
+  profilePic: string;
   friends: Friend[];
   pendingFriend: Friend[];
   menuChat: Friend[];
@@ -76,6 +76,19 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
       }
     })
     console.log(response.data);
+    if(response.status===200){
+      setUser((prev: User | null)=>{
+        if(!prev){
+          return prev;
+        }
+        const filteredData = user?.friends.filter((data)=>data._id !==item._id) ||[];
+
+        return {
+          ...prev,
+          friends:filteredData
+        }
+      })
+    }
     
   } catch (error) {
     console.log(error);
@@ -103,9 +116,16 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
         </div>
         <h3 className="text-md text-white font-medium">{item.username}</h3>
       </div>
-
-      <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#1E1F22] hover:bg-gray-500 transition-all">
+      <div className="flex gap-2">
+      <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#1E1F22]  transition-all">
         <IoChatbubble className="text-gray-300 text-2xl cursor-pointer hover:text-white" />
+      </div>
+      <div onClick={(e)=>{
+        e.stopPropagation();
+        handleDeleteFriend();
+      }} className="w-12 h-12 flex items-center justify-center rounded-full bg-[#1E1F22]  transition-all">
+        <IoCloseSharp  className="text-gray-300 text-2xl cursor-pointer hover:text-white" />
+      </div>
       </div>
     </div>
   );
