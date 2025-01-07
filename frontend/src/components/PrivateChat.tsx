@@ -68,7 +68,6 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
   };
 
   const handleJoinChannel = async () => {
-    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/channel/join/${tokenForInv}`,
@@ -87,9 +86,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   return (
@@ -135,8 +132,6 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
           alt="Sender"
         />
       )}
-
-      {/* Modal - Kanal katılımı onayı */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
           <div className="bg-[#2F3136] p-6 rounded-lg shadow-lg w-[400px]">

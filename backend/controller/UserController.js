@@ -259,7 +259,6 @@ const addToMenuChat = async (req, res) => {
 
 const uploadProfilePicture = async (req, res) => {
   const { userId } = req.body;
-  console.log(userId);
   
   if (!req.file) {
     return res.status(400).json({ message: "No file uploaded!" });
@@ -412,6 +411,8 @@ const deleteNotification = async(req,res)=>{
 
 const deleteMenuChat = async(req,res)=>{
   const {userId,friendId} = req.body;
+ 
+  
 
   if(!userId || !friendId){
     return res.status(400).json({message:"provide all area"})
@@ -437,6 +438,45 @@ const deleteMenuChat = async(req,res)=>{
   }
 }
 
+const deleteUser = async(req,res)=>{
+const {userId,friendId} = req.body;
+
+if(!userId){
+  return res.status(400).json({message:"no user id"})
+}
+if(!friendId){
+  return res.status(400).json({message:"no friend id"})
+}
+try {
+  const findUser = await User.findById(userId);
+  const findFriend = await User.findById(friendId);
+
+  if(!findUser){
+    return res.status(400).json({message:"user not found"})
+  }
+
+  if(!findFriend){
+    return res.status(400).json({message:"friend not found"})
+  }
+  if(findUser.friends.includes(friendId)){
+    const filteredUser = findUser.friends.filter((item)=>item._id.toString() !== friendId);
+    
+
+    findUser.friends = filteredUser;
+  }
+  if(findFriend.friends.includes(userId)){
+    const filteredFriend = findFriend.friends.filter((item)=>item._id.toString()!== userId);
+    findFriend.friends = filteredFriend;
+  }
+
+  await findUser.save();
+  await findFriend.save();
+  res.status(200).json({message:"successfull"})
+} catch (error) {
+  return res.status(500).json({message:"server error"})
+}
+}
+
 module.exports = {
   signup,
   login,
@@ -450,5 +490,6 @@ module.exports = {
   addNotification,
   getNotification,
   deleteNotification,
-  deleteMenuChat
+  deleteMenuChat,
+  deleteUser
 };
