@@ -67,6 +67,22 @@ const HomeFriend = ({ item }: HomeFriendProps) => {
   localStorage.setItem("username",item.username);
  }
 
+ const handleDeleteFriend = async()=>{
+  try {
+    const response = await axios.delete("http://localhost:5000/api/auth/deleteuser",{
+      data:{
+        userId:user?.userId,
+        friendId:item?._id
+      }
+    })
+    console.log(response.data);
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+  }
+
   return (
     <div
       onClick={() => {

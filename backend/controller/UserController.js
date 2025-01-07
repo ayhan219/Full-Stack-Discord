@@ -464,9 +464,15 @@ try {
 
     findUser.friends = filteredUser;
   }
+  else{
+    return res.status(400).json({message:"user already removed"})
+  }
   if(findFriend.friends.includes(userId)){
     const filteredFriend = findFriend.friends.filter((item)=>item._id.toString()!== userId);
     findFriend.friends = filteredFriend;
+  }
+  else{
+    return res.status(400).json({message:"user already removed"})
   }
 
   await findUser.save();
