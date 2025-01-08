@@ -92,7 +92,10 @@ const MenuFriends = ({ item }: MenuFriendProps) => {
           </div>
         </div>
 
-        <div onClick={()=>deleteMenuFriend()} className="absolute right-3 opacity-0 group-hover:opacity-100  text-gray-600 font-semibold text-xl">
+        <div onClick={(e)=>{
+          e.stopPropagation();
+          deleteMenuFriend();
+        }} className="absolute right-3 opacity-0 group-hover:opacity-100  text-gray-600 font-semibold text-xl">
           <MdClose className="cursor-pointer"  />
         </div>
       </div>
