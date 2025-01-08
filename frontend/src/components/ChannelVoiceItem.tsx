@@ -1,9 +1,10 @@
 import { MdSettingsVoice } from "react-icons/md";
 import { useUserContext } from "../context/UserContext";
 import { PiMicrophoneSlashFill } from "react-icons/pi";
-import { FaHeadphones, FaMicrophone } from "react-icons/fa";
+import { FaHeadphones, FaMicrophone, FaSignOutAlt } from "react-icons/fa";
 import { TbHeadphonesOff } from "react-icons/tb";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 type ChannelVoiceItemProps = {
   item: {
@@ -20,27 +21,56 @@ const ChannelVoiceItem = ({
   setConnectToVoice,
   connectToVoice,
 }: ChannelVoiceItemProps) => {
-  const { user, turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff,singleChannel } =
+  const { user,socket, turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff,singleChannel } =
     useUserContext();
 
+    const [voiceUsers, setVoiceUsers] = useState([]);
 
-    const handleConnectToVoice = async()=>{
-      // try {
-      //   const response = await axios.post("http://localhost:5000/api/channel/addusertovoicechannel",{
-      //     userId:user?.userId,
-      //     channelId:singleChannel?._id,
-      //     voiceRoomName:item.voiceRoomName
+    useEffect(() => {
+      socket.on("voiceRoomUsers", (users) => {
+        setVoiceUsers(users);
+      });
+  
+      return () => {
+        socket.off("voiceRoomUsers");
+      };
+    }, []);
 
-      //   })
-      //   if(response.status ===200){
-      //     setConnectToVoice(true)
-      //   }
+    const handleConnectToVoice = () => {
+      setConnectToVoice(true);
+      socket.emit("joinVoiceRoom", {
+        serverName:singleChannel?.channelName,
+        roomName: item.voiceRoomName,
+        userId:user?.userId
+      });
+    };
+
+    const handleDisconnect = () => {
+      setConnectToVoice(false);
+      socket.emit("leaveVoiceRoom", {
+        serverName:singleChannel?.channelName,
+        roomName: item.voiceRoomName,
+        userId:user?.userId
+      });
+    };
+
+    // const handleConnectToVoice = async()=>{
+    //   try {
+    //     const response = await axios.post("http://localhost:5000/api/channel/addusertovoicechannel",{
+    //       userId:user?.userId,
+    //       channelId:singleChannel?._id,
+    //       voiceRoomName:item.voiceRoomName
+
+    //     })
+    //     if(response.status ===200){
+    //       setConnectToVoice(true)
+    //     }
         
-      // } catch (error) {
-      //   console.log(error);
-      // }
-      setConnectToVoice(true)
-    }
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    //   setConnectToVoice(true)
+    // }
   return (
     <div
       onClick={() => handleConnectToVoice()}
@@ -52,40 +82,53 @@ const ChannelVoiceItem = ({
       </div>
 
       {connectToVoice && (
-        <div className="w-full flex flex-col  mt-3 space-y-3">
-          <div className="flex items-center gap-3 bg-[#313338] p-2 rounded-lg shadow-md">
-            <div className="w-full h-full flex gap-2">
-              <img
-                className="w-6 h-6 rounded-full"
-                src={`http://localhost:5000${user?.profilePic}`}
-                alt=""
-              />
-              <p>{user?.username}</p>
-            </div>
-            <div>
-              <div className="flex text-white text-base gap-2 items-center">
-                <div
-                  onClick={() => setTurnMicOff(!turnMicOff)}
-                  className={`cursor-pointer transition duration-200 ${
-                    turnMicOff ? "text-red-600" : ""
-                  }`}
-                >
-                  {turnMicOff ? <PiMicrophoneSlashFill /> : <FaMicrophone />}
-                </div>
+  <div className="w-full flex flex-col mt-3 space-y-3">
+    <div className="flex items-center gap-3 bg-[#313338] p-2 rounded-lg shadow-md">
+      <div className="w-full h-full flex gap-2">
+        <img
+          className="w-6 h-6 rounded-full"
+          src={`http://localhost:5000${user?.profilePic}`}
+          alt=""
+        />
+        <p>{user?.username}</p>
+      </div>
+      <div>
+        <div className="flex text-white text-base gap-2 items-center">
+          <div
+            onClick={() => setTurnMicOff(!turnMicOff)}
+            className={`cursor-pointer transition duration-200 ${
+              turnMicOff ? "text-red-600" : ""
+            }`}
+          >
+            {turnMicOff ? <PiMicrophoneSlashFill /> : <FaMicrophone />}
+          </div>
 
-                <div
-                  onClick={() => setTurnHeadOff(!turnHeadOff)}
-                  className={`cursor-pointer transition duration-200 ${
-                    turnHeadOff ? "text-red-600" : ""
-                  }`}
-                >
-                  {turnHeadOff ? <TbHeadphonesOff /> : <FaHeadphones />}
-                </div>
-              </div>
-            </div>
+          <div
+            onClick={() => setTurnHeadOff(!turnHeadOff)}
+            className={`cursor-pointer transition duration-200 ${
+              turnHeadOff ? "text-red-600" : ""
+            }`}
+          >
+            {turnHeadOff ? <TbHeadphonesOff /> : <FaHeadphones />}
+          </div>
+
+          {/* Disconnect Button */}
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDisconnect();
+            }}
+            className="cursor-pointer text-red-600 transition duration-200"
+          >
+            <FaSignOutAlt /> 
           </div>
         </div>
-      )}
+      </div>
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };
