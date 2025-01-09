@@ -27,7 +27,6 @@ const ChannelMenu = () => {
   const [openChannelSettingArea, setOpenChannelSettingArea] =
     useState<boolean>(false);
     const [isSucces,setIsSucces] = useState<boolean | null>(false || null);
-    const [connectToVoice,setConnectToVoice] = useState<boolean>(false);
 
     const {user} = useUserContext();
 
@@ -47,24 +46,7 @@ const ChannelMenu = () => {
       }
     }
 
-    const handleDisconnectFromVoice = async()=>{
-      setConnectToVoice(false);
-      // try {
-      //   const response = await axios.delete("http://localhost:5000/api/channel/deleteuserfromvoicechannel",{
-      //     data:{
-      //       userId:user?.userId,
-      //     channelId:singleChannel?._id,
-      //     }
-
-      //   })
-      //   if(response.status ===200){
-      //     setConnectToVoice(false)
-      //   }
-        
-      // } catch (error) {
-      //   console.log(error);
-      // }
-    }
+    
 
   return (
     <>
@@ -122,7 +104,7 @@ const ChannelMenu = () => {
 
         <div className="w-full h-auto flex flex-col gap-3">
           {singleChannel?.voiceChannel.map((item, index) => (
-            <ChannelVoiceItem key={index} item={item} connectToVoice={connectToVoice} setConnectToVoice={setConnectToVoice}  />
+            <ChannelVoiceItem key={index} item={item}  />
           ))}
         </div>
       </div>
@@ -175,29 +157,7 @@ const ChannelMenu = () => {
       </div>
       
       )}
-      {
-  connectToVoice && (
-    <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 p-4 w-11/12 max-w-sm bg-[#1E2124] rounded-2xl shadow-md text-white flex flex-col gap-4 items-center">
-      <div className="flex flex-col items-center gap-2">
-        <div className="bg-green-500 w-12 h-6 rounded-full flex items-center justify-center">
-          <ImConnection size={24} className="text-white" />
-        </div>
-        <p className="text-sm font-bold">Connected to Voice</p>
-      </div>
-
-      <button
-        onClick={() => handleDisconnectFromVoice()}
-        className="flex w-full h-8 items-center justify-center gap-2 px-6 py-3 bg-red-500 rounded-lg text-sm font-semibold hover:bg-red-600 active:scale-95 transition duration-200 ease-in-out"
-      >
-        <PiPhoneDisconnectFill size={20} className="text-white" />
-        Disconnect
-      </button>
-    </div>
-  )
-}
-
         </>
-        
       }
       <BottomProfile />
     </div>
