@@ -76,7 +76,15 @@ const getChannelSingle = async(req,res)=>{
         return res.status(400).json({message:"no channel id"})
     }
     try {
-        const findChannel = await Channel.findById(channelId).populate('channelUsers', 'username profilePic _id');  // 'username' ve 'profilePic' alanlarını populate et
+      const findChannel = await Channel.findById(channelId)
+      .populate('channelUsers', 'username profilePic _id') 
+      .populate({
+        path: 'voiceChannel',  
+        populate: {
+          path: 'voiceUsers', 
+          select: 'username profilePic _id', 
+        },
+      });
         if(!findChannel){
             return res.status(400).json({message:"channel not found"})
         }

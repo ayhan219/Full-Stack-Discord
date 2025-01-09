@@ -5,10 +5,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import VoiceComponent from "./VoiceComponent";
 
+type VoiceUser = {
+  _id: string;
+  username: string;
+  profilePic: string;
+};
+
+
 type ChannelVoiceItemProps = {
   item: {
     voiceRoomName: string;
-    voiceUsers: string[];
+    voiceUsers: VoiceUser[];
     _id: string;
   };
 };
@@ -58,7 +65,7 @@ const ChannelVoiceItem = ({
     .map((channel, index) => (
       <div key={index}>
         {channel.voiceUsers?.map((user, userIndex) => (
-          <VoiceComponent key={userIndex} userId={user} roomName={item.voiceRoomName}  />
+          <VoiceComponent key={userIndex} item={user} roomName={item.voiceRoomName}  />
         ))}
       </div>
     ))}

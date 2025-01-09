@@ -5,11 +5,15 @@ import { TbHeadphonesOff } from "react-icons/tb";
 import axios from 'axios';
 
 interface UserProps {
-  userId: string;
+  item:{
+    username:string,
+    profilePic:string,
+    _id:string
+  }
   roomName: string;
 }
 
-const VoiceComponent = ({ userId, roomName }: UserProps) => {
+const VoiceComponent = ({ item, roomName }: UserProps) => {
   const {
     turnMicOff,
     user,
@@ -46,10 +50,10 @@ const VoiceComponent = ({ userId, roomName }: UserProps) => {
         <div className="w-full h-full flex gap-2">
           <img
             className="w-6 h-6 rounded-full"
-            src=""
+            src={`http://localhost:5000${item.profilePic}`}
             alt=""
           />
-          <p>{userId}</p>
+          <p>{item.username}</p>
         </div>
 
         <div>
@@ -70,7 +74,7 @@ const VoiceComponent = ({ userId, roomName }: UserProps) => {
               {turnHeadOff ? <TbHeadphonesOff /> : <FaHeadphones />}
             </div>
 
-            {userId === user?.userId && (
+            {item._id === user?.userId && (
               <div
                 onClick={(e) => {
                   e.stopPropagation();

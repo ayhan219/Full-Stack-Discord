@@ -68,9 +68,15 @@ interface ChatChannel {
   messages: string[];
 }
 
+type VoiceUser = {
+  _id: string;
+  username: string;
+  profilePic: string;
+};
+
 interface VoiceChannel {
   voiceRoomName: string;
-  voiceUsers: string[];  
+  voiceUsers: VoiceUser[];  
   _id: string;
 }
 
