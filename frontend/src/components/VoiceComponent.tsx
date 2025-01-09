@@ -13,6 +13,36 @@ interface UserProps {
   roomName: string;
 }
 
+
+interface VoiceChannel {
+    voiceRoomName: string;
+    voiceUsers: VoiceUser[];  
+    _id: string;
+  }
+
+  type VoiceUser = {
+    _id: string;
+    username: string;
+    profilePic: string;
+  };
+  
+
+  
+interface ChatChannel {
+    roomName: string;
+    messages: string[];
+  }
+  
+  
+  interface SingleChannel {
+    _id: string;
+    channelName: string;
+    chatChannel: ChatChannel[];
+    voiceChannel: VoiceChannel[];
+    admin:string[],
+    channelUsers: [];
+  }
+
 const VoiceComponent = ({ item, roomName }: UserProps) => {
   const {
     turnMicOff,
@@ -22,6 +52,7 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
     setTurnHeadOff,
     singleChannel,
     socket,
+    setSingleChannel
   } = useUserContext();
 
   const handleDisconnectFromVoice = async () => {
@@ -33,6 +64,28 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
         }
       });
       if (response.status === 200) {
+        console.log("User disconnected and removed from voice channel");
+  
+        setSingleChannel((prev: SingleChannel | null) => {
+          if (!prev) return prev;
+  
+
+          const updatedVoiceChannels = prev.voiceChannel.map((channel) => {
+            if (channel.voiceRoomName === roomName) {
+              return {
+                ...channel,
+                voiceUsers: channel.voiceUsers.filter((user) => user._id !== response.data._id), 
+              };
+            }
+            return channel;
+          });
+  
+          return {
+            ...prev,
+            voiceChannel: updatedVoiceChannels, 
+          };
+        });
+  
         socket.emit("leaveVoiceRoom", {
           serverName: singleChannel?.channelName,
           roomName: roomName,
