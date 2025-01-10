@@ -83,6 +83,13 @@ const ChannelVoiceItem = ({
           roomName: item.voiceRoomName,
           userId: user?.userId,
         });
+        socket.emit("sendVoiceJoinedUser",{
+          serverName:singleChannel?.channelName,
+          roomName:item.voiceRoomName,
+          username:user?.username,
+          profilePic:user?.profilePic,
+          _id:user?.userId
+        })
       }
     } catch (error) {
       console.log(error);

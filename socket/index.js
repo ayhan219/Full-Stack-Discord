@@ -228,29 +228,34 @@ io.on('connection', (socket) => {
     });
 
     socket.on("joinVoiceRoom", (data) => {
-        const {serverName,roomName,userId} = data
+        const { serverName, roomName, userId } = data;
         const uniqueServerName = serverNamesWithUUID[serverName];
-
+    
         if (!uniqueServerName || !servers[uniqueServerName]) {
             console.log(`Server "${serverName}" not found.`);
             socket.emit("serverError", `Server "${serverName}" not found.`);
             return;
         }
+    
         const voiceRooms = servers[uniqueServerName]?.voiceRoom || [];
-
         const voiceRoom = voiceRooms.find((room) => room.voiceRoomName === roomName);
     
         if (voiceRoom) {
             if (!voiceRoom.voiceUsers) {
                 voiceRoom.voiceUsers = [];
             }
+    
             if (!voiceRoom.voiceUsers.includes(userId)) {
                 voiceRoom.voiceUsers.push(userId);
                 console.log(`User ${userId} joined voice room "${roomName}" in server "${uniqueServerName}"`);
                 saveDataToFile(); 
+    
+        
                 voiceRoom.voiceUsers.forEach((memberUserId) => {
                     const memberSocketId = onlineUsers[memberUserId];
-                    if (memberSocketId) {
+                    
+                   
+                    if (memberSocketId && memberUserId !== userId) { 
                         io.to(memberSocketId).emit("userJoinedVoiceRoom", { roomName, userId });
                     }
                 });
@@ -262,6 +267,32 @@ io.on('connection', (socket) => {
             socket.emit("serverError", `Voice room "${roomName}" not found.`);
         }
     });
+    
+
+    socket.on("sendVoiceJoinedUser",(data)=>{
+        const {serverName,username,profilePic,_id,roomName} = data;
+        const uniqueServerName = serverNamesWithUUID[serverName];
+        if (!uniqueServerName || !servers[uniqueServerName]) {
+            console.log(`Server "${serverName}" not found.`);
+            socket.emit("serverError", `Server "${serverName}" not found.`);
+            return;
+        }
+
+        const findServerUsers = servers[uniqueServerName].members;
+        findServerUsers.forEach((memberUserId)=>{
+            const memberSocketId = onlineUsers[memberUserId];
+            if (memberSocketId && memberUserId !== _id && memberSocketId !== socket.id) {
+                io.to(memberSocketId).emit("userJoinedVoiceRoom", {
+                  username,
+                  profilePic,
+                  _id,
+                  roomName,
+                });
+              }
+        })
+        
+
+    })
 
     socket.on("leaveVoiceRoom", (data) => {
         const { serverName, roomName, userId } = data;
