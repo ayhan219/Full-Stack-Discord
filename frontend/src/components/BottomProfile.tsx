@@ -71,24 +71,31 @@ const BottomProfile = () => {
 
       {/* Settings Panel */}
       {openSettings && (
-        <div className="absolute w-full h-40 bg-[#1E1F22] bottom-16 right-0 shadow-lg rounded-lg flex flex-col">
-          <div className="w-full h-12 bg-[#232428] rounded-t-lg flex items-center justify-between px-4">
-            <h3 className="text-white text-lg font-semibold">Account Settings</h3>
-          </div>
-          <div className="flex-1 flex flex-col justify-center px-4">
-            <button onClick={()=>navigate("/profile")} className="w-full py-2 bg-[#2B2D31] hover:bg-[#3A3C41] text-white font-medium rounded-md text-center transition duration-150 ease-in-out">
-              Manage Account
-            </button>
-          </div>
-          <div className="w-full h-12 bg-[#232428] rounded-b-lg flex items-center justify-between px-4">
-            <h3 className="text-gray-400 font-semibold">Logout</h3>
-            <IoLogOutSharp
-              onClick={handleLogout}
-              className="text-red-600 text-2xl cursor-pointer hover:scale-110 transition duration-150 ease-in-out"
-            />
-          </div>
-        </div>
-      )}
+  <div className="absolute w-full h-40 bg-[#1E1F22] bottom-16 right-0 shadow-2xl rounded-lg flex flex-col">
+    <div className="w-full h-12 bg-[#232428] rounded-t-lg flex items-center justify-between px-6">
+      <h3 className="text-white text-lg font-semibold">Account Settings</h3>
+    </div>
+
+
+    <div className="flex-1 flex flex-col justify-center px-6 py-3">
+      <button
+        onClick={() => navigate("/profile")}
+        className="w-full py-3 bg-[#2B2D31] hover:bg-[#3A3C41] text-white font-semibold rounded-md text-center transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#5D5F63] focus:ring-offset-2"
+      >
+        Manage Account
+      </button>
+    </div>
+
+    <div className="w-full h-14 bg-[#232428] rounded-b-lg flex items-center justify-between px-6 py-3">
+      <h3 className="text-gray-400 font-semibold">Logout</h3>
+      <IoLogOutSharp
+        onClick={handleLogout}
+        className="text-red-600 text-2xl cursor-pointer hover:scale-110 hover:text-red-800 transition-all duration-200 ease-in-out"
+      />
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
