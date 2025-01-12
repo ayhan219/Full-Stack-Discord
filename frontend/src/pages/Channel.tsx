@@ -16,6 +16,7 @@ const Channel = () => {
   useEffect(() => {
     socket.on("userJoinedVoiceRoom", (data) => {
       const { username, profilePic, _id, roomName } = data;
+
       
       console.log(data);
       
@@ -43,9 +44,39 @@ const Channel = () => {
       });
     });
 
+    socket.on("userLeftVoiceRoom", (data) => {
+      const { _id, roomName } = data;
+      setSingleChannel((prev) => {
+        if (!prev) {
+          return prev;
+        }
+    
+        const updatedChannel = prev.voiceChannel.map((channel) => {
+          if (channel.voiceRoomName === roomName) {
+
+            const updatedVoiceChannel = channel.voiceUsers.filter(
+              (item) => item._id !== _id
+            );
+            return {
+              ...channel,
+              voiceUsers: updatedVoiceChannel, 
+            };
+          }
+          return channel; 
+        });
+    
+        return {
+          ...prev,
+          voiceChannel: updatedChannel, 
+        };
+      });
+    });
+    
+
     return () => {
       if(socket){
         socket.off("userJoinedVoiceRoom");
+        socket.off("userLeftVoiceRoom");
       }
     };
   }, [socket,user]);

@@ -17,9 +17,9 @@ interface UserProps {
 const VoiceComponent = ({ item, roomName }: UserProps) => {
   const { user, singleChannel, socket, setSingleChannel } = useUserContext();
 
-  const [userAudioStates, setUserAudioStates] = useState<{
-    [userId: string]: { micOff: boolean; headphonesOff: boolean };
-  }>({});
+  // const [userAudioStates, setUserAudioStates] = useState<{
+  //   [userId: string]: { micOff: boolean; headphonesOff: boolean };
+  // }>({});
 
   // const currentUserState = userAudioStates[item._id] || {
   //   micOff: false,
@@ -84,6 +84,14 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
           roomName,
           userId: user?.userId,
         });
+
+        socket.emit("sendVoiceLeftUser",{
+          serverName:singleChannel?.channelName,
+          roomName:roomName,
+          username:user?.username,
+          profilePic:user?.profilePic,
+          _id:user?.userId
+        })
       }
     } catch (error) {
       console.error("Error disconnecting from voice channel:", error);
