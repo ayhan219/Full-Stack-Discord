@@ -176,9 +176,7 @@ const ChatArea = () => {
           )}
         </>
       )}
-         {
-          connectedToVoice && <VideoConferenceRoom />
-         }
+         
     </div>
   );
 };

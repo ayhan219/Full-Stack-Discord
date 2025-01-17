@@ -52,6 +52,10 @@ interface UserContextType {
   setLoading:(loading:boolean)=>void;
   connectedToVoice:boolean;
   setConnectedToVoice:(connectedToVoice:boolean)=>void;
+  token:string;
+  setToken:(token:string)=>void;
+  handleDisconnect:boolean;
+  setHandleDisconnect:(handleDisconnect:boolean)=>void;
 }
 
 interface Friend {
@@ -119,6 +123,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [notificationNumber, setNotificationNumber] = useState<number>(0);
   const [loading,setLoading] = useState<boolean>(false);
   const [connectedToVoice,setConnectedToVoice] = useState<boolean>(false);
+  const [token,setToken] = useState<string>("");
+  const [handleDisconnect,setHandleDisconnect] = useState<boolean>(false);
 
   const getCurrentUser = async () => {
     try {
@@ -351,7 +357,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         loading,
         setLoading,
         connectedToVoice,
-        setConnectedToVoice
+        setConnectedToVoice,
+        token,
+        setToken,
+        handleDisconnect,
+        setHandleDisconnect
       }}
     >
       {children}

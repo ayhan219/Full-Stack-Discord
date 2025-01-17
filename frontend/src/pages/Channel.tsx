@@ -4,6 +4,7 @@ import ChatArea from "../components/ChatArea";
 import ChatRightArea from "../components/ChatRightArea";
 import axios from "axios";
 import { useUserContext } from "../context/UserContext";
+import VideoConferenceRoom from "../components/VideoConferenceRoom";
 
 interface SingleChannel {
   _id: string;
@@ -11,7 +12,7 @@ interface SingleChannel {
 }
 
 const Channel = () => {
-  const { user, socket, setSingleChannel } = useUserContext();
+  const { user, socket, setSingleChannel,connectedToVoice } = useUserContext();
 
   useEffect(() => {
     socket.on("userJoinedVoiceRoom", (data) => {
@@ -84,7 +85,12 @@ const Channel = () => {
   return (
     <div className="w-full flex bg-[#313338]">
       <ChannelMenu />
-      <ChatArea />
+      {
+          connectedToVoice ? <div className="w-[70%]">
+            <VideoConferenceRoom />
+          </div>:
+          <ChatArea />
+         }
       <ChatRightArea />
     </div>
   );

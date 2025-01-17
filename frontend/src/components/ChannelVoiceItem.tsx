@@ -48,7 +48,7 @@ interface SingleChannel {
 const ChannelVoiceItem = ({
   item,
 }: ChannelVoiceItemProps) => {
-  const { user, socket, singleChannel,setSingleChannel,setConnectedToVoice } = useUserContext();
+  const { user, socket, singleChannel,setSingleChannel,setConnectedToVoice,setToken } = useUserContext();
 
   const handleConnectToVoice = async () => {
     try {
@@ -91,7 +91,22 @@ const ChannelVoiceItem = ({
           profilePic:user?.profilePic,
           _id:user?.userId
         })
+        try {
+          const channelAndVoiceRoomName = `${singleChannel?.channelName}-${item.voiceRoomName}`
+          const response = await axios.get("http://localhost:5000/getToken",{
+            params:{
+              roomName:channelAndVoiceRoomName,
+              username:user?.username
+            }
+          });
+        console.log(response.data.token);
+        setToken(response.data.token)
         setConnectedToVoice(true);
+        
+        } catch (error) {
+          console.log(error);
+          
+        }
       }
       
     } catch (error) {

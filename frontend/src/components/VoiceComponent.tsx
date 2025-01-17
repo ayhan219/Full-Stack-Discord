@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
 import { PiMicrophoneSlashFill } from "react-icons/pi";
 import { FaHeadphones, FaMicrophone, FaSignOutAlt } from "react-icons/fa";
@@ -15,7 +15,7 @@ interface UserProps {
 }
 
 const VoiceComponent = ({ item, roomName }: UserProps) => {
-  const { user, singleChannel, socket, setSingleChannel } = useUserContext();
+  const { user, singleChannel, socket, setSingleChannel,connectedToVoice ,handleDisconnect,setHandleDisconnect} = useUserContext();
 
   // const [userAudioStates, setUserAudioStates] = useState<{
   //   [userId: string]: { micOff: boolean; headphonesOff: boolean };
@@ -92,11 +92,23 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
           profilePic:user?.profilePic,
           _id:user?.userId
         })
+        setHandleDisconnect(false);
       }
+
+      
     } catch (error) {
       console.error("Error disconnecting from voice channel:", error);
     }
   };
+
+
+  useEffect(()=>{
+    if(handleDisconnect){
+      handleDisconnectFromVoice();
+    }
+    
+    
+  },[handleDisconnect])
 
   return (
     <div className="w-full flex flex-col mt-3 space-y-3">
@@ -112,18 +124,7 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
 
         <div className="flex gap-2 items-center">
  
-          {item._id === user?.userId && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDisconnectFromVoice();
-              }}
-              className="p-2 rounded-full bg-red-600 hover:bg-red-700 transition duration-200"
-              title="Disconnect from Voice Channel"
-            >
-              <FaSignOutAlt className="text-white" />
-            </button>
-          )}
+          
         </div>
       </div>
     </div>
