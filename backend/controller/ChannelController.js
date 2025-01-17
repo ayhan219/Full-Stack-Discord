@@ -307,7 +307,7 @@ const joinChannel = async (req, res) => {
   };
 
   const deleteUserFromVoiceChannel = async (req, res) => {
-    const { userId, channelId } = req.body; // voiceRoomName'ı kaldırdık
+    const { userId, channelId } = req.body; 
   
     try {
       const findChannel = await Channel.findById(channelId);
@@ -315,43 +315,36 @@ const joinChannel = async (req, res) => {
         return res.status(404).json({ message: "Channel not found" });
       }
   
-      // Kullanıcıyı bulunduğu her ses odasından silmek için
       let userFound = false;
       let removedUser;
-  
-      // Her bir voiceChannel'ı kontrol et
+
       for (let room of findChannel.voiceChannel) {
         const isUserInRoom = room.voiceUsers.some(
           (user) => user.toString() === userId
         );
   
         if (isUserInRoom) {
-          // Kullanıcıyı ses kanalından çıkar
           room.voiceUsers = room.voiceUsers.filter(
             (user) => user.toString() !== userId
           );
           userFound = true;
   
-          // Silinen kullanıcıyı bul
           removedUser = await User.findById(userId).select("username profilePic _id");
-          await removedUser.populate("profilePic");  // profilePic gibi ilişkili alanları populate et
-          break;  // Kullanıcıyı bulduktan sonra daha fazla aramaya gerek yok
+          await removedUser.populate("profilePic");  
+          break;  
         }
       }
   
-      // Eğer kullanıcı bulunmadıysa hata döndür
       if (!userFound) {
         return res.status(400).json({ message: "User is not in any voice channel" });
       }
   
-      // Kanalı güncelle ve değişiklikleri kaydet
-      const updatedChannel = await findChannel.save(); // save() kullanarak değişiklikleri kaydet
+      const updatedChannel = await findChannel.save(); 
   
       if (!removedUser) {
         return res.status(404).json({ message: "User not found" });
       }
-  
-      // Silinen kullanıcıyı ve güncellenmiş kanalı döndür
+ 
       return res.status(200).json(
         removedUser);
   
@@ -362,6 +355,35 @@ const joinChannel = async (req, res) => {
   };
   
   
+  const deleteChannel = async(req,res)=>{
+    const {channelId,userId} = req.body;
+
+    console.log(channelId,userId);
+    
+    try {
+       const findUser = await User.findById(userId);
+
+       if(!findUser){
+        return res.status(400).json({message:"user not found"})
+       }
+
+       const findChannel = await Channel.findById(channelId);
+       if(!findChannel){
+        return res.status(400).json({message:"channel not found"})
+       }
+
+       const findChannelAdmin = findChannel.admin[0].toString();
+       if(!findChannelAdmin === userId){
+        return res.status(400).json({message:"user is not admin"})
+       }
+       
+       await Channel.findByIdAndDelete(channelId);
+
+       return res.status(200).json(findChannel);
+    } catch (error) {
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
 
 module.exports ={
 createChannel,
@@ -372,5 +394,6 @@ createVoiceRoom,
 createInvite,
 joinChannel,
 addUserToVoiceChannel,
-deleteUserFromVoiceChannel
+deleteUserFromVoiceChannel,
+deleteChannel
 }
