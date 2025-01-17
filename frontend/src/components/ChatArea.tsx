@@ -3,6 +3,7 @@ import ChatComplement from "./ChatComplement";
 import "../index.css";
 import { useUserContext } from "../context/UserContext";
 import { useEffect, useRef, useState } from "react";
+import VideoConferenceRoom from "./VideoConferenceRoom";
 
 interface Message {
   channelName: string;
@@ -15,7 +16,7 @@ interface Message {
 }
 
 const ChatArea = () => {
-  const { singleChannel, selectedChatRoom, socket, user, loading } =
+  const { singleChannel, selectedChatRoom, socket, user, loading,connectedToVoice } =
     useUserContext();
   const [containsMessage, setContainsMessage] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -175,6 +176,9 @@ const ChatArea = () => {
           )}
         </>
       )}
+         {
+          connectedToVoice && <VideoConferenceRoom />
+         }
     </div>
   );
 };

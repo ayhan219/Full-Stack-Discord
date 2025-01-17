@@ -4,6 +4,7 @@ import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import VoiceComponent from "./VoiceComponent";
+import VideoConferenceRoom from "./VideoConferenceRoom";
 
 type VoiceUser = {
   _id: string;
@@ -47,7 +48,7 @@ interface SingleChannel {
 const ChannelVoiceItem = ({
   item,
 }: ChannelVoiceItemProps) => {
-  const { user, socket, singleChannel,setSingleChannel } = useUserContext();
+  const { user, socket, singleChannel,setSingleChannel,setConnectedToVoice } = useUserContext();
 
   const handleConnectToVoice = async () => {
     try {
@@ -90,7 +91,9 @@ const ChannelVoiceItem = ({
           profilePic:user?.profilePic,
           _id:user?.userId
         })
+        setConnectedToVoice(true);
       }
+      
     } catch (error) {
       console.log(error);
     }
@@ -107,8 +110,7 @@ const ChannelVoiceItem = ({
     <MdSettingsVoice className="text-2xl" />
     <p className="font-semibold text-lg">{item.voiceRoomName}</p>
   </div>
-
-
+  
   {singleChannel?.voiceChannel
     ?.filter((channel) => channel.voiceRoomName === item.voiceRoomName) 
     .map((channel, index) => (
