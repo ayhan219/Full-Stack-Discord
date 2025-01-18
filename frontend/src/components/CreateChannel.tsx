@@ -2,6 +2,7 @@ import { IoCloseCircle } from "react-icons/io5";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Channel {
   _id: string;
@@ -16,8 +17,11 @@ const CreateChannel = () => {
     setSingleChannel,
     setChannels,
     socket,
+    setActiveChannel,
+    getSingleChannel
   } = useUserContext();
   const [channelName, setChannelName] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleCreateChannel = async () => {
     try {
@@ -30,13 +34,19 @@ const CreateChannel = () => {
       );
       if (response.status === 201) {
         setSingleChannel(response.data);
+        console.log("here worked");
+        
         setChannels((prev: Channel[]) => {
           return [response.data, ...prev];
         });
         setOpenCreateChannel(!openCreateChannel);
       }
-
       socket.emit("createServer", channelName, user?.userId);
+      console.log(response.data);
+      setActiveChannel(response.data._id)
+      getSingleChannel(response.data._id);
+      navigate("/channel")
+
     } catch (error) {
       console.log(error);
     }

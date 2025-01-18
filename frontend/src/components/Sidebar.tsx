@@ -14,6 +14,7 @@ const Sidebar = () => {
   const { openCreateChannel, setOpenCreateChannel,setSelectedChatRoom,activeChannel,setActiveChannel } = useUserContext();
 
   const getChannelInfo = async () => {
+    
     setLoading(true);
     try {
       const response = await axios.get(
