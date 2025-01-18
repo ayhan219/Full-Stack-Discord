@@ -7,15 +7,11 @@ import CreateChannel from "./CreateChannel";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-type SidebarInterface = {
-  setActiveChannel: (activeChannel: string) => void;
-  activeChannel: string;
-};
 
-const Sidebar = ({ setActiveChannel, activeChannel }: SidebarInterface) => {
+const Sidebar = () => {
   const { user, channels, setChannels,notificationNumber,loading,setLoading } = useUserContext();
 
-  const { openCreateChannel, setOpenCreateChannel,setSelectedChatRoom } = useUserContext();
+  const { openCreateChannel, setOpenCreateChannel,setSelectedChatRoom,activeChannel,setActiveChannel } = useUserContext();
 
   const getChannelInfo = async () => {
     setLoading(true);

@@ -12,7 +12,6 @@ import Profile from "./pages/Profile";
 
 
 function App() {
-  const [activeChannel, setActiveChannel] = useState<string>("home");
   const { user } = useUserContext();
 
   return (
@@ -23,8 +22,6 @@ function App() {
       <div className="flex">
         {user && (
           <Sidebar
-            setActiveChannel={setActiveChannel}
-            activeChannel={activeChannel}
           />
         )}
         <Routes>

@@ -56,6 +56,8 @@ interface UserContextType {
   setToken:(token:string)=>void;
   handleDisconnect:boolean;
   setHandleDisconnect:(handleDisconnect:boolean)=>void;
+  activeChannel:string;
+  setActiveChannel:(activeChannel:string)=>void;
 }
 
 interface Friend {
@@ -125,6 +127,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [connectedToVoice,setConnectedToVoice] = useState<boolean>(false);
   const [token,setToken] = useState<string>("");
   const [handleDisconnect,setHandleDisconnect] = useState<boolean>(false);
+  const [activeChannel, setActiveChannel] = useState<string>("home");
 
   const getCurrentUser = async () => {
     try {
@@ -361,7 +364,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         token,
         setToken,
         handleDisconnect,
-        setHandleDisconnect
+        setHandleDisconnect,
+        activeChannel,
+        setActiveChannel
       }}
     >
       {children}
