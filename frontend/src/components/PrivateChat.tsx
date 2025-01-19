@@ -68,6 +68,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
   };
 
   const handleJoinChannel = async () => {
+    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:5000/api/channel/join/${tokenForInv}`,
@@ -86,7 +87,9 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
       }
     } catch (error) {
       console.log(error);
-    } 
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -154,7 +157,11 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
 
             {loading ? (
               <div className="flex justify-center items-center">
-                <div className="loader">Loading...</div>
+                <div className="flex space-x-1 text-lg font-bold text-gray-700">
+                  <span className="animate-bounce">.</span>
+                  <span className="animate-bounce delay-200">.</span>
+                  <span className="animate-bounce delay-400">.</span>
+                </div>
               </div>
             ) : (
               <>
