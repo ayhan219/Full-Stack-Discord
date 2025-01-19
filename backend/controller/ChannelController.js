@@ -355,35 +355,45 @@ const joinChannel = async (req, res) => {
   };
   
   
-  const deleteChannel = async(req,res)=>{
-    const {channelId,userId} = req.body;
-
-    console.log(channelId,userId);
-    
+  const deleteChannel = async (req, res) => {
+    const { channelId, userId } = req.body;
+  
+    console.log(channelId, userId);
+  
     try {
-       const findUser = await User.findById(userId);
+      const findUser = await User.findById(userId);
+      if (!findUser) {
+        return res.status(400).json({ message: "User not found" });
+      }
+  
+      const findChannel = await Channel.findById(channelId);
+      if (!findChannel) {
+        return res.status(400).json({ message: "Channel not found" });
+      }
+  
+      const findChannelAdmin = findChannel.admin[0].toString();
+      if (findChannelAdmin !== userId) {
+        return res.status(400).json({ message: "User is not the admin" });
+      }
 
-       if(!findUser){
-        return res.status(400).json({message:"user not found"})
-       }
-
-       const findChannel = await Channel.findById(channelId);
-       if(!findChannel){
-        return res.status(400).json({message:"channel not found"})
-       }
-
-       const findChannelAdmin = findChannel.admin[0].toString();
-       if(!findChannelAdmin === userId){
-        return res.status(400).json({message:"user is not admin"})
-       }
-       
-       await Channel.findByIdAndDelete(channelId);
-
-       return res.status(200).json(findChannel);
+      await Channel.findByIdAndDelete(channelId);
+  
+      await User.findByIdAndUpdate(userId, {
+        $pull: { ownChannel: channelId },
+      });
+  
+      await User.updateMany(
+        { joinedChannel: channelId },
+        { $pull: { joinedChannel: channelId } }
+      );
+  
+      return res.status(200).json(findChannel);
     } catch (error) {
+      console.error(error);
       return res.status(500).json({ message: "Server error" });
     }
-  }
+  };
+  
 
 module.exports ={
 createChannel,
