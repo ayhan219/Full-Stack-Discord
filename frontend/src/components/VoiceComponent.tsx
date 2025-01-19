@@ -111,15 +111,15 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
   },[handleDisconnect])
 
   return (
-    <div className="w-full flex flex-col mt-3 space-y-3">
-      <div className="flex items-center gap-3 bg-[#313338] p-2 rounded-lg shadow-md">
+    <div className="w-full flex flex-col mt-1 space-y-3">
+      <div className="flex items-center px-2 gap-3 rounded-lg ">
         <div className="w-full flex items-center gap-2">
           <img
             className="w-8 h-8 rounded-full"
             src={`http://localhost:5000${item.profilePic}`}
             alt={`${item.username}'s profile`}
           />
-          <p className="text-white font-medium">{item.username}</p>
+          <p className="text-white font-medium ">{item.username}</p>
         </div>
 
         <div className="flex gap-2 items-center">

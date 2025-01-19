@@ -124,6 +124,7 @@ const ChannelVoiceItem = ({
   <div className="w-full flex items-center gap-4">
     <MdSettingsVoice className="text-2xl" />
     <p className="font-semibold text-lg">{item.voiceRoomName}</p>
+    <p>{item.voiceUsers.length}/10</p>
   </div>
   
   {singleChannel?.voiceChannel
