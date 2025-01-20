@@ -5,6 +5,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import VoiceComponent from "./VoiceComponent";
 import VideoConferenceRoom from "./VideoConferenceRoom";
+import { useRoomContext } from "@livekit/components-react";
 
 type VoiceUser = {
   _id: string;
@@ -50,7 +51,10 @@ const ChannelVoiceItem = ({
 }: ChannelVoiceItemProps) => {
   const { user, socket, singleChannel,setSingleChannel,setConnectedToVoice,setToken } = useUserContext();
 
+  const room = useRoomContext();
+
   const handleConnectToVoice = async () => {
+    room.disconnect();
     try {
       const response = await axios.post(
         "http://localhost:5000/api/channel/addusertovoicechannel",
