@@ -5,6 +5,7 @@ import ChatRightArea from "../components/ChatRightArea";
 import axios from "axios";
 import { useUserContext } from "../context/UserContext";
 import VideoConferenceRoom from "../components/VideoConferenceRoom";
+import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
 
 interface SingleChannel {
   _id: string;
@@ -12,7 +13,9 @@ interface SingleChannel {
 }
 
 const Channel = () => {
-  const { user, socket, setSingleChannel,connectedToVoice } = useUserContext();
+  const { user,token, socket, setSingleChannel,connectedToVoice } = useUserContext();
+
+  const serverUrl = 'wss://discord-clone-6tnm5nqn.livekit.cloud';
 
   useEffect(() => {
     socket.on("userJoinedVoiceRoom", (data) => {
@@ -84,14 +87,29 @@ const Channel = () => {
 
   return (
     <div className="w-full flex bg-[#313338]">
-      <ChannelMenu />
-      {
+      <LiveKitRoom
+      video={true}
+      audio={true}
+      connect={true}
+      token={token}
+      serverUrl={serverUrl}
+      data-lk-theme="default"
+      style={{ height: '100vh' }}
+      >
+        <RoomAudioRenderer />
+        <ChannelMenu />
+        </LiveKitRoom>
+      
+      {/* {
           connectedToVoice ? <div className="w-[70%]">
             <VideoConferenceRoom />
           </div>:
+         
+         } */}
           <ChatArea />
-         }
+
       <ChatRightArea />
+     
     </div>
   );
 };

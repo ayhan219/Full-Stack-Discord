@@ -4,6 +4,8 @@ import { PiMicrophoneSlashFill } from "react-icons/pi";
 import { FaHeadphones, FaMicrophone, FaSignOutAlt } from "react-icons/fa";
 import { TbHeadphonesOff } from "react-icons/tb";
 import axios from "axios";
+import { useRoomContext } from "@livekit/components-react";
+import { FiLogOut } from "react-icons/fi";
 
 interface UserProps {
   item: {
@@ -15,7 +17,15 @@ interface UserProps {
 }
 
 const VoiceComponent = ({ item, roomName }: UserProps) => {
-  const { user, singleChannel, socket, setSingleChannel,connectedToVoice ,handleDisconnect,setHandleDisconnect} = useUserContext();
+  const {
+    user,
+    singleChannel,
+    socket,
+    setSingleChannel,
+    connectedToVoice,
+    handleDisconnect,
+    setHandleDisconnect,
+  } = useUserContext();
 
   // const [userAudioStates, setUserAudioStates] = useState<{
   //   [userId: string]: { micOff: boolean; headphonesOff: boolean };
@@ -46,6 +56,7 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
   //   }));
   // };
 
+  const room = useRoomContext();
   const handleDisconnectFromVoice = async () => {
     try {
       const response = await axios.delete(
@@ -59,6 +70,7 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
       );
 
       if (response.status === 200) {
+        room.disconnect();
         console.log("User disconnected and removed from voice channel");
 
         setSingleChannel((prev) => {
@@ -85,49 +97,50 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
           userId: user?.userId,
         });
 
-        socket.emit("sendVoiceLeftUser",{
-          serverName:singleChannel?.channelName,
-          roomName:roomName,
-          username:user?.username,
-          profilePic:user?.profilePic,
-          _id:user?.userId
-        })
+        socket.emit("sendVoiceLeftUser", {
+          serverName: singleChannel?.channelName,
+          roomName: roomName,
+          username: user?.username,
+          profilePic: user?.profilePic,
+          _id: user?.userId,
+        });
         setHandleDisconnect(false);
       }
-
-      
     } catch (error) {
       console.error("Error disconnecting from voice channel:", error);
     }
   };
 
-
-  useEffect(()=>{
-    if(handleDisconnect){
+  useEffect(() => {
+    if (handleDisconnect) {
       handleDisconnectFromVoice();
     }
-    
-    
-  },[handleDisconnect])
+  }, [handleDisconnect]);
 
   return (
-    <div className="w-full flex flex-col mt-1 space-y-3">
-      <div className="flex items-center px-2 gap-3 rounded-lg ">
-        <div className="w-full flex items-center gap-2">
-          <img
-            className="w-8 h-8 rounded-full"
-            src={`http://localhost:5000${item.profilePic}`}
-            alt={`${item.username}'s profile`}
-          />
-          <p className="text-white font-medium ">{item.username}</p>
-        </div>
-
-        <div className="flex gap-2 items-center">
- 
-          
-        </div>
-      </div>
+    <div className="w-full flex flex-col mt-4 space-y-4">
+  <div className="flex items-center px-4 gap-4 rounded-lg transition-colors duration-300">
+    <div className="flex items-center gap-3">
+      <img
+        className="w-8 h-8 rounded-full border-2 border-blue-500"
+        src={`http://localhost:5000${item.profilePic}`}
+        alt={`${item.username}'s profile`}
+      />
+      <p className="text-white font-semibold text-lg">{item.username}</p>
     </div>
+
+    {
+      item._id === user?.userId && 
+      <div onClick={(e)=>{
+        e.stopPropagation()
+        handleDisconnectFromVoice()
+      }} className="flex items-center gap-2 bg-red-600 text-white p-1 rounded-md cursor-pointer hover:bg-red-500 transition-colors duration-300">
+      <FiLogOut className="text-xl" />
+    </div>
+    }
+  </div>
+</div>
+
   );
 };
 
