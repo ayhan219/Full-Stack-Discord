@@ -13,17 +13,16 @@ interface SingleChannel {
 }
 
 const Channel = () => {
-  const { user,token, socket, setSingleChannel,connectedToVoice } = useUserContext();
+  const { user, token, socket, setSingleChannel, connectedToVoice } =
+    useUserContext();
 
-  const serverUrl = 'wss://discord-clone-6tnm5nqn.livekit.cloud';
+  const serverUrl = "wss://discord-clone-6tnm5nqn.livekit.cloud";
 
   useEffect(() => {
     socket.on("userJoinedVoiceRoom", (data) => {
       const { username, profilePic, _id, roomName } = data;
-
-      
       console.log(data);
-      
+
       setSingleChannel((prev) => {
         if (!prev) {
           return prev;
@@ -54,62 +53,88 @@ const Channel = () => {
         if (!prev) {
           return prev;
         }
-    
         const updatedChannel = prev.voiceChannel.map((channel) => {
           if (channel.voiceRoomName === roomName) {
-
             const updatedVoiceChannel = channel.voiceUsers.filter(
               (item) => item._id !== _id
             );
             return {
               ...channel,
+              voiceUsers: updatedVoiceChannel,
+            };
+          }
+          return channel;
+        });
+
+        return {
+          ...prev,
+          voiceChannel: updatedChannel,
+        };
+      });
+    });
+
+    socket.on("sendUserChangedRoom", (data) => {
+      const { _id, roomName } = data;
+    
+      setSingleChannel((prev) => {
+        if (!prev) {
+          return prev;
+        }
+
+        const updatedChannel = prev.voiceChannel.map((voiceRoom) => {
+          if (voiceRoom.voiceRoomName === roomName) {
+            const updatedVoiceChannel = voiceRoom.voiceUsers.filter(
+              (item) => item._id !== _id 
+            );
+
+            return {
+              ...voiceRoom,
               voiceUsers: updatedVoiceChannel, 
             };
           }
-          return channel; 
+          return voiceRoom;
         });
-    
+
         return {
           ...prev,
           voiceChannel: updatedChannel, 
         };
       });
     });
-    
 
     return () => {
-      if(socket){
+      if (socket) {
         socket.off("userJoinedVoiceRoom");
         socket.off("userLeftVoiceRoom");
+        socket.off("sendUserChangedRoom");
       }
     };
-  }, [socket,user]);
+  }, [socket, user]);
 
   return (
     <div className="w-full flex bg-[#313338]">
       <LiveKitRoom
-      video={true}
-      audio={true}
-      connect={true}
-      token={token}
-      serverUrl={serverUrl}
-      data-lk-theme="default"
-      style={{ height: '100vh' }}
+        video={true}
+        audio={true}
+        connect={true}
+        token={token}
+        serverUrl={serverUrl}
+        data-lk-theme="default"
+        style={{ height: "100vh" }}
       >
         <RoomAudioRenderer />
         <ChannelMenu />
-        </LiveKitRoom>
-      
+      </LiveKitRoom>
+
       {/* {
           connectedToVoice ? <div className="w-[70%]">
             <VideoConferenceRoom />
           </div>:
          
          } */}
-          <ChatArea />
+      <ChatArea />
 
       <ChatRightArea />
-     
     </div>
   );
 };

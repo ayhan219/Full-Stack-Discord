@@ -336,8 +336,26 @@ io.on('connection', (socket) => {
             socket.emit("serverError", `Voice room "${roomName}" not found.`);
         }
     });
-    
 
+    socket.on("userChangedRoom",(data)=>{
+        const {serverName,roomName,_id} = data;
+
+        const uniqueServerName = serverNamesWithUUID[serverName];
+
+        if (!uniqueServerName || !servers[uniqueServerName]) {
+            console.log(`Server "${serverName}" not found.`);
+            socket.emit("serverError", `Server "${serverName}" not found.`);
+            return;
+        }
+
+        servers[uniqueServerName].members.forEach((memberUserId)=>{
+            const memberSocketId = onlineUsers[memberUserId];
+            if (memberSocketId && memberSocketId!==socket.id) {
+                console.log("sending users");
+                io.to(memberSocketId).emit("sendUserChangedRoom",{_id,roomName});
+            }
+        })
+    })
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {

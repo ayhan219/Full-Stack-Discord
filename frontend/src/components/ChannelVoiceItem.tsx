@@ -49,12 +49,25 @@ interface SingleChannel {
 const ChannelVoiceItem = ({
   item,
 }: ChannelVoiceItemProps) => {
-  const { user, socket, singleChannel,setSingleChannel,setConnectedToVoice,setToken } = useUserContext();
+  const { user, socket, singleChannel,setSingleChannel,voiceRoomName,setConnectedToVoice,setToken ,setVoiceRoomName,connectedToVoice,setHandleDisconnect} = useUserContext();
 
   const room = useRoomContext();
 
   const handleConnectToVoice = async () => {
-    room.disconnect();
+    setVoiceRoomName(item.voiceRoomName);
+    const currentVoiceRoomName = singleChannel?.voiceChannel.find((channel) =>
+      channel.voiceUsers.some((voiceUser) => voiceUser._id === user?.userId)
+    )?.voiceRoomName;
+
+    if (connectedToVoice && currentVoiceRoomName && currentVoiceRoomName !== item.voiceRoomName) {
+      room.disconnect();
+      setConnectedToVoice(false);
+      socket.emit("userChangedRoom",{
+        serverName: singleChannel?.channelName,
+          roomName: voiceRoomName,
+          _id: user?.userId,
+      })
+    }
     try {
       const response = await axios.post(
         "http://localhost:5000/api/channel/addusertovoicechannel",

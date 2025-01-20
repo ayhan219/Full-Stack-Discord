@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import { useUserContext } from "../context/UserContext";
-import { PiMicrophoneSlashFill } from "react-icons/pi";
-import { FaHeadphones, FaMicrophone, FaSignOutAlt } from "react-icons/fa";
-import { TbHeadphonesOff } from "react-icons/tb";
+// import { PiMicrophoneSlashFill } from "react-icons/pi";
+// import { FaHeadphones, FaMicrophone, FaSignOutAlt } from "react-icons/fa";
+// import { TbHeadphonesOff } from "react-icons/tb";
 import axios from "axios";
 import { useRoomContext } from "@livekit/components-react";
 import { FiLogOut } from "react-icons/fi";
@@ -22,7 +22,6 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
     singleChannel,
     socket,
     setSingleChannel,
-    connectedToVoice,
     handleDisconnect,
     setHandleDisconnect,
   } = useUserContext();
@@ -71,6 +70,7 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
 
       if (response.status === 200) {
         room.disconnect();
+        
         console.log("User disconnected and removed from voice channel");
 
         setSingleChannel((prev) => {
