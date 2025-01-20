@@ -60,59 +60,68 @@ const ChannelVoiceItem = ({
           voiceRoomName: item.voiceRoomName,
         }
       );
+  
       if (response.status === 200) {
+  
         setSingleChannel((prev: SingleChannel | null) => {
           if (!prev) return prev;
   
           const updatedVoiceChannels = prev.voiceChannel.map((channel) => {
+            const updatedVoiceUsers = channel.voiceUsers.filter(
+              (voiceUser) => voiceUser._id !== user?.userId
+            );
+  
             if (channel.voiceRoomName === item.voiceRoomName) {
               return {
                 ...channel,
-                voiceUsers: [...channel.voiceUsers, response.data], 
+                voiceUsers: [...updatedVoiceUsers, response.data],
               };
             }
-            return channel;
+  
+            return {
+              ...channel,
+              voiceUsers: updatedVoiceUsers,
+            };
           });
   
           return {
             ...prev,
-            voiceChannel: updatedVoiceChannels, 
+            voiceChannel: updatedVoiceChannels,
           };
         });
+
         socket.emit("joinVoiceRoom", {
           serverName: singleChannel?.channelName,
           roomName: item.voiceRoomName,
           userId: user?.userId,
         });
-        socket.emit("sendVoiceJoinedUser",{
-          serverName:singleChannel?.channelName,
-          roomName:item.voiceRoomName,
-          username:user?.username,
-          profilePic:user?.profilePic,
-          _id:user?.userId
-        })
+        socket.emit("sendVoiceJoinedUser", {
+          serverName: singleChannel?.channelName,
+          roomName: item.voiceRoomName,
+          username: user?.username,
+          profilePic: user?.profilePic,
+          _id: user?.userId,
+        });
+
         try {
-          const channelAndVoiceRoomName = `${singleChannel?.channelName}-${item.voiceRoomName}`
-          const response = await axios.get("http://localhost:5000/getToken",{
-            params:{
-              roomName:channelAndVoiceRoomName,
-              username:user?.username
-            }
+          const channelAndVoiceRoomName = `${singleChannel?.channelName}-${item.voiceRoomName}`;
+          const response = await axios.get("http://localhost:5000/getToken", {
+            params: {
+              roomName: channelAndVoiceRoomName,
+              username: user?.username,
+            },
           });
-        console.log(response.data.token);
-        setToken(response.data.token)
-        setConnectedToVoice(true);
-        
+          setToken(response.data.token);
+          setConnectedToVoice(true);
         } catch (error) {
-          console.log(error);
-          
+          console.error("Error getting token:", error);
         }
       }
-      
     } catch (error) {
-      console.log(error);
+      console.error("Error connecting to voice channel:", error);
     }
   };
+  
 
 
 
