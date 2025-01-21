@@ -1,11 +1,8 @@
-import { useEffect} from "react";
-import { useUserContext } from "../context/UserContext";
-// import { PiMicrophoneSlashFill } from "react-icons/pi";
-// import { FaHeadphones, FaMicrophone, FaSignOutAlt } from "react-icons/fa";
-// import { TbHeadphonesOff } from "react-icons/tb";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import { useRoomContext } from "@livekit/components-react";
 import { FiLogOut } from "react-icons/fi";
+import axios from "axios";
+import { useUserContext } from "../context/UserContext";
 
 interface UserProps {
   item: {
@@ -26,36 +23,9 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
     setHandleDisconnect,
   } = useUserContext();
 
-  // const [userAudioStates, setUserAudioStates] = useState<{
-  //   [userId: string]: { micOff: boolean; headphonesOff: boolean };
-  // }>({});
-
-  // const currentUserState = userAudioStates[item._id] || {
-  //   micOff: false,
-  //   headphonesOff: false,
-  // };
-
-  // const toggleMic = (userId: string) => {
-  //   setUserAudioStates((prev) => ({
-  //     ...prev,
-  //     [userId]: {
-  //       ...prev[userId],
-  //       micOff: !prev[userId]?.micOff,
-  //     },
-  //   }));
-  // };
-
-  // const toggleHeadphones = (userId: string) => {
-  //   setUserAudioStates((prev) => ({
-  //     ...prev,
-  //     [userId]: {
-  //       ...prev[userId],
-  //       headphonesOff: !prev[userId]?.headphonesOff,
-  //     },
-  //   }));
-  // };
-
   const room = useRoomContext();
+  const [isSpeaking, setIsSpeaking] = useState(false);
+
   const handleDisconnectFromVoice = async () => {
     try {
       const response = await axios.delete(
@@ -70,7 +40,7 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
 
       if (response.status === 200) {
         room.disconnect();
-        
+
         console.log("User disconnected and removed from voice channel");
 
         setSingleChannel((prev) => {
@@ -117,30 +87,49 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
     }
   }, [handleDisconnect]);
 
+  useEffect(() => {
+    const handleActiveSpeakerChange = () => {
+      const activeSpeakers = room?.activeSpeakers || [];
+      const isCurrentUserSpeaking = activeSpeakers.some(
+        (participant) => participant.identity === item.username
+      );
+      setIsSpeaking(isCurrentUserSpeaking);
+      
+    };
+
+    room?.on("activeSpeakersChanged", handleActiveSpeakerChange);
+    return () => {
+      room?.off("activeSpeakersChanged", handleActiveSpeakerChange);
+    };
+  }, [room, item._id]);
+
   return (
     <div className="w-full flex flex-col mt-4 space-y-4">
-  <div className="flex items-center px-4 gap-4 rounded-lg transition-colors duration-300">
-    <div className="flex items-center gap-3">
-      <img
-        className="w-8 h-8 rounded-full border-2 border-blue-500"
-        src={`http://localhost:5000${item.profilePic}`}
-        alt={`${item.username}'s profile`}
-      />
-      <p className="text-white font-semibold text-lg">{item.username}</p>
-    </div>
+      <div className="flex items-center px-4 gap-4 rounded-lg transition-colors duration-300">
+        <div className="flex items-center gap-3">
+          <img
+            className={`w-8 h-8 rounded-full border-2 ${
+              isSpeaking ? "border-green-500 border-2" : "border-blue-500"
+            }`}
+            src={`http://localhost:5000${item.profilePic}`}
+            alt={`${item.username}'s profile`}
+          />
+          <p className="text-white font-semibold text-lg">{item.username}</p>
+        </div>
 
-    {
-      item._id === user?.userId && 
-      <div onClick={(e)=>{
-        e.stopPropagation()
-        handleDisconnectFromVoice()
-      }} className="flex items-center gap-2 bg-red-600 text-white p-1 rounded-md cursor-pointer hover:bg-red-500 transition-colors duration-300">
-      <FiLogOut className="text-xl" />
+        {item._id === user?.userId && (
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDisconnectFromVoice();
+            }}
+            className="flex items-center gap-2 bg-red-600 text-white p-1 rounded-md cursor-pointer hover:bg-red-500 transition-colors duration-300"
+          >
+            <FiLogOut className="text-xl" />
+          </div>
+        )}
+      </div>
     </div>
-    }
-  </div>
-</div>
-
   );
 };
 
