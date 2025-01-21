@@ -1,4 +1,5 @@
 import { MdSettingsVoice } from "react-icons/md";
+import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useUserContext } from "../context/UserContext";
 
 import axios from "axios";
@@ -145,11 +146,11 @@ const ChannelVoiceItem = ({
   return (
     <div
   onClick={() => handleConnectToVoice()}
-  className="w-full h-auto text-gray-400 flex flex-col items-start gap-2 px-7 py-3 rounded-lg hover:text-white hover:bg-gray-700 cursor-pointer transition-all"
+  className="w-full h-auto text-gray-400 flex flex-col items-start gap-2 px-7 py-1 rounded-lg hover:text-white hover:bg-gray-700 cursor-pointer transition-all"
 >
   <div className="w-full flex items-center gap-4">
-    <MdSettingsVoice className="text-2xl" />
-    <p className="font-semibold text-lg">{item.voiceRoomName}</p>
+    <HiMiniSpeakerWave className="text-2xl" />
+    <p className="font-semibold text-md">{item.voiceRoomName}</p>
     <p>{item.voiceUsers.length}/10</p>
   </div>
   
