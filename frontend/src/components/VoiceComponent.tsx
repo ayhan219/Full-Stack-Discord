@@ -90,6 +90,8 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
   useEffect(() => {
     const handleActiveSpeakerChange = () => {
       const activeSpeakers = room?.activeSpeakers || [];
+      console.log(activeSpeakers);
+      
       const isCurrentUserSpeaking = activeSpeakers.some(
         (participant) => participant.identity === item.username
       );
