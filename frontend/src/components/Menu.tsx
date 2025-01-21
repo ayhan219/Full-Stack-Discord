@@ -80,7 +80,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         
       </div>
 
-      {/* <BottomProfile /> */}
+      <BottomProfile />
     </div>
   );
 };

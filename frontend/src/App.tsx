@@ -8,14 +8,28 @@ import Login from "./pages/Login";
 import { useUserContext } from "./context/UserContext";
 import FriendChat from "./pages/FriendChat";
 import Profile from "./pages/Profile";
+import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
 
 
 
 function App() {
-  const { user } = useUserContext();
+  const { user,token } = useUserContext();
+  const serverUrl = "wss://discord-clone-6tnm5nqn.livekit.cloud";
 
   return (
     <BrowserRouter>
+    <LiveKitRoom
+        video={true}
+        audio={true}
+        connect={true}
+        token={token}
+        serverUrl={serverUrl}
+        data-lk-theme="default"
+        style={{ height: "100vh" }}
+      >
+        <RoomAudioRenderer />
+        
+      
       {/* <div className='flex'>
   
   </div> */}
@@ -34,6 +48,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
+      </LiveKitRoom>
     </BrowserRouter>
   );
 }
