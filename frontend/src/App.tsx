@@ -10,7 +10,6 @@ import FriendChat from "./pages/FriendChat";
 import Profile from "./pages/Profile";
 import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
 
-// PrivateRoute bileşeni
 interface PrivateRouteProps {
   children: ReactNode;
 }
@@ -18,6 +17,15 @@ interface PrivateRouteProps {
 const PrivateRoute = ({ children }: PrivateRouteProps) => {
   const { user } = useUserContext();
   return user ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+interface PublicRouteProps {
+  children: ReactNode;
+}
+
+const PublicRoute = ({ children }: PublicRouteProps) => {
+  const { user } = useUserContext();
+  return user ? <Navigate to="/home" replace /> : <>{children}</>;
 };
 
 function App() {
@@ -39,12 +47,24 @@ function App() {
         <div className="flex">
           {user && <Sidebar />}
           <Routes>
-            {/* Genel Rotalar */}
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <Signup />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
             <Route path="/" element={<Navigate to="/login" replace />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login />} />
 
-            {/* Korunan Rotalar */}
             <Route
               path="/channel"
               element={
