@@ -75,13 +75,13 @@ const MenuFriends = ({ item }: MenuFriendProps) => {
         setFriend();
         navigate("/friendchat");
       }}
-      className="w-full h-14 flex items-center px-6 gap-3 cursor-pointer hover:bg-gray-400 ease-in-out duration-100 text-gray-400 hover:text-gray-800 hover:rounded-lg relative group"
+      className="w-full h-12 flex items-center px-6 gap-3 cursor-pointer hover:bg-gray-400 ease-in-out duration-100 text-gray-400 hover:text-gray-800 hover:rounded-lg relative group"
     >
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
           <div className="relative">
             <img
-              className="w-11 h-11 rounded-full"
+              className="w-9 h-9 rounded-full"
               src={`http://localhost:5000${item.profilePic}`}
               alt=""
             />
