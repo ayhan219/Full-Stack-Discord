@@ -20,7 +20,7 @@ const ChannelMenu = () => {
     setOpenCreateVoiceRoom,
     openCreateVoiceRoom,
     loading,
-    connectedToVoice
+    connectedToVoice,
   } = useUserContext();
 
   const [openChannelSettingArea, setOpenChannelSettingArea] =
@@ -29,8 +29,9 @@ const ChannelMenu = () => {
   const [openDeleteArea, setOpenDeleteArea] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const { user,setActiveChannel,setSelectedChatRoom,setChannels } = useUserContext();
-  const [loadingForDelete,setLoadingForDelete] = useState<boolean>(false);
+  const { user, setActiveChannel, setSelectedChatRoom, setChannels } =
+    useUserContext();
+  const [loadingForDelete, setLoadingForDelete] = useState<boolean>(false);
 
   const getLink = async () => {
     try {
@@ -50,35 +51,40 @@ const ChannelMenu = () => {
     }
   };
 
-  const handleDeleteChannel = async()=>{
+  const handleDeleteChannel = async () => {
     setLoadingForDelete(true);
     try {
-      const response = await axios.delete("http://localhost:5000/api/channel/deletechannel",{
-        data:{
-          userId:user?.userId,
-          channelId:singleChannel?._id
+      const response = await axios.delete(
+        "http://localhost:5000/api/channel/deletechannel",
+        {
+          data: {
+            userId: user?.userId,
+            channelId: singleChannel?._id,
+          },
         }
-      })
+      );
       console.log(response.data);
       setActiveChannel("home");
       setOpenDeleteArea(false);
       setSelectedChatRoom("");
 
-      setChannels((prev)=>{
-        if(!prev){
-          return prev
+      setChannels((prev) => {
+        if (!prev) {
+          return prev;
         }
-        const filteredChannel = prev.filter((channel)=>channel._id!==response.data._id)
-        return filteredChannel
-      })
-      
-      navigate("/home")
+        const filteredChannel = prev.filter(
+          (channel) => channel._id !== response.data._id
+        );
+        return filteredChannel;
+      });
+
+      navigate("/home");
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setLoadingForDelete(false);
     }
-  }
+  };
 
   return (
     <>
@@ -138,7 +144,7 @@ const ChannelMenu = () => {
                 )}
               </div>
 
-              <div className="w-full h-auto flex flex-col gap-3">
+              <div className={`flex flex-col gap-3 custom-scrollbar overflow-y-auto ${connectedToVoice ? "h-[450px]" : "h-[600]"}`}>
                 {singleChannel?.voiceChannel.map((item, index) => (
                   <ChannelVoiceItem key={index} item={item} />
                 ))}
@@ -204,51 +210,55 @@ const ChannelMenu = () => {
             )}
           </>
         )}
-       {
-        connectedToVoice && 
-        <div className="flex h-full items-end">
-        <ChannelUserControlArea />
+        {connectedToVoice && (
+          <div className="absolute w-full bottom-16">
+            <ChannelUserControlArea />
+          </div>
+        )}
+        <div className="absolute bottom-0 w-full">
+          <BottomProfile />
         </div>
-       }
-        <BottomProfile />
       </div>
       {openDeleteArea && (
-  <div className="inset-0 bg-black bg-opacity-55 fixed flex items-center justify-center">
-    <div className="w-[400px] bg-[#2B2D31] rounded-lg shadow-lg p-6">
-      <div className="text-center text-white font-bold text-xl mb-4">
-        <h2>Are you sure?</h2>
-      </div>
-      <div className="text-center text-gray-300 text-sm mb-6">
-        <p>If you select "Delete," you will permanently lose access to this channel, and it cannot be recovered.</p>
-      </div>
-      <div className="flex justify-between">
-        {
-          loadingForDelete ? <div className="flex items-center justify-center w-full h-full">
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
-            <p className="mt-4 text-white font-semibold">Loading...</p>
+        <div className="inset-0 bg-black bg-opacity-55 fixed flex items-center justify-center">
+          <div className="w-[400px] bg-[#2B2D31] rounded-lg shadow-lg p-6">
+            <div className="text-center text-white font-bold text-xl mb-4">
+              <h2>Are you sure?</h2>
+            </div>
+            <div className="text-center text-gray-300 text-sm mb-6">
+              <p>
+                If you select "Delete," you will permanently lose access to this
+                channel, and it cannot be recovered.
+              </p>
+            </div>
+            <div className="flex justify-between">
+              {loadingForDelete ? (
+                <div className="flex items-center justify-center w-full h-full">
+                  <div className="flex flex-col items-center">
+                    <div className="w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin"></div>
+                    <p className="mt-4 text-white font-semibold">Loading...</p>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setOpenDeleteArea(false)}
+                    className="w-[48%] h-12 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-500 transition-all duration-300 ease-in-out"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleDeleteChannel()}
+                    className="w-[48%] h-12 bg-red-600 text-white font-medium rounded-lg hover:bg-red-500 transition-all duration-300 ease-in-out"
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
-         :
-          <>
-          <button
-         onClick={()=>setOpenDeleteArea(false)}
-          className="w-[48%] h-12 bg-gray-600 text-white font-medium rounded-lg hover:bg-gray-500 transition-all duration-300 ease-in-out"
-        >
-          Cancel
-        </button>
-        <button
-        onClick={()=>handleDeleteChannel()}
-          className="w-[48%] h-12 bg-red-600 text-white font-medium rounded-lg hover:bg-red-500 transition-all duration-300 ease-in-out"
-        >
-          Delete
-        </button>
-        </>
-        }
-      </div>
-    </div>
-  </div>
-)}
+      )}
 
       {openCreateRoom && <CreateRoom />}
       {openCreateVoiceRoom && <CreateVoiceRoom />}

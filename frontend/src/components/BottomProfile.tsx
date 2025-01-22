@@ -38,7 +38,7 @@ const BottomProfile = () => {
   };
 
   return (
-    <div className="w-full h-16 bg-[#232428] mt-auto p-3 relative">
+    <div className="w-full h-16 bg-[#232428] p-3 relative">
       <div className="w-full h-full flex justify-between items-center">
         <div className="flex gap-3 items-center">
           <img
