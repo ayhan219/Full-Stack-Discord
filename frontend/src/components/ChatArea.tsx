@@ -16,8 +16,15 @@ interface Message {
 }
 
 const ChatArea = () => {
-  const { singleChannel, selectedChatRoom, socket, user, loading,connectedToVoice } =
-    useUserContext();
+  const {
+    singleChannel,
+    selectedChatRoom,
+    setSelectedChatRoom,
+    socket,
+    user,
+    loading,
+    connectedToVoice,
+  } = useUserContext();
   const [containsMessage, setContainsMessage] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [message, setMessage] = useState<string>("");
@@ -86,6 +93,10 @@ const ChatArea = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  useEffect(()=>{
+    setSelectedChatRoom("");
+  },[])
+
   return (
     <div className="w-[70%] h-screen bg-[#313338] flex flex-col">
       {loading ? (
@@ -106,7 +117,7 @@ const ChatArea = () => {
           )}
 
           <div className="w-full h-full flex flex-col gap-6 overflow-hidden overflow-y-auto custom-scrollbar p-5">
-            {!containsMessage ? (
+            {!containsMessage && !selectedChatRoom ? (
               <div className="flex flex-col items-center justify-center h-screen bg-[#313338] text-gray-100">
                 {/* Channel Icon */}
                 <div className="flex items-center justify-center w-24 h-24 rounded-full bg-gray-600">
@@ -143,10 +154,47 @@ const ChatArea = () => {
               </div>
             ) : (
               <>
-                {messages.map((item, index) => (
-                  <ChatComplement key={index} item={item} />
-                ))}
-                <div ref={messagesEndRef} />
+                {!messages ? (
+                  <div></div>
+                ) : (
+                  <>
+                    {!messages || messages.length === 0 ? (
+                      <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                        <div className="text-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            className="w-28 h-28 mx-auto text-gray-400 mb-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="M7 8h10M7 12h6m5 8v-2a2 2 0 00-2-2H7l-4 4V6a2 2 0 012-2h12a2 2 0 012 2v12z"
+                            />
+                          </svg>
+
+                          <h2 className="text-lg font-semibold mb-2">
+                            No messages yet
+                          </h2>
+                          <p className="text-sm">
+                            Start a conversation or wait for others to send a
+                            message.
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        {messages.map((item, index) => (
+                          <ChatComplement key={index} item={item} />
+                        ))}
+                        <div ref={messagesEndRef} />
+                      </>
+                    )}
+                  </>
+                )}
               </>
             )}
           </div>
@@ -176,7 +224,6 @@ const ChatArea = () => {
           )}
         </>
       )}
-         
     </div>
   );
 };
