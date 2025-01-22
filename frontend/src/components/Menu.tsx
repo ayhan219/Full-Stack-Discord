@@ -22,7 +22,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
   const navigate = useNavigate();
   
   return (
-    <div  className="w-[270px] h-screen bg-[#2B2D31] flex flex-col">
+    <div  className="w-[270px] h-screen bg-[#2B2D31] flex flex-col relative">
       <div className="w-full h-16 flex justify-center items-center">
         <input
           className="bg-[#1E1F22] w-[85%] h-9 outline-none text-white text-sm pl-2 rounded-lg"
@@ -69,7 +69,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         <h3>DIRECT MESSAGES</h3>
         <GoPlus className=" text-xl cursor-pointer" />
         </div>
-        <div className="w-full h-auto flex flex-col gap-2">
+        <div className="w-full h-auto flex flex-col gap-2 overflow-y-auto custom-scrollbar">
           {
             user?.menuChat.map((item,index)=>(
               <MenuFriends key={index} item={item} />
@@ -80,7 +80,9 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         
       </div>
 
+      <div className="absolute bottom-0 w-full">
       <BottomProfile />
+      </div>
     </div>
   );
 };
