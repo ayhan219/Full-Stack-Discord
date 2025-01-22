@@ -8,9 +8,9 @@ import CreateRoom from "./CreateRoom";
 import CreateVoiceRoom from "./CreateVoiceRoom";
 import { useState } from "react";
 import axios from "axios";
-import { ImConnection } from "react-icons/im";
 import { PiPhoneDisconnectFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
+import ChannelUserControlArea from "./ChannelUserControlArea";
 
 const ChannelMenu = () => {
   const {
@@ -20,6 +20,7 @@ const ChannelMenu = () => {
     setOpenCreateVoiceRoom,
     openCreateVoiceRoom,
     loading,
+    connectedToVoice
   } = useUserContext();
 
   const [openChannelSettingArea, setOpenChannelSettingArea] =
@@ -203,6 +204,12 @@ const ChannelMenu = () => {
             )}
           </>
         )}
+       {
+        connectedToVoice && 
+        <div className="flex h-full items-end">
+        <ChannelUserControlArea />
+        </div>
+       }
         <BottomProfile />
       </div>
       {openDeleteArea && (

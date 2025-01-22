@@ -14,78 +14,78 @@ interface UserProps {
 }
 
 const VoiceComponent = ({ item, roomName }: UserProps) => {
-  const {
-    user,
-    singleChannel,
-    socket,
-    setSingleChannel,
-    handleDisconnect,
-    setHandleDisconnect,
-  } = useUserContext();
+  // const {
+  //   user,
+  //   singleChannel,
+  //   socket,
+  //   setSingleChannel,
+  //   handleDisconnect,
+  //   setHandleDisconnect,
+  // } = useUserContext();
 
   const room = useRoomContext();
   const [isSpeaking, setIsSpeaking] = useState(false);
 
-  const handleDisconnectFromVoice = async () => {
-    try {
-      const response = await axios.delete(
-        "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
-        {
-          data: {
-            userId: user?.userId,
-            channelId: singleChannel?._id,
-          },
-        }
-      );
+  // const handleDisconnectFromVoice = async () => {
+  //   try {
+  //     const response = await axios.delete(
+  //       "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
+  //       {
+  //         data: {
+  //           userId: user?.userId,
+  //           channelId: singleChannel?._id,
+  //         },
+  //       }
+  //     );
 
-      if (response.status === 200) {
-        room.disconnect();
+  //     if (response.status === 200) {
+  //       room.disconnect();
 
-        console.log("User disconnected and removed from voice channel");
+  //       console.log("User disconnected and removed from voice channel");
 
-        setSingleChannel((prev) => {
-          if (!prev) return prev;
+  //       setSingleChannel((prev) => {
+  //         if (!prev) return prev;
 
-          const updatedVoiceChannels = prev.voiceChannel.map((channel) => {
-            if (channel.voiceRoomName === roomName) {
-              return {
-                ...channel,
-                voiceUsers: channel.voiceUsers.filter(
-                  (voiceUser) => voiceUser._id !== user?.userId
-                ),
-              };
-            }
-            return channel;
-          });
+  //         const updatedVoiceChannels = prev.voiceChannel.map((channel) => {
+  //           if (channel.voiceRoomName === roomName) {
+  //             return {
+  //               ...channel,
+  //               voiceUsers: channel.voiceUsers.filter(
+  //                 (voiceUser) => voiceUser._id !== user?.userId
+  //               ),
+  //             };
+  //           }
+  //           return channel;
+  //         });
 
-          return { ...prev, voiceChannel: updatedVoiceChannels };
-        });
+  //         return { ...prev, voiceChannel: updatedVoiceChannels };
+  //       });
 
-        socket.emit("leaveVoiceRoom", {
-          serverName: singleChannel?.channelName,
-          roomName,
-          userId: user?.userId,
-        });
+  //       socket.emit("leaveVoiceRoom", {
+  //         serverName: singleChannel?.channelName,
+  //         roomName,
+  //         userId: user?.userId,
+  //       });
 
-        socket.emit("sendVoiceLeftUser", {
-          serverName: singleChannel?.channelName,
-          roomName: roomName,
-          username: user?.username,
-          profilePic: user?.profilePic,
-          _id: user?.userId,
-        });
-        setHandleDisconnect(false);
-      }
-    } catch (error) {
-      console.error("Error disconnecting from voice channel:", error);
-    }
-  };
+  //       socket.emit("sendVoiceLeftUser", {
+  //         serverName: singleChannel?.channelName,
+  //         roomName: roomName,
+  //         username: user?.username,
+  //         profilePic: user?.profilePic,
+  //         _id: user?.userId,
+  //       });
+  //       setHandleDisconnect(false);
+  //     }
+  //   } catch (error) {
+  //     console.error("Error disconnecting from voice channel:", error);
+  //   }
+  // };
 
-  useEffect(() => {
-    if (handleDisconnect) {
-      handleDisconnectFromVoice();
-    }
-  }, [handleDisconnect]);
+  // useEffect(() => {
+  //   if (handleDisconnect) {
+  //     handleDisconnectFromVoice();
+  //   }
+  // }, [handleDisconnect]);
 
   useEffect(() => {
     const handleActiveSpeakerChange = () => {
@@ -118,18 +118,6 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
           />
           <p className="text-white font-semibold text-sm">{item.username}</p>
         </div>
-
-        {item._id === user?.userId && (
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDisconnectFromVoice();
-            }}
-            className="flex items-center gap-2 bg-red-600 text-white p-1 rounded-md cursor-pointer hover:bg-red-500 transition-colors duration-300"
-          >
-            <FiLogOut className="text-xl" />
-          </div>
-        )}
       </div>
     </div>
   );
