@@ -25,7 +25,6 @@ async function loadDataFromFile() {
         await fs.access(path); // Check if the file exists
         const data = await fs.readFile(path, 'utf-8');
         const parsedData = JSON.parse(data);
-        onlineUsers = parsedData.onlineUsers || {};
         servers = parsedData.servers || {};
         serverNamesWithUUID = parsedData.serverNamesWithUUID || {};
         console.log('Data loaded from file');
@@ -41,7 +40,6 @@ async function loadDataFromFile() {
 
   async function saveDataToFile() {
     const data = {
-        onlineUsers,
       servers,
       serverNamesWithUUID
     };
@@ -61,9 +59,27 @@ io.on('connection', (socket) => {
  
     socket.on('userOnline', (userId) => {
         onlineUsers[userId] = socket.id;  
-        console.log(`${userId} is now online with socket ID ${socket.id}`);
-        saveDataToFile();        
+        console.log(`${userId} is now online with socket ID ${socket.id}`)
+        saveDataToFile(); 
+               
     });
+
+    socket.on("getOnlineUser", ({userIds,userId}) => {
+      
+        const onlineFriends = [];
+                
+       userIds.forEach((userId)=>{
+
+        if(onlineUsers[userId]){
+            console.log(`${userId} friend with socket ID ${onlineUsers[userId]}`);
+            onlineFriends.push(userId);
+        }
+        else{
+            console.log(`${userId} is not online`);
+        }
+       })
+         io.to(socket.id).emit("onlineFriends",onlineFriends)
+      });
 
    
     socket.on('createServer', (serverName, userId) => {

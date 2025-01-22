@@ -47,19 +47,21 @@ interface UserContextType {
   setFriendId: (friendId: string) => void;
   notificationNumber: number;
   setNotificationNumber: (notificationNumber: number) => void;
-  deleteNotification:() =>void
-  loading:boolean;
-  setLoading:(loading:boolean)=>void;
-  connectedToVoice:boolean;
-  setConnectedToVoice:(connectedToVoice:boolean)=>void;
-  token:string;
-  setToken:(token:string)=>void;
-  handleDisconnect:boolean;
-  setHandleDisconnect:(handleDisconnect:boolean)=>void;
-  activeChannel:string;
-  setActiveChannel:(activeChannel:string)=>void;
-  voiceRoomName:string;
-  setVoiceRoomName:(voiceRoomName:string)=>void;
+  deleteNotification: () => void;
+  loading: boolean;
+  setLoading: (loading: boolean) => void;
+  connectedToVoice: boolean;
+  setConnectedToVoice: (connectedToVoice: boolean) => void;
+  token: string;
+  setToken: (token: string) => void;
+  handleDisconnect: boolean;
+  setHandleDisconnect: (handleDisconnect: boolean) => void;
+  activeChannel: string;
+  setActiveChannel: (activeChannel: string) => void;
+  voiceRoomName: string;
+  setVoiceRoomName: (voiceRoomName: string) => void;
+  onlineFriendUserIds:string[],
+  setOnlineFriendUserIds:(onlineFriendUserIds:string[])=>void;
 }
 
 interface Friend {
@@ -86,7 +88,7 @@ type VoiceUser = {
 
 interface VoiceChannel {
   voiceRoomName: string;
-  voiceUsers: VoiceUser[];  
+  voiceUsers: VoiceUser[];
   _id: string;
 }
 
@@ -95,11 +97,9 @@ interface SingleChannel {
   channelName: string;
   chatChannel: ChatChannel[];
   voiceChannel: VoiceChannel[];
-  admin:string[],
+  admin: string[];
   channelUsers: [];
 }
-
-
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -125,12 +125,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState<string>("friends");
   const [friendId, setFriendId] = useState<string>("");
   const [notificationNumber, setNotificationNumber] = useState<number>(0);
-  const [loading,setLoading] = useState<boolean>(false);
-  const [connectedToVoice,setConnectedToVoice] = useState<boolean>(false);
-  const [token,setToken] = useState<string>("");
-  const [handleDisconnect,setHandleDisconnect] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [connectedToVoice, setConnectedToVoice] = useState<boolean>(false);
+  const [token, setToken] = useState<string>("");
+  const [handleDisconnect, setHandleDisconnect] = useState<boolean>(false);
   const [activeChannel, setActiveChannel] = useState<string>("home");
-  const [voiceRoomName,setVoiceRoomName] = useState<string>("");
+  const [voiceRoomName, setVoiceRoomName] = useState<string>("");
+  const [onlineFriendUserIds,setOnlineFriendUserIds] = useState<string[]>([]);
 
   const getCurrentUser = async () => {
     try {
@@ -140,7 +141,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           withCredentials: true,
         }
       );
-      console.log(response.data);
 
       setUser(response.data);
     } catch (error) {
@@ -156,8 +156,13 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     if (user?.userId) {
       socket.emit("userOnline", user?.userId);
+      const userIds = user?.friends.map((friend: any) => friend._id);
+      socket.emit("getOnlineUser", ({
+       userIds:userIds,
+       userId:user?.userId
+      }));
     }
-  }, [user?.userId]); // Only run this effect when the user is available
+  }, [user?.userId]);
 
   const getSingleChannel = async (id: string) => {
     setLoading(true);
@@ -170,18 +175,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           },
         }
       );
-      console.log("channel:",response.data);
-      
+      console.log("channel:", response.data);
+
       setSingleChannel(response.data);
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
 
   const addNotification = async () => {
-    
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/addnotification",
@@ -195,7 +199,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
-  const deleteNotification = async()=>{
+  const deleteNotification = async () => {
     try {
       const response = await axios.post(
         "http://localhost:5000/api/auth/deletenotification",
@@ -204,39 +208,42 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
       );
       console.log(response);
-      setNotificationNumber(response.data)
+      setNotificationNumber(response.data);
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  const getNotification = async()=>{
+  const getNotification = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/auth/getnotification",{
-        params:{
-          userId:user?.userId
+      const response = await axios.get(
+        "http://localhost:5000/api/auth/getnotification",
+        {
+          params: {
+            userId: user?.userId,
+          },
         }
-      })
-      setNotificationNumber(response.data)
+      );
+      setNotificationNumber(response.data);
     } catch (error) {
       console.log(error);
-      
     }
-  }
+  };
 
-  useEffect(()=>{
-    if(user){
+  useEffect(() => {
+    if (user) {
       getNotification();
     }
-
-  },[user])
+  }, [user]);
 
   useEffect(() => {
     if (socket) {
       socket.on(
         "friendRequestNotification",
         (senderId: string, username: string, profilePic: string) => {
-          setNotificationNumber((prevNotificationNumber) => prevNotificationNumber + 1);
+          setNotificationNumber(
+            (prevNotificationNumber) => prevNotificationNumber + 1
+          );
           if (user?.userId) {
             addNotification();
           }
@@ -284,36 +291,37 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           }
         }
       );
-      socket.on("dataToServer",(data)=>{
-        const {roomName,messages} = data
-        setSingleChannel((prev:SingleChannel | null)=>{
-          if(!prev){
-            return prev
+      socket.on("dataToServer", (data) => {
+        const { roomName, messages } = data;
+        setSingleChannel((prev: SingleChannel | null) => {
+          if (!prev) {
+            return prev;
           }
           const fixedChatRoom = {
             ...roomName,
             roomName: roomName,
           };
-          return{
+          return {
             ...prev,
-            chatChannel:[...prev.chatChannel,fixedChatRoom]
-
-          }
-        })
-      })
-      socket.on("dataToServerVoice",(voiceRoom)=>{
+            chatChannel: [...prev.chatChannel, fixedChatRoom],
+          };
+        });
+      });
+      socket.on("dataToServerVoice", (voiceRoom) => {
         console.log(voiceRoom);
-        
-        setSingleChannel((prev:SingleChannel | null)=>{
-          if(!prev){
-            return prev
+
+        setSingleChannel((prev: SingleChannel | null) => {
+          if (!prev) {
+            return prev;
           }
           return {
             ...prev,
-            voiceChannel:[...prev.voiceChannel,voiceRoom]
-          }
-        })
-        
+            voiceChannel: [...prev.voiceChannel, voiceRoom],
+          };
+        });
+      });
+      socket.on("onlineFriends",(onlineFriends)=>{
+        setOnlineFriendUserIds(onlineFriends)
       })
     }
 
@@ -324,10 +332,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("sendReceiverIdToUser");
         socket.off("new_message_notification");
         socket.off("dataToServer");
-        socket.off("dataToServerVoice")
+        socket.off("dataToServerVoice");
+        socket.off("onlineFriends");
       }
     };
-  }, [socket,user]);
+  }, [socket, user]);
 
   return (
     <UserContext.Provider
@@ -371,7 +380,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         activeChannel,
         setActiveChannel,
         voiceRoomName,
-        setVoiceRoomName
+        setVoiceRoomName,
+        onlineFriendUserIds,
+        setOnlineFriendUserIds
       }}
     >
       {children}
