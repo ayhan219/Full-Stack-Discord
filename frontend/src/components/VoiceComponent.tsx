@@ -106,8 +106,8 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
   }, [room, item._id]);
 
   return (
-    <div className="w-full flex flex-col  space-y-4">
-      <div className="flex items-center px-4 gap-4 rounded-lg transition-colors duration-300">
+    <div className="w-full flex flex-col  space-y-2">
+      <div className="flex items-center px-2 gap-4 rounded-lg transition-colors duration-300">
         <div className="flex items-center gap-3">
           <img
             className={`w-7 h-7 rounded-full border-2 ${

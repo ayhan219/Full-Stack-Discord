@@ -17,7 +17,7 @@ const ChannelMember = ({item}: ChannelMemberProps) => {
       {/* Avatar Container */}
       <div className="relative">
         <img
-          className="w-11 h-11 rounded-full"
+          className="w-10 h-10 rounded-full"
           src={`http://localhost:5000${item.profilePic}`}
           alt="Avatar"
         />
