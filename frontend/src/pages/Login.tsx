@@ -1,41 +1,45 @@
 import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
-import axios from "axios"
+import axios from "axios";
 import { useUserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-
-  const [email,setEmail] = useState<string>("");
-  const [password,setPassword] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const navigate = useNavigate();
 
-  const {setUser} = useUserContext();
+  const { setUser, user, socket } = useUserContext();
 
-
-  const handleLogin = async()=>{
+  const handleLogin = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login",{
-        email,
-        password
-      },{
-        withCredentials:true
-        
-      })
+      const response = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       console.log(response.data);
-      setUser(response.data)
-      
-      if(response.status===200){
+      setUser(response.data);
+
+      if (response.status === 200) {
+        const userIds = response.data.friends.map((friend: any) => friend._id);
+        console.log(userIds);
+        socket.emit("getOnlineUser", {
+          userIds: userIds,
+          userId: response.data.userId,
+        });
         navigate("/home");
       }
-      
-      
     } catch (error) {
       console.log(error);
-      
     }
-  }
+  };
 
   return (
     <div
@@ -43,7 +47,7 @@ const Login = () => {
       style={{ backgroundImage: `url(${dcbackgroung})` }}
     >
       <div className="w-[600px] h-auto bg-[#2f3136] rounded-lg shadow-lg p-6">
-      <div className="w-full h-auto text-white font-bold text-3xl flex justify-center py-4">
+        <div className="w-full h-auto text-white font-bold text-3xl flex justify-center py-4">
           <h3>Login</h3>
         </div>
         <div className="w-full h-auto">
@@ -53,7 +57,7 @@ const Login = () => {
               <input
                 className="w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white "
                 type="email"
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
             </div>
@@ -65,14 +69,17 @@ const Login = () => {
               <input
                 className="w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white "
                 type="password"
-                onChange={(e)=>setPassword(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 value={password}
               />
             </div>
           </div>
 
           <div className="w-full h-auto flex justify-center py-4">
-            <button onClick={()=>handleLogin()} className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300">
+            <button
+              onClick={() => handleLogin()}
+              className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300"
+            >
               Login
             </button>
           </div>
