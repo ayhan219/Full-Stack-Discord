@@ -11,7 +11,7 @@ import { useUserContext } from "../context/UserContext";
 import { useRoomContext } from "@livekit/components-react";
 
 const BottomProfile = () => {
-  const { user } = useUserContext();
+  const { user,socket } = useUserContext();
   const { turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff } =
     useUserContext();
   const [openSettings, setOpenSettings] = useState<boolean>(false);
@@ -30,6 +30,7 @@ const BottomProfile = () => {
       );
       if (response.status === 200) {
         setUser(null);
+        socket.disconnect();
         navigate("/login");
       }
     } catch (error) {
