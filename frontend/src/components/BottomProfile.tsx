@@ -11,7 +11,7 @@ import { useUserContext } from "../context/UserContext";
 import { useRoomContext } from "@livekit/components-react";
 
 const BottomProfile = () => {
-  const { user,socket } = useUserContext();
+  const { user, socket } = useUserContext();
   const { turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff } =
     useUserContext();
   const [openSettings, setOpenSettings] = useState<boolean>(false);
@@ -29,9 +29,19 @@ const BottomProfile = () => {
         }
       );
       if (response.status === 200) {
+        const userIds = user?.friends.map((friend: any) => friend);
+        console.log(userIds);
+
+        socket.emit("userDisconnected", {
+          userIds: userIds,
+          senderId: user?.userId,
+        });
         setUser(null);
+
         socket.disconnect();
+        window.location.reload();
         navigate("/login");
+        
       }
     } catch (error) {
       console.log(error);
@@ -60,25 +70,33 @@ const BottomProfile = () => {
               turnMicOff ? "text-red-600" : ""
             }`}
           >
-            {turnMicOff ? <PiMicrophoneSlashFill onClick={()=>{
-              const audioTracks = Array.from(
-                room.localParticipant.audioTrackPublications.values()
-              );
-              audioTracks.forEach((trackPublication) => {
-                if (trackPublication.track) {
-                  trackPublication.track.unmute(); 
-                }
-              });
-            }} /> : <FaMicrophone onClick={()=>{
-              const audioTracks = Array.from(
-                room.localParticipant.audioTrackPublications.values()
-              );
-              audioTracks.forEach((trackPublication) => {
-                if (trackPublication.track) {
-                  trackPublication.track.mute(); 
-                }
-              });
-            }} />}
+            {turnMicOff ? (
+              <PiMicrophoneSlashFill
+                onClick={() => {
+                  const audioTracks = Array.from(
+                    room.localParticipant.audioTrackPublications.values()
+                  );
+                  audioTracks.forEach((trackPublication) => {
+                    if (trackPublication.track) {
+                      trackPublication.track.unmute();
+                    }
+                  });
+                }}
+              />
+            ) : (
+              <FaMicrophone
+                onClick={() => {
+                  const audioTracks = Array.from(
+                    room.localParticipant.audioTrackPublications.values()
+                  );
+                  audioTracks.forEach((trackPublication) => {
+                    if (trackPublication.track) {
+                      trackPublication.track.mute();
+                    }
+                  });
+                }}
+              />
+            )}
           </div>
 
           {/* Headphones Button */}
@@ -88,29 +106,41 @@ const BottomProfile = () => {
               turnHeadOff ? "text-red-600" : ""
             }`}
           >
-            {turnHeadOff ? <TbHeadphonesOff onClick={()=>{
-              const audioTracks = Array.from(
-                room.localParticipant.audioTrackPublications.values()
-              );
-              
-              audioTracks.forEach((trackPublication) => {
-                if (trackPublication.track && trackPublication.track.mediaStreamTrack) {
-                  trackPublication.resumeUpstream();
-                  
-                }
-              });
-            }} /> : <FaHeadphones onClick={()=>{
-             const audioTracks = Array.from(
-              room.localParticipant.audioTrackPublications.values()
-            );
-            
-            audioTracks.forEach((trackPublication) => {
-              if (trackPublication.track && trackPublication.track.mediaStreamTrack) {
-                trackPublication.pauseUpstream();
-                
-              }
-            });
-            }} />}
+            {turnHeadOff ? (
+              <TbHeadphonesOff
+                onClick={() => {
+                  const audioTracks = Array.from(
+                    room.localParticipant.audioTrackPublications.values()
+                  );
+
+                  audioTracks.forEach((trackPublication) => {
+                    if (
+                      trackPublication.track &&
+                      trackPublication.track.mediaStreamTrack
+                    ) {
+                      trackPublication.resumeUpstream();
+                    }
+                  });
+                }}
+              />
+            ) : (
+              <FaHeadphones
+                onClick={() => {
+                  const audioTracks = Array.from(
+                    room.localParticipant.audioTrackPublications.values()
+                  );
+
+                  audioTracks.forEach((trackPublication) => {
+                    if (
+                      trackPublication.track &&
+                      trackPublication.track.mediaStreamTrack
+                    ) {
+                      trackPublication.pauseUpstream();
+                    }
+                  });
+                }}
+              />
+            )}
           </div>
 
           {/* Settings Button */}

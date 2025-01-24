@@ -376,6 +376,16 @@ io.on('connection', (socket) => {
             }
         })
     })
+    socket.on("userDisconnected",({userIds,senderId})=>{
+        console.log("worked xd");
+        console.log(userIds);
+        
+        userIds.forEach((user)=>{
+            if(onlineUsers[user._id]){
+                io.to(onlineUsers[user._id]).emit("userThatDisconnected",(senderId))
+            }
+        })
+    })
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {

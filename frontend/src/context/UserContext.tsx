@@ -338,6 +338,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           return prev;
         });
       });
+
+      socket.on("userThatDisconnected",(senderId)=>{
+        setOnlineFriends((prev)=>{
+          if(!prev){
+            return prev;
+          }
+          const newData = prev.filter((data)=>data._id!==senderId);
+          return newData
+        })
+        
+      })
     }
 
     // Temizleme işlemi
@@ -350,6 +361,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("dataToServerVoice");
         socket.off("onlineFriends");
         socket.off("ImOnline");
+        socket.off("userThatDisconnected");
       }
     };
   }, [socket, user]);
