@@ -28,11 +28,15 @@ const Login = () => {
       setUser(response.data);
 
       if (response.status === 200) {
-        const userIds = response.data.friends.map((friend: any) => friend._id);
-        console.log(userIds);
+        const userIds = response.data.friends.map((friend: any) => friend);
+        const senderData = {
+          _id: response.data.userId,
+          username: response.data?.username,
+          profilePic: response.data?.profilePic,
+        };
         socket.emit("getOnlineUser", {
           userIds: userIds,
-          userId: response.data.userId,
+          senderId: senderData,
         });
         navigate("/home");
       }

@@ -9,7 +9,8 @@ import AddFriendMenu from "../components/AddFriendMenu";
 import PendingFriend from "../components/PendingFriend";
 
 const Home = () => {
-  const { user, activeMenu, setActiveMenu,onlineFriendUserIds } = useUserContext();
+  const { user, activeMenu, setActiveMenu, onlineFriendUserIds,onlineFriends } =
+    useUserContext();
   const [activeTopBarMenu, setActiveTopBarMenu] = useState<string>("online");
 
   const show = () => {
@@ -39,41 +40,41 @@ const Home = () => {
               </div>
 
               <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
-                <h3 onClick={() => show()}>ONLINE - {onlineFriendUserIds.length}</h3>
+                <h3 onClick={() => show()}>
+                  ONLINE - {onlineFriends.length}
+                </h3>
               </div>
-              <div className="w-full h-[calc(100%-60px)] p-4  overflow-y-auto  custom-scrollbar flex flex-col gap-2 ">
-                {activeMenu === "friends" &&
-                  (user?.friends && user?.friends.length > 0 ? (
-                    user?.friends.map((item, index) => (
-                      onlineFriendUserIds.includes(item._id) ? 
-                      <HomeFriend key={index} item={item} activeTopBarMenu={activeTopBarMenu} />
-                      :
-                      null
-                    ))
-                  ) : (
-                    <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
-                      <p>You don't have any friends yet</p>
-                    </div>
-                  ))}
+              <div className="w-full h-[calc(100%-60px)] p-4 overflow-y-auto custom-scrollbar flex flex-col gap-2">
+                {user?.friends && user?.friends.length > 0 ? (
+                 onlineFriends.map((item,index)=>(
+                  <HomeFriend key={index} item={item} activeTopBarMenu={activeTopBarMenu}  />
+                 ))
+                ) : (
+                  <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
+                    <p>You don't have any friends yet</p>
+                  </div>
+                )}
               </div>
             </div>
           )}
-          {
-            activeTopBarMenu === "all" && 
-
+          {activeTopBarMenu === "all" && (
             <div className="w-full h-[calc(100%-60px)] p-4  overflow-y-auto  custom-scrollbar flex flex-col gap-2 ">
-                {activeMenu === "friends" &&
-                  (user?.friends && user?.friends.length > 0 ? (
-                    user?.friends.map((item, index) => (
-                      <HomeFriend key={index} item={item} activeTopBarMenu={activeTopBarMenu} />
-                    ))
-                  ) : (
-                    <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
-                      <p>You don't have any friends yet</p>
-                    </div>
-                  ))}
-              </div>
-          }
+              {activeMenu === "friends" &&
+                (user?.friends && user?.friends.length > 0 ? (
+                  user?.friends.map((item, index) => (
+                    <HomeFriend
+                      key={index}
+                      item={item}
+                      activeTopBarMenu={activeTopBarMenu}
+                    />
+                  ))
+                ) : (
+                  <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
+                    <p>You don't have any friends yet</p>
+                  </div>
+                ))}
+            </div>
+          )}
           {activeTopBarMenu === "addfriend" && <AddFriendMenu />}
           {activeTopBarMenu === "pending" && (
             <>
@@ -109,7 +110,6 @@ const Home = () => {
                       <p className="text-sm mt-1">
                         Send friend requests or wait for others to send you one!
                       </p>
-                      
                     </div>
                   )}
                 </div>

@@ -64,21 +64,25 @@ io.on('connection', (socket) => {
                
     });
 
-    socket.on("getOnlineUser", ({userIds,userId}) => {
+    socket.on("getOnlineUser", ({userIds,senderId}) => {
       
-        const onlineFriends = [];
+        const onlineFriendsFromSocket = [];
                 
-       userIds.forEach((userId)=>{
-
-        if(onlineUsers[userId]){
-            console.log(`${userId} friend with socket ID ${onlineUsers[userId]}`);
-            onlineFriends.push(userId);
+       userIds.forEach((user)=>{
+        if(onlineUsers[user._id]){
+            const data ={
+                _id:user._id,
+                username:user.username,
+                profilePic:user.profilePic
+            }
+            io.to(onlineUsers[user._id]).emit("ImOnline",(senderId))
+            onlineFriendsFromSocket.push(data);
         }
         else{
-            console.log(`${userId} is not online`);
+            console.log(`${user?._id} is not online`);
         }
        })
-         io.to(socket.id).emit("onlineFriends",onlineFriends)
+         io.to(socket.id).emit("onlineFriends",onlineFriendsFromSocket)
       });
 
    

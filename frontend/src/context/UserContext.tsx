@@ -60,8 +60,10 @@ interface UserContextType {
   setActiveChannel: (activeChannel: string) => void;
   voiceRoomName: string;
   setVoiceRoomName: (voiceRoomName: string) => void;
-  onlineFriendUserIds:string[],
-  setOnlineFriendUserIds:(onlineFriendUserIds:string[])=>void;
+  onlineFriendUserIds: string[];
+  setOnlineFriendUserIds: (onlineFriendUserIds: string[]) => void;
+  onlineFriends: Friend[];
+  setOnlineFriends: (onlineFriends: Friend[]) => void;
 }
 
 interface Friend {
@@ -131,7 +133,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [handleDisconnect, setHandleDisconnect] = useState<boolean>(false);
   const [activeChannel, setActiveChannel] = useState<string>("home");
   const [voiceRoomName, setVoiceRoomName] = useState<string>("");
-  const [onlineFriendUserIds,setOnlineFriendUserIds] = useState<string[]>([]);
+  const [onlineFriendUserIds, setOnlineFriendUserIds] = useState<string[]>([]);
+  const [onlineFriends, setOnlineFriends] = useState<Friend[]>([]);
 
   const getCurrentUser = async () => {
     try {
@@ -156,11 +159,16 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   useEffect(() => {
     if (user?.userId) {
       socket.emit("userOnline", user?.userId);
-      const userIds = user?.friends.map((friend: any) => friend._id);
-      socket.emit("getOnlineUser", ({
-       userIds:userIds,
-       userId:user?.userId
-      }));
+      const userIds = user?.friends.map((friend: any) => friend);
+      const senderData = {
+        _id: user?.userId,
+        username: user?.username,
+        profilePic: user?.profilePic,
+      };
+      socket.emit("getOnlineUser", {
+        userIds: userIds,
+        senderId: senderData,
+      });
     }
   }, [user?.userId]);
 
@@ -175,7 +183,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           },
         }
       );
-      console.log("channel:", response.data);
 
       setSingleChannel(response.data);
     } catch (error) {
@@ -320,9 +327,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           };
         });
       });
-      socket.on("onlineFriends",(onlineFriends)=>{
-        setOnlineFriendUserIds(onlineFriends)
-      })
+      socket.on("onlineFriends", (onlineFriendsFromSocket) => {
+        setOnlineFriends(onlineFriendsFromSocket);
+      });
+      socket.on("ImOnline", (userId) => {
+        setOnlineFriends((prev) => {
+          if (!prev.some((friend) => friend._id === userId._id)) {
+            return [...prev, userId];
+          }
+          return prev;
+        });
+      });
     }
 
     // Temizleme işlemi
@@ -334,6 +349,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("dataToServer");
         socket.off("dataToServerVoice");
         socket.off("onlineFriends");
+        socket.off("ImOnline");
       }
     };
   }, [socket, user]);
@@ -382,7 +398,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         voiceRoomName,
         setVoiceRoomName,
         onlineFriendUserIds,
-        setOnlineFriendUserIds
+        setOnlineFriendUserIds,
+        onlineFriends,
+        setOnlineFriends,
       }}
     >
       {children}
