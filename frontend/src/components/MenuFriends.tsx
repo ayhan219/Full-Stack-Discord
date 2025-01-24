@@ -32,7 +32,7 @@ type User = {
 const MenuFriends = ({ item }: MenuFriendProps) => {
   const { user,setUser } = useUserContext();
   const navigate = useNavigate();
-  const { setFriendId } = useUserContext();
+  const { setFriendId,onlineFriends } = useUserContext();
 
   const setFriend = async () => {
     setFriendId(item._id);
@@ -85,7 +85,10 @@ const MenuFriends = ({ item }: MenuFriendProps) => {
               src={`http://localhost:5000${item.profilePic}`}
               alt=""
             />
-            <div className="w-3 h-3 rounded-full bg-green-700 absolute right-0 bottom-0"></div>
+            {
+              onlineFriends.some((friend)=>friend._id === item._id) &&
+              <div className="w-3 h-3 rounded-full bg-green-700 absolute right-0 bottom-0"></div> 
+            }
           </div>
           <div className="font-semibold">
             <p>{item.username}</p>
