@@ -202,25 +202,39 @@ const ChatArea = () => {
           {/* Message Input */}
           {selectedChatRoom !== "" && (
             <div className="w-full h-16 bg-[#2B2D31] flex items-center px-5 gap-3">
+            <input
+              type="text"
+              placeholder="Type a message..."
+              className="w-full h-10 bg-[#40444B] text-gray-200 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 placeholder-gray-400"
+              onChange={(e) => setMessage(e.target.value)}
+              value={message}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleSend();
+                }
+              }}
+            />
+            <label
+              htmlFor="image-upload"
+              className="cursor-pointer h-10 w-10 flex items-center justify-center bg-gray-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200"
+            >
+              📷
               <input
-                type="text"
-                placeholder="Type a message..."
-                className="w-full h-10 bg-[#40444B] text-gray-200 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 placeholder-gray-400"
-                onChange={(e) => setMessage(e.target.value)}
-                value={message}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleSend();
-                  }
-                }}
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
               />
-              <button
-                onClick={handleSend}
-                className="h-10 px-6 bg-gray-500 text-white font-medium rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200"
-              >
-                Send
-              </button>
-            </div>
+            </label>
+          
+            <button
+              onClick={handleSend}
+              className="h-10 px-6 bg-gray-500 text-white font-medium rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200"
+            >
+              Send
+            </button>
+          </div>
+          
           )}
         </>
       )}
