@@ -85,6 +85,26 @@ io.on('connection', (socket) => {
          io.to(socket.id).emit("onlineFriends",onlineFriendsFromSocket)
       });
 
+      socket.on("sendChannelUsers",({allUser,senderId})=>{
+       const onlineChannelUserFromSocket = []
+       
+       allUser.forEach((user)=>{
+        if(onlineUsers[user._id]){
+            const data ={
+                _id:user._id,
+                username:user.username,
+                profilePic:user.profilePic
+            }
+           io.to(onlineUsers[user._id]).emit("onlineChannelUsers",(senderId))
+           onlineChannelUserFromSocket.push(data);
+            
+        }
+       })
+       
+       io.to(socket.id).emit("onlineAllChannelUsers",(onlineChannelUserFromSocket))
+
+      })
+
    
     socket.on('createServer', (serverName, userId) => {
       if (serverNamesWithUUID[serverName]) {

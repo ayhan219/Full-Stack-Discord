@@ -29,18 +29,22 @@ const Server = ({
     .toUpperCase();
 
 
-  useEffect(() => {
-    getSingleChannel(item._id);
-  }, [channels]);
+    useEffect(() => {
+      if (activeChannel === item._id) {
+        getSingleChannel(item._id);
+      }
+    }, [activeChannel, item._id]);
 
   return (
     <div
       onClick={() => setActiveChannel(item._id)}
       className="w-full h-16 flex items-center justify-center relative"
+      key={item._id}
     >
       <Link
         onClick={() => getSingleChannel(item._id)}
-        to={"/channel"}
+        to={`/channel/${item._id}`}
+        key={item._id}
         className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer"
       >
         <p className="text-black font-bold text-lg">{initials}</p>

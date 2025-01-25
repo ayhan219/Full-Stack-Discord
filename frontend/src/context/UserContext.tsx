@@ -64,6 +64,8 @@ interface UserContextType {
   setOnlineFriendUserIds: (onlineFriendUserIds: string[]) => void;
   onlineFriends: Friend[];
   setOnlineFriends: (onlineFriends: Friend[]) => void;
+  allUser:string[];
+  setAllUser:(allUser:string[])=>void;
 }
 
 interface Friend {
@@ -75,6 +77,7 @@ interface Friend {
 interface Channel {
   _id: string;
   channelName: string;
+  channelUsers:[];
 }
 
 interface ChatChannel {
@@ -135,6 +138,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [voiceRoomName, setVoiceRoomName] = useState<string>("");
   const [onlineFriendUserIds, setOnlineFriendUserIds] = useState<string[]>([]);
   const [onlineFriends, setOnlineFriends] = useState<Friend[]>([]);
+  const [allUser,setAllUser] = useState<string[]>([]);
 
   const getCurrentUser = async () => {
     try {
@@ -167,12 +171,44 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       };
       socket.emit("getOnlineUser", {
         userIds: userIds,
-        senderId: senderData,
+        senderId:senderData
       });
+      const uniqueUsers: any[] = [];
+      channels.forEach((item) => {
+        item.channelUsers.forEach((data: any) => {
+          if (!uniqueUsers.some((user) => user._id === data._id)) {
+            uniqueUsers.push(data);
+          }
+        });
+      });
+      setAllUser(uniqueUsers);
+      
     }
-  }, [user?.userId]);
+
+    
+  }, [user?.userId,channels]);
+
+  useEffect(()=>{
+   
+    
+    if (allUser.length > 0) {
+      const data = {
+        _id:user?.userId,
+        username:user?.username,
+        profilePic:user?.profilePic
+      }
+      
+      socket.emit("sendChannelUsers", ({
+        allUser,
+        senderId:data
+      }));
+      
+    }
+
+  },[allUser])
 
   const getSingleChannel = async (id: string) => {
+    
     setLoading(true);
     try {
       const response = await axios.get(
@@ -185,6 +221,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       );
 
       setSingleChannel(response.data);
+      
     } catch (error) {
       console.log(error);
     } finally {
@@ -413,6 +450,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setOnlineFriendUserIds,
         onlineFriends,
         setOnlineFriends,
+        allUser,
+        setAllUser
       }}
     >
       {children}

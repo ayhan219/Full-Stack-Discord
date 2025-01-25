@@ -66,7 +66,7 @@ function App() {
             <Route path="/" element={<Navigate to="/login" replace />} />
 
             <Route
-              path="/channel"
+              path="/channel/:id"
               element={
                 <PrivateRoute>
                   <Channel />

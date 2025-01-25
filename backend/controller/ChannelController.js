@@ -52,7 +52,11 @@ const getChannel = async(req,res)=>{
     try {
         const findUser = await User.findById(userId).populate({
             path: "joinedChannel",
-            select: "_id channelName", 
+            select: "_id channelName channelUsers", 
+            populate: {
+              path: "channelUsers", 
+              select: "_id username profilePic" 
+          }
           });
         if(!findUser){
             return res.status(400).json({message:"user not found"})

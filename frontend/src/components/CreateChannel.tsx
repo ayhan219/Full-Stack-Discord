@@ -45,7 +45,7 @@ const CreateChannel = () => {
       console.log(response.data);
       setActiveChannel(response.data._id)
       getSingleChannel(response.data._id);
-      navigate("/channel")
+      navigate(`/channel/${response.data._id}`)
 
     } catch (error) {
       console.log(error);
