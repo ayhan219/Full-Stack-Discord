@@ -119,7 +119,14 @@ const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
             <div className="w-3 h-3 rounded-full bg-green-700 absolute right-0 bottom-0"></div>
           )}
         </div>
+        <div>
         <h3 className="text-md text-white font-medium">{item.username}</h3>
+        {
+          activeTopBarMenu !== "all" && (
+            <p className="text-green-500 text-xs">online</p>
+          )
+        }
+        </div>
       </div>
       <div className="flex gap-2">
         <div className="w-12 h-12 flex items-center justify-center rounded-full bg-[#1E1F22]  transition-all">
