@@ -14,7 +14,7 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
 
 
   return (
-    <div className="w-[250px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden">
+    <div className="w-[300px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden">
   {loading ? (
     <div className="flex items-center justify-center w-full h-full">
       <span className="text-gray-400 text-lg animate-pulse">Loading...</span>
