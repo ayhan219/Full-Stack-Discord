@@ -12,12 +12,9 @@ type ChannelProps = {
 const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
   const { singleChannel, loading } = useUserContext();
 
-  const show = () => {
-    console.log(onlineChannelUsers);
-  };
 
   return (
-    <div className="w-[300px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden">
+    <div className="w-[250px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden">
   {loading ? (
     <div className="flex items-center justify-center w-full h-full">
       <span className="text-gray-400 text-lg animate-pulse">Loading...</span>
@@ -25,11 +22,9 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
   ) : (
     <>
       {/* Members Section */}
-      <div className="bg-[#1F2124] p-4">
+      <div className="p-4">
         <h3
-          className="text-gray-300 text-lg font-bold cursor-pointer hover:text-white transition"
-          onClick={() => show()}
-        >
+          className="text-gray-300 text-lg font-bold cursor-pointer hover:text-white transition">
           Members - {singleChannel?.channelUsers.length}
         </h3>
       </div>
