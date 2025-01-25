@@ -20,7 +20,7 @@ const Server = ({
   setActiveChannel,
   isActive,
 }: ServerProps) => {
-  const { getSingleChannel, channels,setActiveRoom } = useUserContext();
+  const { getSingleChannel, channels,setActiveRoom,setSelectedChatRoom } = useUserContext();
 
   const initials = item.channelName
     .split(" ")
@@ -40,6 +40,7 @@ const Server = ({
       onClick={() => {
         setActiveChannel(item._id)
         setActiveRoom("chat");
+        setSelectedChatRoom("");
       }}
       className="w-full h-16 flex items-center justify-center relative"
       key={item._id}
