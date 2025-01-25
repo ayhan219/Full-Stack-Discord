@@ -29,13 +29,13 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
 };
 
 function App() {
-  const { user, token } = useUserContext();
+  const { user, token,setConnectedToVoice,setHandleDisconnect } = useUserContext();
   const serverUrl = "wss://discord-clone-6tnm5nqn.livekit.cloud";
 
   return (
     <BrowserRouter>
       <LiveKitRoom
-        video={true}
+        video={false}
         audio={true}
         connect={!!user}
         token={token}

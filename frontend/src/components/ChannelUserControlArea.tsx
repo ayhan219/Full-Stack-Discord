@@ -6,8 +6,14 @@ import { useRoomContext } from "@livekit/components-react";
 import { BsCameraVideoFill } from "react-icons/bs";
 import { MdScreenShare } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { LocalVideoTrack } from "livekit-client";
 
-const ChannelUserControlArea = () => {
+interface ChannelProps {
+  setIsCameraOn:(isCameraOn:boolean)=>void;
+  isCameraOn:boolean;
+}
+
+const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
   const {
     user,
     singleChannel,
@@ -18,12 +24,15 @@ const ChannelUserControlArea = () => {
     voiceRoomName,
     connectedToVoice,
     setConnectedToVoice,
+    setSelectedChatRoom,
+    setActiveRoom
   } = useUserContext();
   const room = useRoomContext();
 
   const [connectionState, setConnectionState] = useState(room.state); 
 
   const handleDisconnectFromVoice = async () => {
+    setActiveRoom("chat");
     console.log(room);
 
     try {
@@ -105,13 +114,31 @@ const ChannelUserControlArea = () => {
     };
   }, [room]);
 
+  const handleCameraToggle = () => {
+    // const userIdCameraToSend: string[] = [];
+    // singleChannel?.voiceChannel.map((item)=>{
+    //   if(item.voiceRoomName===voiceRoomName){
+    //      item.voiceUsers.map((item)=>{
+    //       if(item._id !==user?.userId){
+    //         userIdCameraToSend.push(item._id)
+    //       }
+    //     })
+    //   }
+    // })
+    
+    const state = !isCameraOn;
+    setIsCameraOn(state);
+    room.localParticipant.setCameraEnabled(state)
+    // socket.emit("toggleCamera",({userIdCameraToSend,senderId:user?.userId,isCameraOn:state}))
+ 
+  };
+
   return (
     <div className="w-full h-24 bg-[#232428]">
       <div className="flex justify-between p-2 items-center">
         <div>
           <div className="flex text-green-500 items-center gap-2">
             <ImConnection className="text-xl" />
-            {/* Bağlantı durumu */}
             {connectionState === "connected" && (
               <p className="text-green-500">Voice Connected</p>
             )}
@@ -128,12 +155,15 @@ const ChannelUserControlArea = () => {
           <p className="text-[#9C9A8E] px-1 text-sm">{voiceRoomName}</p>
         </div>
         <div className="pr-2 text-2xl text-red-600 cursor-pointer">
-          <PiPhoneDisconnectFill onClick={() => handleDisconnectFromVoice()} />
+          <PiPhoneDisconnectFill onClick={() => {
+            handleDisconnectFromVoice();
+            setIsCameraOn(false)
+          }} />
         </div>
       </div>
       <div className="w-full h-full">
         <div className="flex text-gray-400 px-2 gap-3 ">
-          <div className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
+          <div onClick={()=>handleCameraToggle()} className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
             <BsCameraVideoFill />
           </div>
 

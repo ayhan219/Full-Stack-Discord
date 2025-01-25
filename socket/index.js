@@ -406,6 +406,14 @@ io.on('connection', (socket) => {
             }
         })
     })
+
+    socket.on("toggleCamera",({userIdCameraToSend,senderId,isCameraOn})=>{
+        console.log(userIdCameraToSend);
+        
+        userIdCameraToSend.forEach((id)=>{
+            io.to(onlineUsers[id]).emit("cameraToggled",({senderId,isCameraOn}))
+        })
+    })
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {

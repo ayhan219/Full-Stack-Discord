@@ -5,8 +5,17 @@ import ChatRightArea from "../components/ChatRightArea";
 import axios from "axios";
 import { useUserContext } from "../context/UserContext";
 import VideoConferenceRoom from "../components/VideoConferenceRoom";
-import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
+import {
+  ControlBar,
+  GridLayout,
+  LiveKitRoom,
+  ParticipantTile,
+  RoomAudioRenderer,
+  useTracks,
+} from "@livekit/components-react";
 import { useParams } from "react-router-dom";
+import { Track } from "livekit-client";
+import "@livekit/components-styles";
 
 interface ChannelUser {
   _id: string;
@@ -23,19 +32,25 @@ const Channel = () => {
     singleChannel,
     allUser,
     setAllUser,
-    activeChannel,getSingleChannel
+    activeChannel,
+    getSingleChannel,
+    isCameraOn,
+    setIsCameraOn,
+    connectedToVoice,
+    selectedChatRoom,
+    setSelectedChatRoom,
+    activeRoom,
+    setActiveRoom
   } = useUserContext();
 
-  const {channelId} = useParams();
-
+  const { channelId } = useParams();
 
   const [onlineChannelUsers, setOnlineChannelUsers] = useState<ChannelUser[]>(
     []
   );
-
-
- 
   
+
+
 
   useEffect(() => {
     socket.on("userJoinedVoiceRoom", (data) => {
@@ -124,7 +139,9 @@ const Channel = () => {
       setOnlineChannelUsers((prev) => {
         if (
           !prev.some((user) => user._id === senderId._id) &&
-          singleChannel?.channelUsers.some((user:any) => user._id === senderId._id)
+          singleChannel?.channelUsers.some(
+            (user: any) => user._id === senderId._id
+          )
         ) {
           return [...prev, senderId];
         }
@@ -150,6 +167,10 @@ const Channel = () => {
       });
     });
 
+    socket.on("cameraToggled", ({ senderId, isCameraOn }) => {
+      console.log(`${senderId} is opened camera?`, isCameraOn);
+    });
+
     return () => {
       if (socket) {
         socket.off("userJoinedVoiceRoom");
@@ -160,17 +181,39 @@ const Channel = () => {
         socket.off("userThatDisconnected");
       }
     };
-  }, [socket, user,singleChannel]);
+  }, [socket, user, singleChannel]);
 
   useEffect(() => {
     socket.emit("sendChannelUsers", { allUser, senderId: user?.userId });
   }, [singleChannel]);
+  
 
- 
+  function MyVideoConference() {
+    // `useTracks` returns all camera and screen share tracks. If a user
+    // joins without a published camera track, a placeholder track is returned.
+    const tracks = useTracks(
+      [
+        { source: Track.Source.Camera, withPlaceholder: true },
+        // { source: Track.Source.ScreenShare, withPlaceholder: false },
+      ],
+      { onlySubscribed: false }
+    );
+
+    return (
+      <GridLayout
+        tracks={tracks}
+        style={{ height: "calc(100vh - var(--lk-control-bar-height))" }}
+      >
+        {/* The GridLayout accepts zero or one child. The child is used
+        as a template to render all passed in tracks. */}
+        <ParticipantTile />
+      </GridLayout>
+    );
+  }
 
   return (
     <div className="w-full flex bg-[#313338]" key={channelId}>
-      <ChannelMenu />
+      <ChannelMenu setIsCameraOn={setIsCameraOn} isCameraOn={isCameraOn} setActiveRoom={setActiveRoom} activeRoom={activeRoom} />
 
       {/* {
           connectedToVoice ? <div className="w-[70%]">
@@ -178,9 +221,18 @@ const Channel = () => {
           </div>:
          
          } */}
-      <ChatArea />
 
-      <ChatRightArea onlineChannelUsers={onlineChannelUsers} />
+      {connectedToVoice && activeRoom==="video"   ? (
+        <div className={`w-[70%]`}>
+          <MyVideoConference />
+          
+        </div>
+      ) :
+      activeRoom === 'chat' || activeRoom ==='' ? (
+        <ChatArea />
+      ) : null}
+      
+      <ChatRightArea onlineChannelUsers={onlineChannelUsers}  />
     </div>
   );
 };

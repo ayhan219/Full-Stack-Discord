@@ -8,11 +8,11 @@ chatName:string
 
 const ChannelChatItem = ({chatName}:ChannelChatItemProps) => {
 
-  const {setSelectedChatRoom} = useUserContext();
+  const {setSelectedChatRoom,setActiveRoom} = useUserContext();
 
   const handleSelectedRoom = ()=>{
     setSelectedChatRoom(chatName);
-    console.log(chatName);
+    setActiveRoom("chat")
     
   }
   return (

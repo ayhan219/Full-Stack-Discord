@@ -21,6 +21,8 @@ type ChannelVoiceItemProps = {
     voiceUsers: VoiceUser[];
     _id: string;
   };
+  activeRoom:string;
+  setActiveRoom:(activeRoom:string)=>void;
 };
 
 
@@ -48,13 +50,14 @@ interface SingleChannel {
 
 
 const ChannelVoiceItem = ({
-  item,
+  item,activeRoom,setActiveRoom
 }: ChannelVoiceItemProps) => {
   const { user, socket, singleChannel,setSingleChannel,voiceRoomName,setConnectedToVoice,setToken ,setVoiceRoomName,connectedToVoice,setHandleDisconnect} = useUserContext();
 
   const room = useRoomContext();
 
   const handleConnectToVoice = async () => {
+    setActiveRoom("video");
     setVoiceRoomName(item.voiceRoomName);
     const currentVoiceRoomName = singleChannel?.voiceChannel.find((channel) =>
       channel.voiceUsers.some((voiceUser) => voiceUser._id === user?.userId)
@@ -80,7 +83,7 @@ const ChannelVoiceItem = ({
       );
   
       if (response.status === 200) {
-  
+        
         setSingleChannel((prev: SingleChannel | null) => {
           if (!prev) return prev;
   

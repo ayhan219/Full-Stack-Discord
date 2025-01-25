@@ -66,6 +66,10 @@ interface UserContextType {
   setOnlineFriends: (onlineFriends: Friend[]) => void;
   allUser:string[];
   setAllUser:(allUser:string[])=>void;
+  isCameraOn:boolean;
+  setIsCameraOn:(isCameraOn:boolean)=>void;
+  activeRoom:string,
+  setActiveRoom:(activeRoom:string)=>void;
 }
 
 interface Friend {
@@ -139,6 +143,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [onlineFriendUserIds, setOnlineFriendUserIds] = useState<string[]>([]);
   const [onlineFriends, setOnlineFriends] = useState<Friend[]>([]);
   const [allUser,setAllUser] = useState<string[]>([]);
+  const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
+  const [activeRoom, setActiveRoom] = useState(''); 
 
   const getCurrentUser = async () => {
     try {
@@ -451,7 +457,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         onlineFriends,
         setOnlineFriends,
         allUser,
-        setAllUser
+        setAllUser,
+        isCameraOn,
+        setIsCameraOn,
+        activeRoom,
+        setActiveRoom
       }}
     >
       {children}

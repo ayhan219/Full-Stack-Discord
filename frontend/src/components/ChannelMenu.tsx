@@ -12,7 +12,14 @@ import { PiPhoneDisconnectFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import ChannelUserControlArea from "./ChannelUserControlArea";
 
-const ChannelMenu = () => {
+interface ChannelProps {
+  setIsCameraOn:(isCameraOn:boolean)=>void;
+  isCameraOn:boolean;
+  activeRoom:string;
+  setActiveRoom:(activeRoom:string)=>void;
+}
+
+const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:ChannelProps) => {
   const {
     singleChannel,
     setOpenCreateRoom,
@@ -146,7 +153,7 @@ const ChannelMenu = () => {
 
               <div className={`flex flex-col gap-3 custom-scrollbar overflow-y-auto ${connectedToVoice ? "h-[450px]" : "h-[600]"}`}>
                 {singleChannel?.voiceChannel.map((item, index) => (
-                  <ChannelVoiceItem key={index} item={item} />
+                  <ChannelVoiceItem key={index} item={item} activeRoom={activeRoom} setActiveRoom={setActiveRoom} />
                 ))}
               </div>
             </div>
@@ -212,7 +219,7 @@ const ChannelMenu = () => {
         )}
         {connectedToVoice && (
           <div className="absolute w-full bottom-16">
-            <ChannelUserControlArea />
+            <ChannelUserControlArea isCameraOn={isCameraOn} setIsCameraOn={setIsCameraOn} />
           </div>
         )}
         <div className="absolute bottom-0 w-full">
