@@ -245,12 +245,22 @@ const joinChannel = async (req, res) => {
     const { userId, channelId, voiceRoomName } = req.body;
   
     try {
+      const otherChannel = await Channel.findOne({
+        "voiceChannel.voiceUsers": userId,
+        _id: { $ne: channelId },
+      });
+  
+      if (otherChannel) {
+        return res
+          .status(400)
+          .json({ message: "User is already in a voice room on another channel" });
+      }
+  
       const findChannel = await Channel.findById(channelId);
       if (!findChannel) {
         return res.status(404).json({ message: "Channel not found" });
       }
   
-      console.log("Checking current room...");
       let currentRoom = null;
       findChannel.voiceChannel.forEach((room) => {
         if (room.voiceUsers.some((user) => user.toString() === userId)) {
@@ -259,7 +269,6 @@ const joinChannel = async (req, res) => {
       });
   
       if (currentRoom && currentRoom !== voiceRoomName) {
-        console.log(`Removing user ${userId} from room ${currentRoom}`);
         const removeResult = await Channel.findOneAndUpdate(
           {
             _id: channelId,
@@ -295,7 +304,6 @@ const joinChannel = async (req, res) => {
       }
   
       // Kullanıcıyı yeni odaya ekle
-      console.log(`Adding user ${userId} to room ${voiceRoomName}`);
       const updatedChannel = await Channel.findOneAndUpdate(
         {
           _id: channelId,
@@ -315,7 +323,9 @@ const joinChannel = async (req, res) => {
         });
   
       if (!updatedChannel) {
-        return res.status(404).json({ message: "Failed to add user to the voice room" });
+        return res
+          .status(404)
+          .json({ message: "Failed to add user to the voice room" });
       }
   
       const updatedVoiceRoom = updatedChannel.voiceChannel.find(
@@ -336,6 +346,7 @@ const joinChannel = async (req, res) => {
       return res.status(500).json({ message: "Server error" });
     }
   };
+  
   
   
   const deleteUserFromVoiceChannel = async (req, res) => {
