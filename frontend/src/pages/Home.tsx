@@ -9,12 +9,17 @@ import AddFriendMenu from "../components/AddFriendMenu";
 import PendingFriend from "../components/PendingFriend";
 
 const Home = () => {
-  const { user, activeMenu, setActiveMenu, onlineFriendUserIds,onlineFriends } =
-    useUserContext();
+  const {
+    user,
+    activeMenu,
+    setActiveMenu,
+    onlineFriendUserIds,
+    onlineFriends,
+  } = useUserContext();
   const [activeTopBarMenu, setActiveTopBarMenu] = useState<string>("online");
 
   const show = () => {
-    console.log(user);
+    console.log(onlineFriends);
   };
 
   return (
@@ -40,18 +45,53 @@ const Home = () => {
               </div>
 
               <div className="w-full h-auto text-gray-400 px-7 py-3 font-bold ">
-                <h3 onClick={() => show()}>
-                  ONLINE - {onlineFriends.length}
-                </h3>
+                <h3 onClick={() => show()}>ONLINE - {onlineFriends.length}</h3>
               </div>
               <div className="w-full h-[calc(100%-60px)] p-4 overflow-y-auto custom-scrollbar flex flex-col gap-2">
                 {user?.friends && user?.friends.length > 0 ? (
-                 onlineFriends.map((item,index)=>(
-                  <HomeFriend key={index} item={item} activeTopBarMenu={activeTopBarMenu}  />
-                 ))
+                  onlineFriends.length > 0 ? (
+                    onlineFriends.map((item, index) => (
+                      <HomeFriend
+                        key={index}
+                        item={item}
+                        activeTopBarMenu={activeTopBarMenu}
+                      />
+                    ))
+                  ) : (
+                    <div className="flex justify-center items-center h-full">
+                      <div className="text-gray-300 p-8 rounded-lg  max-w-md text-center">
+                        <div className="flex flex-col items-center">
+                          <div className=" p-4 rounded-full mb-4">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-12 w-12 text-gray-600"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M12 11c0-1.5 0-4-2-4s-2 2.5-2 4c0 1.5.5 2 2 2s2-.5 2-2zm4 4v1c0 1.5-.5 2-2 2H8c-1.5 0-2-.5-2-2v-1c0-2.5 1.5-4 4-4h4c2.5 0 4 1.5 4 4z"
+                              />
+                            </svg>
+                          </div>
+                          <h2 className="text-2xl font-bold mb-2">
+                            No Online Friends
+                          </h2>
+                          <p className="text-sm text-gray-400 mb-4">
+                            None of your friends are online right now. Take a
+                            moment to relax or check back later!
+                          </p>
+                         
+                        </div>
+                      </div>
+                    </div>
+                  )
                 ) : (
                   <div className="flex justify-center items-center h-full text-gray-500 font-medium text-xl">
-                    <p>You don't have any friends yet</p>
+                    <p>You don't have online friends yet</p>
                   </div>
                 )}
               </div>
