@@ -1,7 +1,8 @@
 const mongoose = require("mongoose");
 const express = require("express");
-const {createChannel,getChannel,getChannelSingle,createChatRoom,createVoiceRoom,createInvite,joinChannel,addUserToVoiceChannel,deleteUserFromVoiceChannel,deleteChannel} = require("../controller/ChannelController")
+const {createChannel,getChannel,getChannelSingle,createChatRoom,createVoiceRoom,createInvite,joinChannel,addUserToVoiceChannel,deleteUserFromVoiceChannel,deleteChannel,uploadChannelPhoto} = require("../controller/ChannelController")
 const router = express.Router();
+const upload = require("../middleware/MulterMiddleware")
 
 
 
@@ -15,5 +16,6 @@ router.get("/join/:token",joinChannel)
 router.post("/addusertovoicechannel",addUserToVoiceChannel)
 router.delete("/deleteuserfromvoicechannel",deleteUserFromVoiceChannel)
 router.delete("/deletechannel",deleteChannel);
+router.post("/uploadchannelphoto",upload.single("channelphoto"),uploadChannelPhoto)
 
 module.exports = router;
