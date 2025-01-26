@@ -86,12 +86,23 @@ const MenuFriends = ({ item }: MenuFriendProps) => {
               alt=""
             />
             {
-              onlineFriends.some((friend)=>friend._id === item._id) &&
-              <div className="w-3 h-3 rounded-full bg-green-700 absolute right-0 bottom-0"></div> 
+              onlineFriends.some((friend)=>friend._id === item._id) ?
+              <div className="w-3 h-3 rounded-full bg-green-700 absolute right-0 bottom-0 "></div> 
+              :
+              <div className="w-3 h-3 rounded-full bg-[#72767E] absolute right-0 bottom-0 flex items-center justify-center border-2 border-gray-700">
+                <div className="w-1 h-1 rounded-full bg-gray-600">
+
+                </div>
+              </div> 
             }
           </div>
           <div className="font-semibold">
             <p>{item.username}</p>
+            {
+              onlineFriends.some((friend)=>friend._id === item._id) ?
+              <p className="text-xs text-green-500">online</p> :
+              <p className="text-xs ">offline</p>
+            }
           </div>
         </div>
 
