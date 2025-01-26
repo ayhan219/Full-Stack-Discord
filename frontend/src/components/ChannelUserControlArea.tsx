@@ -25,7 +25,8 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
     connectedToVoice,
     setConnectedToVoice,
     setSelectedChatRoom,
-    setActiveRoom
+    setActiveRoom,
+    setWhichChannelConnected
   } = useUserContext();
   const room = useRoomContext();
 
@@ -48,6 +49,7 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
 
       if (response.status === 200) {
         room.disconnect();
+        setWhichChannelConnected("");
         setConnectedToVoice(false);
 
         console.log("User disconnected and removed from voice channel");

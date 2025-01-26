@@ -52,7 +52,7 @@ interface SingleChannel {
 const ChannelVoiceItem = ({
   item,activeRoom,setActiveRoom
 }: ChannelVoiceItemProps) => {
-  const { user, socket, singleChannel,setSingleChannel,voiceRoomName,setConnectedToVoice,setToken ,setVoiceRoomName,connectedToVoice,setHandleDisconnect} = useUserContext();
+  const { user, socket, singleChannel,setSingleChannel,voiceRoomName,setConnectedToVoice,setToken ,setVoiceRoomName,connectedToVoice,setHandleDisconnect,setWhichChannelConnected} = useUserContext();
 
   const room = useRoomContext();
 
@@ -83,7 +83,7 @@ const ChannelVoiceItem = ({
       );
   
       if (response.status === 200) {
-        
+        setWhichChannelConnected(singleChannel?.channelName ?? "");
         setSingleChannel((prev: SingleChannel | null) => {
           if (!prev) return prev;
   

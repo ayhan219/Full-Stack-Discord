@@ -68,8 +68,10 @@ interface UserContextType {
   setAllUser:(allUser:string[])=>void;
   isCameraOn:boolean;
   setIsCameraOn:(isCameraOn:boolean)=>void;
-  activeRoom:string,
+  activeRoom:string;
   setActiveRoom:(activeRoom:string)=>void;
+  whichChannelConnected:string;
+  setWhichChannelConnected:(whichChannelConnected:string)=>void;
 }
 
 interface Friend {
@@ -145,6 +147,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [allUser,setAllUser] = useState<string[]>([]);
   const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
   const [activeRoom, setActiveRoom] = useState(''); 
+  const [whichChannelConnected,setWhichChannelConnected] = useState<string>("");
 
   const getCurrentUser = async () => {
     try {
@@ -461,7 +464,9 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         isCameraOn,
         setIsCameraOn,
         activeRoom,
-        setActiveRoom
+        setActiveRoom,
+        setWhichChannelConnected,
+        whichChannelConnected
       }}
     >
       {children}

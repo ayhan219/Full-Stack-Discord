@@ -2,6 +2,7 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { useEffect } from "react";
+import { PiSpeakerHigh, PiSpeakerHighFill } from "react-icons/pi";
 
 interface ServerProps {
   item: {
@@ -20,7 +21,13 @@ const Server = ({
   setActiveChannel,
   isActive,
 }: ServerProps) => {
-  const { getSingleChannel, channels,setActiveRoom,setSelectedChatRoom } = useUserContext();
+  const {
+    getSingleChannel,
+    channels,
+    setActiveRoom,
+    setSelectedChatRoom,
+    whichChannelConnected,
+  } = useUserContext();
 
   const initials = item.channelName
     .split(" ")
@@ -28,17 +35,16 @@ const Server = ({
     .join("")
     .toUpperCase();
 
-
-    useEffect(() => {
-      if (activeChannel === item._id) {
-        getSingleChannel(item._id);
-      }
-    }, [activeChannel, item._id]);
+  useEffect(() => {
+    if (activeChannel === item._id) {
+      getSingleChannel(item._id);
+    }
+  }, [activeChannel, item._id]);
 
   return (
     <div
       onClick={() => {
-        setActiveChannel(item._id)
+        setActiveChannel(item._id);
         setActiveRoom("chat");
         setSelectedChatRoom("");
       }}
@@ -49,9 +55,14 @@ const Server = ({
         onClick={() => getSingleChannel(item._id)}
         to={`/channel/${item._id}`}
         key={item._id}
-        className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer"
+        className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer relative"
       >
         <p className="text-black font-bold text-lg">{initials}</p>
+        {whichChannelConnected === item.channelName && (
+          <div className="absolute left-0 top-0 flex items-center gap-2 p-1 bg-red-500 text-white rounded-md shadow-lg animate-pulse">
+            <PiSpeakerHighFill className="text-xs" />
+          </div>
+        )}
       </Link>
 
       {isActive ? (
