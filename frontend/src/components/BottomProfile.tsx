@@ -51,13 +51,17 @@ const BottomProfile = () => {
   return (
     <div className="w-full h-16 bg-[#232428] p-3 relative">
       <div className="w-full h-full flex justify-between items-center">
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center relative">
           <img
             className="w-10 h-10 rounded-full border-2 border-gray-600"
             src={`http://localhost:5000${user?.profilePic}`}
             alt="user-avatar"
           />
+          <div className="w-3 h-3 rounded-full bg-green-700 absolute left-7 bottom-0 "></div>
+          <div>
           <p className="text-white text-base font-medium">{user?.username}</p>
+          <p className="text-xs text-green-500">online</p>
+          </div>
         </div>
 
         <div className="flex text-white text-base gap-4 items-center">
