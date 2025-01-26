@@ -160,7 +160,7 @@ const ChannelVoiceItem = ({
   {singleChannel?.voiceChannel
     ?.filter((channel) => channel.voiceRoomName === item.voiceRoomName) 
     .map((channel, index) => (
-      <div key={index} className="flex flex-col gap-3">
+      <div key={index} className="flex flex-col gap-3 w-full">
         {channel.voiceUsers?.map((user, userIndex) => (
           <VoiceComponent key={userIndex} item={user} roomName={item.voiceRoomName}  />
         ))}

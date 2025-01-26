@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRoomContext } from "@livekit/components-react";
-import { FiLogOut } from "react-icons/fi";
-import axios from "axios";
+import { FaHeadphones, FaMicrophone, FaMicrophoneSlash } from "react-icons/fa";
+import { TbHeadphonesOff } from "react-icons/tb";
 import { useUserContext } from "../context/UserContext";
 
 interface UserProps {
@@ -14,101 +14,31 @@ interface UserProps {
 }
 
 const VoiceComponent = ({ item, roomName }: UserProps) => {
-  // const {
-  //   user,
-  //   singleChannel,
-  //   socket,
-  //   setSingleChannel,
-  //   handleDisconnect,
-  //   setHandleDisconnect,
-  // } = useUserContext();
-
   const room = useRoomContext();
+  const { turnHeadOff, turnMicOff, user } = useUserContext(); 
   const [isSpeaking, setIsSpeaking] = useState(false);
-
-  // const handleDisconnectFromVoice = async () => {
-  //   try {
-  //     const response = await axios.delete(
-  //       "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
-  //       {
-  //         data: {
-  //           userId: user?.userId,
-  //           channelId: singleChannel?._id,
-  //         },
-  //       }
-  //     );
-
-  //     if (response.status === 200) {
-  //       room.disconnect();
-
-  //       console.log("User disconnected and removed from voice channel");
-
-  //       setSingleChannel((prev) => {
-  //         if (!prev) return prev;
-
-  //         const updatedVoiceChannels = prev.voiceChannel.map((channel) => {
-  //           if (channel.voiceRoomName === roomName) {
-  //             return {
-  //               ...channel,
-  //               voiceUsers: channel.voiceUsers.filter(
-  //                 (voiceUser) => voiceUser._id !== user?.userId
-  //               ),
-  //             };
-  //           }
-  //           return channel;
-  //         });
-
-  //         return { ...prev, voiceChannel: updatedVoiceChannels };
-  //       });
-
-  //       socket.emit("leaveVoiceRoom", {
-  //         serverName: singleChannel?.channelName,
-  //         roomName,
-  //         userId: user?.userId,
-  //       });
-
-  //       socket.emit("sendVoiceLeftUser", {
-  //         serverName: singleChannel?.channelName,
-  //         roomName: roomName,
-  //         username: user?.username,
-  //         profilePic: user?.profilePic,
-  //         _id: user?.userId,
-  //       });
-  //       setHandleDisconnect(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error disconnecting from voice channel:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (handleDisconnect) {
-  //     handleDisconnectFromVoice();
-  //   }
-  // }, [handleDisconnect]);
 
   useEffect(() => {
     const handleActiveSpeakerChange = () => {
       const activeSpeakers = room?.activeSpeakers || [];
-      console.log(activeSpeakers);
-      
       const isCurrentUserSpeaking = activeSpeakers.some(
         (participant) => participant.identity === item.username
       );
       setIsSpeaking(isCurrentUserSpeaking);
-      
     };
 
     room?.on("activeSpeakersChanged", handleActiveSpeakerChange);
     return () => {
       room?.off("activeSpeakersChanged", handleActiveSpeakerChange);
     };
-  }, [room, item._id]);
+  }, [room, item.username]);
+
+  const isCurrentUser = item._id === user?.userId; 
 
   return (
-    <div className="w-full flex flex-col  space-y-2">
+    <div className="w-full flex flex-col space-y-2">
       <div className="flex items-center px-2 gap-4 rounded-lg transition-colors duration-300">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full justify-between">
           <img
             className={`w-7 h-7 rounded-full border-2 ${
               isSpeaking ? "border-green-500 border-2" : "border-blue-500"
@@ -116,7 +46,23 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
             src={`http://localhost:5000${item.profilePic}`}
             alt={`${item.username}'s profile`}
           />
-          <p className="text-white font-semibold text-sm">{item.username}</p>
+          <div className="flex w-full justify-between px-1">
+            <p className="text-white font-semibold text-sm">{item.username}</p>
+            {isCurrentUser && (
+              <div className="flex gap-2 items-center text-sm">
+                {!turnMicOff ? (
+                  <FaMicrophone />
+                ) : (
+                  <FaMicrophoneSlash className="text-red-600" />
+                )}
+                {!turnHeadOff ? (
+                  <FaHeadphones />
+                ) : (
+                  <TbHeadphonesOff className="text-red-600" />
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
