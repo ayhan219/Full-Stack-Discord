@@ -436,6 +436,43 @@ const joinChannel = async (req, res) => {
       return res.status(500).json({ message: "Server error" });
     }
   };
+
+  const uploadChannelPhoto = async (req, res) => {
+    const { channelId, userId } = req.body;
+  
+    if (!req.file) {
+      return res.status(400).json({ message: "No file uploaded!" });
+    }
+  
+    const filePath = `/uploads/${req.file.filename}`;
+  
+    try {
+      const findChannel = await Channel.findById(channelId);
+  
+      if (!findChannel) {
+        return res.status(400).json({ message: "Channel not found" });
+      }
+  
+      if (!findChannel.admin.includes(userId)) {
+        return res.status(400).json({ message: "User is not an admin" });
+      }
+  
+      // Update the channel's picture
+      findChannel.channelPic = filePath;
+  
+      // Save the updated channel
+      await findChannel.save();
+  
+      res.status(200).json({
+        message: "Channel picture updated successfully!",
+        channelPic: filePath,
+      });
+    } catch (error) {
+      console.error("Error updating channel picture:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+  
   
 
 module.exports ={
@@ -448,5 +485,6 @@ createInvite,
 joinChannel,
 addUserToVoiceChannel,
 deleteUserFromVoiceChannel,
-deleteChannel
+deleteChannel,
+uploadChannelPhoto
 }

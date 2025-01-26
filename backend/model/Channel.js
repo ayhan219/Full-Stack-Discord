@@ -61,7 +61,11 @@ const ChannelSchema = new mongoose.Schema({
             ref: 'User',
             default:null
         }
-    ]
+    ],
+    channelPic:{
+        type:String,
+        default:""
+    }
 })
 
 module.exports = mongoose.model("Channel",ChannelSchema);
