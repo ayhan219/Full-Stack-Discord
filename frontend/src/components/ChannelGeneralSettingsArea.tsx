@@ -3,7 +3,8 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../index.css"
+import "../index.css";
+import { CiSearch } from "react-icons/ci";
 
 interface Member {
   username: string;
@@ -291,7 +292,7 @@ const ChannelGeneralSettingsArea = ({
                 </button>
                 <button
                   onClick={() => setOpenDeleteArea(!openDeleteArea)}
-                  className="w-full py-3 bg-[#40444B] hover:bg-[#5865F2] rounded-lg text-sm text-gray-300 hover:text-white"
+                  className="w-full h-12 px-4 bg-gray-700 text-white font-medium rounded-md hover:bg-gray-600 transition-all duration-300 ease-in-out shadow-md"
                 >
                   Delete Channel
                 </button>
@@ -321,6 +322,47 @@ const ChannelGeneralSettingsArea = ({
                   </div>
                 </div>
               ))}
+            </div>
+          )}
+
+          {channelGeneralSettings === "roles" && (
+            <div className="w-full h-auto  rounded-lg  p-6">
+              {/* Section Title */}
+              <div className="w-full text-gray-400 mb-4">
+                <p className="text-sm">
+                  Use roles to group your server members and assign permissions.
+                </p>
+              </div>
+
+              <div className="w-full flex p-4 gap-4">
+                <div className="relative flex-1">
+                  <input
+                    className="w-full h-12 bg-[#1E1F22] outline-none rounded-md px-4 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-blue-500"
+                    placeholder="Search role"
+                    type="text"
+                  />
+                  <CiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer hover:text-gray-200" />
+                </div>
+                <button className="bg-[#5865F2] w-32 h-12 rounded-md text-sm font-medium text-white hover:bg-[#4a55c1] transition-all duration-200">
+                  Create Role
+                </button>
+              </div>
+
+              <div className="w-full flex justify-between px-5 pt-6 pb-2 text-xs text-gray-500 border-b border-gray-600">
+                <span className="font-semibold">ROLES</span>
+                <span className="font-semibold">MEMBERS</span>
+              </div>
+
+              <div className="w-full">
+                <div className="w-full px-5 py-4 flex justify-between text-sm font-semibold text-red-500 bg-[#292B2F] rounded-md mt-4 shadow">
+                  <span>ADMIN</span>
+                  <p>{singleChannel?.admin.length}</p>
+                </div>
+                <div className="w-full px-5 py-4 flex justify-between text-sm font-semibold text-blue-500 bg-[#292B2F] rounded-md mt-4 shadow">
+                  <span>DEFAULT</span>
+                  <p>{singleChannel?.channelUsers.length}</p>
+                </div>
+              </div>
             </div>
           )}
         </div>
