@@ -43,7 +43,7 @@ const ChannelMember = ({ item, onlineChannelUsers }: ChannelMemberProps) => {
       </div>
 
       {/* Username */}
-      <h3 className="text-base font-medium text-gray-400">{item.username}</h3>
+      <h3 className={`text-base font-medium ${singleChannel?.admin.includes(item._id) ? "text-red-500 font-bold" : "text-gray-400"}  `}>{item.username}</h3>
     </div>
   );
 };
