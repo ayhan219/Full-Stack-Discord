@@ -157,7 +157,7 @@ const Channel = () => {
     });
 
     socket.on("userThatDisconnected", (senderId) => {
-      setOnlineChannelUsers((prev) => {
+      setOnlineChannelUsers((prev) => {     
         if (!prev) {
           return prev;
         }
@@ -178,10 +178,11 @@ const Channel = () => {
         socket.off("sendUserChangedRoom");
         socket.off("onlineChannelUsers");
         socket.off("onlineAllChannelUsers");
-        socket.off("userThatDisconnected");
+        // socket.off("userThatDisconnected");
+        socket.off("cameraToggled");
       }
     };
-  }, [socket, user, singleChannel]);
+  }, [socket, user, singleChannel,onlineChannelUsers]);
 
   useEffect(() => {
     socket.emit("sendChannelUsers", { allUser, senderId: user?.userId });

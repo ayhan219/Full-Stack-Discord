@@ -59,8 +59,7 @@ io.on('connection', (socket) => {
  
     socket.on('userOnline', (userId) => {
         onlineUsers[userId] = socket.id;  
-        console.log(`${userId} is now online with socket ID ${socket.id}`)
-        saveDataToFile(); 
+  
                
     });
 
@@ -397,11 +396,14 @@ io.on('connection', (socket) => {
         })
     })
     socket.on("userDisconnected",({userIds,senderId})=>{
-        console.log("worked xd");
-        console.log(userIds);
         
         userIds.forEach((user)=>{
             if(onlineUsers[user._id]){
+                console.log("data sending to user:",user._id);
+                console.log(onlineUsers);
+                
+                console.log("is online?",onlineUsers[user._id]);
+                
                 io.to(onlineUsers[user._id]).emit("userThatDisconnected",(senderId))
             }
         })
@@ -418,7 +420,6 @@ io.on('connection', (socket) => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {
                 delete onlineUsers[userId];
-                saveDataToFile();
                 console.log(`${userId} has disconnected`);
                 break;
             }

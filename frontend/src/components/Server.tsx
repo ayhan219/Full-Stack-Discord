@@ -55,7 +55,6 @@ const Server = ({
       <Link
         onClick={() => getSingleChannel(item._id)}
         to={`/channel/${item._id}`}
-        key={item._id}
         className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer relative"
       >
         {

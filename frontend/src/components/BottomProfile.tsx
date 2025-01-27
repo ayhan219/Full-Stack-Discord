@@ -38,9 +38,10 @@ const BottomProfile = () => {
         });
         setUser(null);
 
-        socket.disconnect();
+        
         window.location.reload();
         navigate("/login");
+        socket.disconnect();
         
       }
     } catch (error) {

@@ -64,14 +64,14 @@ interface UserContextType {
   setOnlineFriendUserIds: (onlineFriendUserIds: string[]) => void;
   onlineFriends: Friend[];
   setOnlineFriends: (onlineFriends: Friend[]) => void;
-  allUser:string[];
-  setAllUser:(allUser:string[])=>void;
-  isCameraOn:boolean;
-  setIsCameraOn:(isCameraOn:boolean)=>void;
-  activeRoom:string;
-  setActiveRoom:(activeRoom:string)=>void;
-  whichChannelConnected:string;
-  setWhichChannelConnected:(whichChannelConnected:string)=>void;
+  allUser: string[];
+  setAllUser: (allUser: string[]) => void;
+  isCameraOn: boolean;
+  setIsCameraOn: (isCameraOn: boolean) => void;
+  activeRoom: string;
+  setActiveRoom: (activeRoom: string) => void;
+  whichChannelConnected: string;
+  setWhichChannelConnected: (whichChannelConnected: string) => void;
 }
 
 interface Friend {
@@ -83,8 +83,8 @@ interface Friend {
 interface Channel {
   _id: string;
   channelName: string;
-  channelUsers:[];
-  channelPic:string;
+  channelUsers: [];
+  channelPic: string;
 }
 
 interface ChatChannel {
@@ -111,7 +111,7 @@ interface SingleChannel {
   voiceChannel: VoiceChannel[];
   admin: string[];
   channelUsers: [];
-  channelPic:string
+  channelPic: string;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -146,10 +146,11 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [voiceRoomName, setVoiceRoomName] = useState<string>("");
   const [onlineFriendUserIds, setOnlineFriendUserIds] = useState<string[]>([]);
   const [onlineFriends, setOnlineFriends] = useState<Friend[]>([]);
-  const [allUser,setAllUser] = useState<string[]>([]);
+  const [allUser, setAllUser] = useState<string[]>([]);
   const [isCameraOn, setIsCameraOn] = useState<boolean>(false);
-  const [activeRoom, setActiveRoom] = useState(''); 
-  const [whichChannelConnected,setWhichChannelConnected] = useState<string>("");
+  const [activeRoom, setActiveRoom] = useState("");
+  const [whichChannelConnected, setWhichChannelConnected] =
+    useState<string>("");
 
   const getCurrentUser = async () => {
     try {
@@ -182,7 +183,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       };
       socket.emit("getOnlineUser", {
         userIds: userIds,
-        senderId:senderData
+        senderId: senderData,
       });
       const uniqueUsers: any[] = [];
       channels.forEach((item) => {
@@ -193,33 +194,25 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         });
       });
       setAllUser(uniqueUsers);
-      
     }
+  }, [user?.userId, channels]);
 
-    
-  }, [user?.userId,channels]);
-
-  useEffect(()=>{
-   
-    
+  useEffect(() => {
     if (allUser.length > 0) {
       const data = {
-        _id:user?.userId,
-        username:user?.username,
-        profilePic:user?.profilePic
-      }
-      
-      socket.emit("sendChannelUsers", ({
-        allUser,
-        senderId:data
-      }));
-      
-    }
+        _id: user?.userId,
+        username: user?.username,
+        profilePic: user?.profilePic,
+      };
 
-  },[allUser])
+      socket.emit("sendChannelUsers", {
+        allUser,
+        senderId: data,
+      });
+    }
+  }, [allUser]);
 
   const getSingleChannel = async (id: string) => {
-    
     setLoading(true);
     try {
       const response = await axios.get(
@@ -232,7 +225,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       );
 
       setSingleChannel(response.data);
-      
     } catch (error) {
       console.log(error);
     } finally {
@@ -379,6 +371,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setOnlineFriends(onlineFriendsFromSocket);
       });
       socket.on("ImOnline", (userId) => {
+        console.log("user is online (Imonline):", userId._id);
+
         setOnlineFriends((prev) => {
           if (!prev.some((friend) => friend._id === userId._id)) {
             return [...prev, userId];
@@ -387,16 +381,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         });
       });
 
-      socket.on("userThatDisconnected",(senderId)=>{
-        setOnlineFriends((prev)=>{
-          if(!prev){
+      socket.on("userThatDisconnected", (senderId) => {
+        console.log("user disconnected (worked):", senderId);
+
+        setOnlineFriends((prev) => {
+          if (!prev) {
             return prev;
           }
-          const newData = prev.filter((data)=>data._id!==senderId);
-          return newData
-        })
-        
-      })
+          const newData = prev.filter((data) => data._id !== senderId);
+          return newData;
+        });
+      });
     }
 
     // Temizleme işlemi
@@ -404,7 +399,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       if (socket) {
         socket.off("friendRequestNotification");
         socket.off("sendReceiverIdToUser");
-        socket.off("new_message_notification");
         socket.off("dataToServer");
         socket.off("dataToServerVoice");
         socket.off("onlineFriends");
@@ -412,7 +406,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("userThatDisconnected");
       }
     };
-  }, [socket, user]);
+  }, [socket,user,onlineFriends]);
 
   return (
     <UserContext.Provider
@@ -468,7 +462,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         activeRoom,
         setActiveRoom,
         setWhichChannelConnected,
-        whichChannelConnected
+        whichChannelConnected,
       }}
     >
       {children}
