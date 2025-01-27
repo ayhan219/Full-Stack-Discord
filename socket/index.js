@@ -398,12 +398,7 @@ io.on('connection', (socket) => {
     socket.on("userDisconnected",({userIds,senderId})=>{
         
         userIds.forEach((user)=>{
-            if(onlineUsers[user._id]){
-                console.log("data sending to user:",user._id);
-                console.log(onlineUsers);
-                
-                console.log("is online?",onlineUsers[user._id]);
-                
+            if(onlineUsers[user._id]){             
                 io.to(onlineUsers[user._id]).emit("userThatDisconnected",(senderId))
             }
         })

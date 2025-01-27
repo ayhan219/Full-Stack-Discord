@@ -371,8 +371,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setOnlineFriends(onlineFriendsFromSocket);
       });
       socket.on("ImOnline", (userId) => {
-        console.log("user is online (Imonline):", userId._id);
-
         setOnlineFriends((prev) => {
           if (!prev.some((friend) => friend._id === userId._id)) {
             return [...prev, userId];
@@ -382,9 +380,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       });
 
       socket.on("userThatDisconnected", (senderId) => {
-        console.log("user disconnected (worked):", senderId);
-
-        setOnlineFriends((prev) => {
+       setOnlineFriends((prev) => {
           if (!prev) {
             return prev;
           }
