@@ -28,7 +28,7 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
 
   useEffect(() => {
     findOnlineAdmin();
-  }, []);
+  }, [singleChannel,onlineChannelUsers]);
 
   return (
     <div className="w-[300px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar">
