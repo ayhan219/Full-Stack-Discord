@@ -16,6 +16,6 @@ router.get("/join/:token",joinChannel)
 router.post("/addusertovoicechannel",addUserToVoiceChannel)
 router.delete("/deleteuserfromvoicechannel",deleteUserFromVoiceChannel)
 router.delete("/deletechannel",deleteChannel);
-router.post("/uploadchannelphoto",upload.single("channelphoto"),uploadChannelPhoto)
+router.post("/uploadchannelphoto",upload.single("channelPic"),uploadChannelPhoto)
 
 module.exports = router;

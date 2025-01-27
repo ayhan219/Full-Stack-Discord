@@ -8,6 +8,7 @@ interface ServerProps {
   item: {
     _id: string;
     channelName: string;
+    channelPic:string
   };
   index: number;
   activeChannel: string;
@@ -57,7 +58,12 @@ const Server = ({
         key={item._id}
         className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer relative"
       >
-        <p className="text-black font-bold text-lg">{initials}</p>
+        {
+          item.channelPic !== "" ?
+          <img className="w-14 h-14 rounded-full" src={`http://localhost:5000${item.channelPic}`} alt="" /> :
+          <p className="text-black font-bold text-lg">{initials}</p>
+        }
+        
         {whichChannelConnected === item.channelName && (
           <div className="absolute left-0 top-0 flex items-center gap-2 p-1 bg-red-500 text-white rounded-md shadow-lg animate-pulse">
             <PiSpeakerHighFill className="text-xs" />

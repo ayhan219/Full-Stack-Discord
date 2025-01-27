@@ -52,7 +52,7 @@ const getChannel = async(req,res)=>{
     try {
         const findUser = await User.findById(userId).populate({
             path: "joinedChannel",
-            select: "_id channelName channelUsers", 
+            select: "_id channelName channelUsers channelPic", 
             populate: {
               path: "channelUsers", 
               select: "_id username profilePic" 
@@ -438,12 +438,13 @@ const joinChannel = async (req, res) => {
   };
 
   const uploadChannelPhoto = async (req, res) => {
+    
     const { channelId, userId } = req.body;
-  
+    
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded!" });
     }
-  
+
     const filePath = `/uploads/${req.file.filename}`;
   
     try {
@@ -456,17 +457,12 @@ const joinChannel = async (req, res) => {
       if (!findChannel.admin.includes(userId)) {
         return res.status(400).json({ message: "User is not an admin" });
       }
-  
-      // Update the channel's picture
+
       findChannel.channelPic = filePath;
-  
-      // Save the updated channel
+ 
       await findChannel.save();
   
-      res.status(200).json({
-        message: "Channel picture updated successfully!",
-        channelPic: filePath,
-      });
+      res.status(200).json(filePath);
     } catch (error) {
       console.error("Error updating channel picture:", error);
       res.status(500).json({ message: "Internal server error" });

@@ -84,6 +84,7 @@ interface Channel {
   _id: string;
   channelName: string;
   channelUsers:[];
+  channelPic:string;
 }
 
 interface ChatChannel {
@@ -110,6 +111,7 @@ interface SingleChannel {
   voiceChannel: VoiceChannel[];
   admin: string[];
   channelUsers: [];
+  channelPic:string
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
