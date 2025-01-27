@@ -34,7 +34,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
 
   const [openChannelSettingArea, setOpenChannelSettingArea] =
     useState<boolean>(false);
-  const [isSucces, setIsSucces] = useState<boolean | null>(false || null);
+  
 
   const navigate = useNavigate();
 
@@ -44,23 +44,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
 
   const [openChannelGeneralSettingsArea,setOpenChannelGeneralSettingsArea] = useState<boolean>(false);
 
-  const getLink = async () => {
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/api/channel/createinvite",
-        {
-          channelId: singleChannel?._id,
-        }
-      );
-      if (response.status === 200) {
-        await navigator.clipboard.writeText(response.data.inviteLink);
-        setIsSucces(true);
-      }
-    } catch (error) {
-      console.log(error);
-      setIsSucces(false);
-    }
-  };
+  
 
   
 

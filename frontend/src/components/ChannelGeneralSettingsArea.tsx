@@ -3,6 +3,13 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { useUserContext } from "../context/UserContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "../index.css"
+
+interface Member {
+  username: string;
+  _id: string;
+  profilePic: string;
+}
 
 interface ChannelGeneralSettingsAreaProps {
   setOpenChannelGeneralSettingsArea: (isOpen: boolean) => void;
@@ -23,7 +30,11 @@ const ChannelGeneralSettingsArea = ({
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [openDeleteArea, setOpenDeleteArea] = useState<boolean>(false);
   const [loadingForDelete, setLoadingForDelete] = useState<boolean>(false);
+  const [isSucces, setIsSucces] = useState<boolean | null>(false || null);
   const navigate = useNavigate();
+
+  const [channelGeneralSettings, setChannelGeneralSettings] =
+    useState<string>("overview");
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -112,100 +123,206 @@ const ChannelGeneralSettingsArea = ({
     }
   };
 
+  const getLink = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/channel/createinvite",
+        {
+          channelId: singleChannel?._id,
+        }
+      );
+      if (response.status === 200) {
+        await navigator.clipboard.writeText(response.data.inviteLink);
+        setIsSucces(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setIsSucces(false);
+    }
+  };
+
   const initials = singleChannel?.channelName
     .split(" ")
     .map((word) => word.substring(0, 2))
     .join("")
     .toUpperCase();
+
+  const show = () => {
+    console.log(singleChannel);
+  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
       <div className="w-[90%] max-w-[800px] h-[90%] bg-[#23272A] rounded-2xl shadow-lg flex overflow-hidden">
         <div className="w-1/4 bg-[#2C2F33] flex flex-col p-4">
           <h2 className="text-lg font-bold text-white mb-6">Settings</h2>
           <nav className="space-y-3">
-            <button className="w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm text-gray-300 hover:bg-[#5865F2] hover:text-white">
+            <button
+              onClick={() => setChannelGeneralSettings("overview")}
+              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
+                channelGeneralSettings === "overview" &&
+                "bg-blue-700 text-white"
+              } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
+            >
               Overview
             </button>
-            <button className="w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm text-gray-300 hover:bg-[#5865F2] hover:text-white">
+            <button
+              onClick={() => setChannelGeneralSettings("members")}
+              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
+                channelGeneralSettings === "members" && "bg-blue-700 text-white"
+              } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
+            >
               Members
             </button>
-            <button className="w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm text-gray-300 hover:bg-[#5865F2] hover:text-white">
+            <button
+              onClick={() => setChannelGeneralSettings("roles")}
+              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
+                channelGeneralSettings === "roles" && "bg-blue-700 text-white"
+              } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
+            >
               Roles
             </button>
-            <button className="w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm text-gray-300 hover:bg-[#5865F2] hover:text-white">
+            <button
+              onClick={() => setChannelGeneralSettings("integrations")}
+              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
+                channelGeneralSettings === "integrations" &&
+                "bg-blue-700 text-white"
+              } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
+            >
               Integrations
-            </button>
-            <button className="w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm text-gray-300 hover:bg-red-600 hover:text-white">
-              Delete Channel
             </button>
           </nav>
         </div>
 
-
         <div className="w-3/4 bg-[#36393F] flex flex-col">
           <div className="flex justify-between items-center p-4 border-b border-gray-700">
-            <h2 className="text-xl font-semibold text-white">
-              Channel Overview
+            <h2
+              onClick={() => show()}
+              className="text-xl font-semibold text-white"
+            >
+              Channel {channelGeneralSettings}
             </h2>
             <IoMdCloseCircle
               onClick={() => setOpenChannelGeneralSettingsArea(false)}
               className="text-gray-400 text-2xl cursor-pointer hover:text-gray-200"
             />
           </div>
-          <div className="flex flex-col items-center justify-center p-6">
-            <div className="relative group">
-              {singleChannel?.channelPic ? (
-                <img
-                  className="w-32 h-32 rounded-full border-4 border-gray-600 shadow-md transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl"
-                  src={`http://localhost:5000${singleChannel?.channelPic}`}
-                  alt="Channel"
-                />
-              ) : (
-                <div className="w-32 h-32 rounded-full bg-white flex items-center justify-center shadow-md transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl">
-                  <p className="text-black font-bold text-2xl">{initials}</p>
+          {channelGeneralSettings === "overview" && (
+            <>
+              <div className="flex  p-6">
+                <div className="relative group flex ">
+                  {singleChannel?.channelPic ? (
+                    <img
+                      className="w-32 h-32 rounded-full border-4 shadow-lg border-gray-600  transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl"
+                      src={`http://localhost:5000${singleChannel?.channelPic}`}
+                      alt="Channel"
+                    />
+                  ) : (
+                    <div className="w-32 h-32 rounded-full bg-white flex items-center justify-center shadow-md transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl">
+                      <p className="text-black font-bold text-2xl">
+                        {initials}
+                      </p>
+                    </div>
+                  )}
+
+                  <label
+                    className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 rounded-full transition-all duration-300 ease-in-out cursor-pointer group-hover:bg-opacity-40"
+                    htmlFor="file-input"
+                  >
+                    <span className="text-white text-sm font-medium opacity-0 group-hover:opacity-100">
+                      Change Picture
+                    </span>
+                  </label>
                 </div>
-              )}
 
-              <label
-                className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-0 rounded-full transition-all duration-300 ease-in-out cursor-pointer group-hover:bg-opacity-40"
-                htmlFor="file-input"
-              >
-                <span className="text-white text-sm font-medium opacity-0 group-hover:opacity-100">
-                  Change Picture
-                </span>
-              </label>
+                <input
+                  id="file-input"
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+
+                <div className="text-xs w-48 p-4 text-gray-400">
+                  <p>
+                    We recommended an image of at least 512x512 for the channel
+                  </p>
+                  <p className="pt-5">
+                    Click to the image for change channel picture
+                  </p>
+                </div>
+                <div className="p-4">
+                  <p className="text-[#A9B6C1] text-sm">SERVER NAME</p>
+                  <input
+                    className="w-52 h-10 bg-[#1E1F22] outline-none text-white px-2"
+                    placeholder={singleChannel?.channelName}
+                    type="text"
+                  />
+                </div>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <button
+                  onClick={() => getLink()}
+                  className={`w-full h-12 px-4 bg-gray-700 ${
+                    isSucces && "bg-green-500 hover:bg-green-600"
+                  } text-white font-medium rounded-md hover:bg-gray-600 transition-all duration-300 ease-in-out shadow-md`}
+                >
+                  {isSucces ? (
+                    <span className="flex items-center justify-center">
+                      <svg
+                        className="w-5 h-5 mr-2 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      Link copied
+                    </span>
+                  ) : (
+                    "Get Link"
+                  )}
+                </button>
+                <button
+                  onClick={() => setOpenDeleteArea(!openDeleteArea)}
+                  className="w-full py-3 bg-[#40444B] hover:bg-[#5865F2] rounded-lg text-sm text-gray-300 hover:text-white"
+                >
+                  Delete Channel
+                </button>
+              </div>
+            </>
+          )}
+
+          {channelGeneralSettings === "members" && (
+            <div className="w-full h-auto p-5 flex flex-col gap-4 rounded-md overflow-y-auto custom-scrollbar ">
+              {singleChannel?.channelUsers.map((member: Member) => (
+                <div
+                  key={member._id}
+                  className="w-full flex items-center gap-4 p-3  rounded-lg  transition-shadow"
+                >
+                  <div>
+                    <img
+                      className="w-12 h-12 rounded-full object-cover  "
+                      src={`http://localhost:5000${member.profilePic}`}
+                      alt={`${member.username}'s profile`}
+                    />
+                  </div>
+                  <div className="flex flex-col">
+                    <p className="text-base font-semibold text-white">
+                      {member.username}
+                    </p>
+                    <p className="text-sm text-gray-500">Member</p>
+                  </div>
+                </div>
+              ))}
             </div>
-
-            <input
-              id="file-input"
-              type="file"
-              ref={fileInputRef}
-              onChange={handleImageChange}
-              className="hidden"
-            />
-
-            <h3 className="mt-4 text-lg font-medium text-gray-200">
-              {singleChannel?.channelName || "Unnamed Channel"}
-            </h3>
-            <p className="mt-2 text-gray-400">
-              Members: {singleChannel?.channelUsers?.length || 0}
-            </p>
-          </div>
-
-          <div className="p-6 space-y-4">
-            <button className="w-full py-3 bg-[#40444B] hover:bg-[#5865F2] rounded-lg text-sm text-gray-300 hover:text-white">
-              Update Channel Name
-            </button>
-            <button className="w-full py-3 bg-[#40444B] hover:bg-[#5865F2] rounded-lg text-sm text-gray-300 hover:text-white">
-              Manage Permissions
-            </button>
-            <button
-              onClick={() => setOpenDeleteArea(!openDeleteArea)}
-              className="w-full py-3 bg-[#40444B] hover:bg-[#5865F2] rounded-lg text-sm text-gray-300 hover:text-white"
-            >
-              Delete Channel
-            </button>
-          </div>
+          )}
         </div>
       </div>
 
