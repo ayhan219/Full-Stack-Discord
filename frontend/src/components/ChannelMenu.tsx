@@ -113,7 +113,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
               </div>
             </div>
             {openChannelSettingArea && (
-              <div className="w-full max-w-md h-auto bg-[#1F1F23] absolute top-0 rounded-lg shadow-2xl overflow-hidden">
+              <div className="w-full max-w-md h-auto bg-[#313338] absolute top-0 rounded-lg shadow-2xl overflow-hidden">
               {/* Header Section */}
               <div className="w-full p-4 bg-[#2D2F33] border-b border-gray-700 flex items-center justify-between">
                 <h2 className="text-white text-xl font-semibold">Channel Settings</h2>
@@ -124,7 +124,10 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
             
               {/* Settings Options */}
               <div className="p-4 space-y-3">
-                <div onClick={()=>setOpenChannelGeneralSettingsArea(true)} className="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-[#2D2F33] p-3 rounded-lg cursor-pointer transition">
+                <div onClick={()=>{
+                  setOpenChannelGeneralSettingsArea(true)
+                  setOpenChannelSettingArea(false)
+                }} className="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-[#2D2F33] p-3 rounded-lg cursor-pointer transition">
                   <CiSettings className="text-2xl" />
                   <p className="text-md">General Settings</p>
                 </div>
