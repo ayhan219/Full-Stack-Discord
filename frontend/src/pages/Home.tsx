@@ -15,12 +15,17 @@ const Home = () => {
     setActiveMenu,
     onlineFriendUserIds,
     onlineFriends,
+    setChattingFriend
   } = useUserContext();
   const [activeTopBarMenu, setActiveTopBarMenu] = useState<string>("online");
 
   const show = () => {
     console.log(onlineFriends);
   };
+
+  useEffect(()=>{
+    setChattingFriend("");
+  },[])
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">

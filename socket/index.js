@@ -225,14 +225,14 @@ io.on('connection', (socket) => {
       }
     });
 
-    socket.on('send_message', (newMessage) => {
+    socket.on('send_message', (data) => {
+        const {newMessage,profilePic} = data;
+        
       const receiverSocketId = onlineUsers[newMessage.receiverId];
       if (receiverSocketId) {
           io.to(receiverSocketId).emit('receive_message', newMessage);
-          console.log(`Message sent to ${newMessage.receiverId}`);
-      } else {
-          console.log(`${newMessage.receiverId} is offline.`);
-      }
+          io.to(receiverSocketId).emit('messageNotification', ({senderId:newMessage.senderId,profilePic:profilePic}));
+      } 
     });
 
     socket.on("sendMessageToChat", (serverName, channelName, userId, username, profilePic, message) => {

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import discordPNG from "../assets/pngegg.png";
 import Server from "./Server";
 import { GoPlus } from "react-icons/go";
@@ -6,10 +6,11 @@ import { useUserContext } from "../context/UserContext";
 import CreateChannel from "./CreateChannel";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import FriendNotification from "./FriendNotification";
 
 
 const Sidebar = () => {
-  const { user, channels, setChannels,notificationNumber,loading,setLoading } = useUserContext();
+  const { user, channels, setChannels,notificationNumber,loading,setLoading,userMessageNotification } = useUserContext();
 
   const { openCreateChannel, setOpenCreateChannel,setSelectedChatRoom,activeChannel,setActiveChannel } = useUserContext();
 
@@ -71,7 +72,13 @@ const Sidebar = () => {
       <div className="w-full h-auto flex justify-center">
         <div className="w-[60%] h-[0.15rem] bg-[#35363C]"></div>
       </div>
-
+      <div className="w-full h-auto flex flex-col gap-3">
+        {
+          userMessageNotification.map((item,index)=>(
+            <FriendNotification key={index} item={item} />
+          ))
+        }
+      </div>
       {/* server area */}
       <div className="w-full h-auto flex flex-col gap-3">
         {channels.map((item, index) => (

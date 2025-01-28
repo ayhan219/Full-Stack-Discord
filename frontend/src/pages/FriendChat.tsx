@@ -10,6 +10,7 @@ import "../index.css";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 
 interface Message {
@@ -37,12 +38,14 @@ interface Friend {
 }
 
 const FriendChat = () => {
-  const { user, socket, setUser,setLoading,loading } = useUserContext();
+  const { user, socket, setUser,setLoading,loading,setChattingFriend } = useUserContext();
 
   const { activeMenu, setActiveMenu,onlineFriends } = useUserContext();
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  const {id} = useParams();
   
 
   useEffect(() => {
@@ -82,6 +85,7 @@ const FriendChat = () => {
   useEffect(() => {
     if (user && localStorage.getItem("friendId")) {
       getMessages();
+      setChattingFriend(id || "");
     }
   }, [user,localStorage.getItem("friendId")]);
 
@@ -124,7 +128,7 @@ const FriendChat = () => {
       time: new Date().toLocaleTimeString(),
     };
 
-    socket.emit("send_message", newMessage);
+    socket.emit("send_message", ({newMessage,profilePic:localStorage.getItem("profilePic")}));
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     saveMessagesToDB();
     setMessage("");

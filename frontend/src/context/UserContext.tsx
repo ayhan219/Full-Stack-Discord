@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
+import { useParams } from "react-router-dom";
 import { Socket, io } from "socket.io-client";
 
 type User = {
@@ -72,6 +73,12 @@ interface UserContextType {
   setActiveRoom: (activeRoom: string) => void;
   whichChannelConnected: string;
   setWhichChannelConnected: (whichChannelConnected: string) => void;
+  userMessageNotification: NotificationData[];
+  setUserMessageNotification: React.Dispatch<
+    React.SetStateAction<NotificationData[]>
+  >;
+  chattingFriend: string;
+  setChattingFriend: (chattingFriend: string) => void;
 }
 
 interface Friend {
@@ -114,6 +121,11 @@ interface SingleChannel {
   channelPic: string;
 }
 
+interface NotificationData {
+  senderId: string;
+  profilePic: string;
+}
+
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 type UserProviderProps = {
@@ -151,6 +163,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [activeRoom, setActiveRoom] = useState("");
   const [whichChannelConnected, setWhichChannelConnected] =
     useState<string>("");
+  const [userMessageNotification, setUserMessageNotification] = useState<
+    NotificationData[]
+  >([]);
+  const [chattingFriend, setChattingFriend] = useState<string>("");
 
   const getCurrentUser = async () => {
     try {
@@ -380,7 +396,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       });
 
       socket.on("userThatDisconnected", (senderId) => {
-       setOnlineFriends((prev) => {
+        setOnlineFriends((prev) => {
           if (!prev) {
             return prev;
           }
@@ -389,6 +405,31 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         });
       });
     }
+    socket.on("messageNotification", (data) => {
+      
+      const { senderId, profilePic } = data;
+
+      if (chattingFriend === senderId) {
+        return;
+      } else {
+        setUserMessageNotification((prev) => {
+          const updatedNotifications = prev ? [...prev] : [];
+          const pushData = {
+            senderId: senderId,
+            profilePic: profilePic,
+          };
+          const isExist = updatedNotifications.some(
+            (item) => item.senderId === senderId
+          );
+          
+          if (!isExist) {
+            updatedNotifications.push(pushData);
+          }
+
+          return updatedNotifications;
+        });
+      }
+    });
 
     // Temizleme işlemi
     return () => {
@@ -400,9 +441,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("onlineFriends");
         socket.off("ImOnline");
         socket.off("userThatDisconnected");
+        socket.off("messageNotification");
       }
     };
-  }, [socket,user,onlineFriends]);
+  }, [socket, user, onlineFriends, chattingFriend]);
 
   return (
     <UserContext.Provider
@@ -459,6 +501,10 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setActiveRoom,
         setWhichChannelConnected,
         whichChannelConnected,
+        userMessageNotification,
+        setUserMessageNotification,
+        chattingFriend,
+        setChattingFriend,
       }}
     >
       {children}
