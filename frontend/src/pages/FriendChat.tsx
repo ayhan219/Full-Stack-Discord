@@ -39,7 +39,7 @@ interface Friend {
 const FriendChat = () => {
   const { user, socket, setUser,setLoading,loading } = useUserContext();
 
-  const { activeMenu, setActiveMenu } = useUserContext();
+  const { activeMenu, setActiveMenu,onlineFriends } = useUserContext();
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -150,9 +150,18 @@ const FriendChat = () => {
               }
               alt="Profile"
             />
+            <div>
             <h3 className="text-white font-semibold text-lg">
               {localStorage.getItem("username")}
+              {
+                onlineFriends.map((item)=>(
+                  item.username === localStorage.getItem("username") ?
+                  <p className="text-xs text-green-500">online</p> :
+                  <p className="text-xs text-gray-400">offline</p>
+                ))
+              }
             </h3>
+            </div>
           </div>
 
           {/* Icons Section */}
