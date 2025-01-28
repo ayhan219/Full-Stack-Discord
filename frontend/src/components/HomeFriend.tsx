@@ -33,7 +33,7 @@ interface Friend {
 const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
   const navigate = useNavigate();
 
-  const { user, setUser, setFriendId,setChattingFriend } = useUserContext();
+  const { user, setUser, setFriendId,setChattingFriend,setOnlineFriends } = useUserContext();
 
   const addToMenuChat = async () => {
     try {
@@ -44,7 +44,6 @@ const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
           friendUserId: item._id,
         }
       );
-      console.log(response);
       if (response.status === 200) {
         setUser((prev: User | null) => {
           if (!prev) {
@@ -93,6 +92,13 @@ const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
             friends: filteredData,
           };
         });
+        setOnlineFriends((prev)=>{
+          if(!prev){
+            return prev;
+          }
+          const filteredData = prev.filter((data)=>data._id !== item._id);
+          return filteredData
+        })
       }
     } catch (error) {
       console.log(error);
