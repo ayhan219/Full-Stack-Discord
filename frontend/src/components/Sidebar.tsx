@@ -7,15 +7,28 @@ import CreateChannel from "./CreateChannel";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import FriendNotification from "./FriendNotification";
-
+import "../index.css";
 
 const Sidebar = () => {
-  const { user, channels, setChannels,notificationNumber,loading,setLoading,userMessageNotification } = useUserContext();
+  const {
+    user,
+    channels,
+    setChannels,
+    notificationNumber,
+    loading,
+    setLoading,
+    userMessageNotification,
+  } = useUserContext();
 
-  const { openCreateChannel, setOpenCreateChannel,setSelectedChatRoom,activeChannel,setActiveChannel } = useUserContext();
+  const {
+    openCreateChannel,
+    setOpenCreateChannel,
+    setSelectedChatRoom,
+    activeChannel,
+    setActiveChannel,
+  } = useUserContext();
 
   const getChannelInfo = async () => {
-    
     setLoading(true);
     try {
       const response = await axios.get(
@@ -30,7 +43,7 @@ const Sidebar = () => {
       console.log(response.data);
     } catch (error) {
       console.log(error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -40,15 +53,15 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <div className="w-[80px] h-screen bg-[#1E1F22] flex flex-col  pt-4 gap-3">
+    <div className="w-[80px] h-screen bg-[#1E1F22] flex flex-col  overflow-y-auto custom-scrollbar2   pt-4 gap-3">
       <div
         className={`relative flex items-center justify-center cursor-pointer ${
           activeChannel === "home" ? "group" : ""
         }`}
-        onClick={() =>{
-          setActiveChannel("home")
+        onClick={() => {
+          setActiveChannel("home");
           setSelectedChatRoom("");
-        } }
+        }}
       >
         <div
           className={`absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 rounded-r-lg bg-white transition-all duration-300 ${
@@ -73,11 +86,9 @@ const Sidebar = () => {
         <div className="w-[60%] h-[0.15rem] bg-[#35363C]"></div>
       </div>
       <div className="w-full h-auto flex flex-col gap-3">
-        {
-          userMessageNotification.map((item,index)=>(
-            <FriendNotification key={index} item={item} />
-          ))
-        }
+        {userMessageNotification.map((item, index) => (
+          <FriendNotification key={index} item={item} />
+        ))}
       </div>
       {/* server area */}
       <div className="w-full h-auto flex flex-col gap-3">

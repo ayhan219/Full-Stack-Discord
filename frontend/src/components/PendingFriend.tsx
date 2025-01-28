@@ -31,7 +31,7 @@ interface Friend {
 
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
-  const { user,socket,setUser,deleteNotification } = useUserContext();
+  const { user,socket,setUser,deleteNotification,setOnlineFriends,onlineFriends } = useUserContext();
 
   const handleAction = async (action: string) => {
     try {
@@ -76,6 +76,19 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
           user?.username,
           user?.profilePic
         );
+
+        setOnlineFriends((prev) => {
+          const newFriend = {
+            username: item.username,
+            _id: item._id,
+            profilePic:item.profilePic
+          };
+          if (!prev.some((friend:Friend) => friend._id === item._id)) {
+            return [...prev, newFriend];
+          }
+          return prev;
+        });
+        
       }
     } catch (error) {
       console.error(error);

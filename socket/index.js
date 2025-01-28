@@ -66,6 +66,8 @@ io.on('connection', (socket) => {
     socket.on("getOnlineUser", ({userIds,senderId}) => {
       
         const onlineFriendsFromSocket = [];
+        console.log(userIds,senderId);
+        
                 
        userIds.forEach((user)=>{
         if(onlineUsers[user._id]){

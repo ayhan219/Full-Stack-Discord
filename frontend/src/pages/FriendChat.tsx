@@ -128,7 +128,7 @@ const FriendChat = () => {
       time: new Date().toLocaleTimeString(),
     };
 
-    socket.emit("send_message", ({newMessage,profilePic:localStorage.getItem("profilePic")}));
+    socket.emit("send_message", ({newMessage,profilePic:user?.profilePic}));
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     saveMessagesToDB();
     setMessage("");

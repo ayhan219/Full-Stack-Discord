@@ -64,7 +64,7 @@ interface UserContextType {
   onlineFriendUserIds: string[];
   setOnlineFriendUserIds: (onlineFriendUserIds: string[]) => void;
   onlineFriends: Friend[];
-  setOnlineFriends: (onlineFriends: Friend[]) => void;
+  setOnlineFriends: React.Dispatch<React.SetStateAction<Friend[]>>;
   allUser: string[];
   setAllUser: (allUser: string[]) => void;
   isCameraOn: boolean;
@@ -79,8 +79,8 @@ interface UserContextType {
   >;
   chattingFriend: string;
   setChattingFriend: (chattingFriend: string) => void;
-  activeMenuFriend:string;
-  setActiveMenuFriend:(activeMenuFriend:string)=>void;
+  activeMenuFriend: string;
+  setActiveMenuFriend: (activeMenuFriend: string) => void;
 }
 
 interface Friend {
@@ -169,7 +169,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     NotificationData[]
   >([]);
   const [chattingFriend, setChattingFriend] = useState<string>("");
-  const [activeMenuFriend,setActiveMenuFriend] = useState<string>("");
+  const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
 
   const getCurrentUser = async () => {
     try {
@@ -337,7 +337,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           username: string,
           profilePic: string
         ) => {
-          console.log("Notification received:", senderId);
+
           if (selectedValue === "accept") {
             setUser((prev: User | null) => {
               if (!prev) return prev;
@@ -351,6 +351,17 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
                 ...prev,
                 friends: [...prev.friends, newFriend],
               };
+            });
+            setOnlineFriends((prev) => {
+              const newFriend: Friend = {
+                username: username,
+                _id: senderId,
+                profilePic,
+              };
+              if (!prev.some((friend) => friend._id === senderId)) {
+                return [...prev, newFriend];
+              }
+              return prev;
             });
           } else {
             return;
@@ -409,7 +420,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       });
     }
     socket.on("messageNotification", (data) => {
-      
       const { senderId, profilePic } = data;
 
       if (chattingFriend === senderId) {
@@ -424,7 +434,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           const isExist = updatedNotifications.some(
             (item) => item.senderId === senderId
           );
-          
+
           if (!isExist) {
             updatedNotifications.push(pushData);
           }
@@ -509,7 +519,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         chattingFriend,
         setChattingFriend,
         activeMenuFriend,
-        setActiveMenuFriend
+        setActiveMenuFriend,
       }}
     >
       {children}
