@@ -28,6 +28,7 @@ const Server = ({
     setActiveRoom,
     setSelectedChatRoom,
     whichChannelConnected,
+    setActiveMenuFriend
   } = useUserContext();
 
   const initials = item.channelName
@@ -53,7 +54,10 @@ const Server = ({
       key={item._id}
     >
       <Link
-        onClick={() => getSingleChannel(item._id)}
+        onClick={() => {
+          getSingleChannel(item._id)
+          setActiveMenuFriend(item._id)
+        }}
         to={`/channel/${item._id}`}
         className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer relative"
       >

@@ -18,10 +18,10 @@ type MenuProps ={
 
 const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
 
-  const {user} = useUserContext();
+  const {user,activeMenuFriend,setActiveMenuFriend} = useUserContext();
 
   const navigate = useNavigate();
-  const [activeMenuFriend,setActiveMenuFriend] = useState<string>("");
+  
   
   return (
     <div  className="w-[270px] h-screen bg-[#2B2D31] flex flex-col relative">
@@ -36,6 +36,8 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         <div className="w-full h-12 hover:text-gray-300 hover:rounded-lg text-gray-400 font-bold flex  gap-2 cursor-pointer hover:bg-gray-500 duration-100 ease-in-out">
           <div onClick={()=>{
             setActiveMenu("friends")
+            setActiveMenuFriend("");
+            navigate("/home")
             {
               window.location.pathname==="/friendchat" && navigate("/home")
             }

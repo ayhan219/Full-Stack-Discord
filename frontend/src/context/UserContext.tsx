@@ -79,6 +79,8 @@ interface UserContextType {
   >;
   chattingFriend: string;
   setChattingFriend: (chattingFriend: string) => void;
+  activeMenuFriend:string;
+  setActiveMenuFriend:(activeMenuFriend:string)=>void;
 }
 
 interface Friend {
@@ -167,6 +169,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     NotificationData[]
   >([]);
   const [chattingFriend, setChattingFriend] = useState<string>("");
+  const [activeMenuFriend,setActiveMenuFriend] = useState<string>("");
 
   const getCurrentUser = async () => {
     try {
@@ -505,6 +508,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         setUserMessageNotification,
         chattingFriend,
         setChattingFriend,
+        activeMenuFriend,
+        setActiveMenuFriend
       }}
     >
       {children}
