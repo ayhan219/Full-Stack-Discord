@@ -33,7 +33,7 @@ interface Friend {
 const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
   const navigate = useNavigate();
 
-  const { user, setUser, setFriendId } = useUserContext();
+  const { user, setUser, setFriendId,setChattingFriend } = useUserContext();
 
   const addToMenuChat = async () => {
     try {
@@ -102,9 +102,11 @@ const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
   return (
     <div
       onClick={() => {
+        setChattingFriend(item._id)
         navigate(`/friendchat/${item._id}`);
         addToMenuChat();
         setFriend();
+        
       }}
       className="w-full h-14 text-gray-300 font-semibold flex p-3 px-6 items-center border-t border-gray-600 justify-between hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all"
     >
