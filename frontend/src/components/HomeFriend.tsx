@@ -102,7 +102,7 @@ const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
   return (
     <div
       onClick={() => {
-        navigate("/friendchat");
+        navigate(`/friendchat/:${item._id}`);
         addToMenuChat();
         setFriend();
       }}
