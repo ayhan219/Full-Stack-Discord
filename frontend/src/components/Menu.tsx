@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import FriendChat from "../pages/FriendChat";
 import HomeFriend from "./HomeFriend";
+import { useState } from "react";
 
 type MenuProps ={
   activeMenu:string,
@@ -20,6 +21,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
   const {user} = useUserContext();
 
   const navigate = useNavigate();
+  const [activeMenuFriend,setActiveMenuFriend] = useState<string>("");
   
   return (
     <div  className="w-[270px] h-screen bg-[#2B2D31] flex flex-col relative">
@@ -72,7 +74,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         <div className="w-full h-auto flex flex-col gap-2 overflow-y-auto custom-scrollbar">
           {
             user?.menuChat.map((item,index)=>(
-              <MenuFriends key={index} item={item} />
+              <MenuFriends key={index} item={item} setActiveMenuFriend={setActiveMenuFriend} activeMenuFriend={activeMenuFriend} />
             ))
           }
         </div>

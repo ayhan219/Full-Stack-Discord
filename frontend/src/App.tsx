@@ -82,7 +82,7 @@ function App() {
               }
             />
             <Route
-              path="/friendchat"
+              path="/friendchat/:id"
               element={
                 <PrivateRoute>
                   <FriendChat />

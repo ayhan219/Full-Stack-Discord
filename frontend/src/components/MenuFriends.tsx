@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { MdClose } from "react-icons/md";
 import axios from "axios";
+import { useState } from "react";
 
 type MenuFriendProps = {
   item: {
@@ -9,6 +10,8 @@ type MenuFriendProps = {
     _id: string;
     profilePic: string;
   };
+  activeMenuFriend:string;
+  setActiveMenuFriend:(activeMenuFriend:string)=>void;
 };
 
 
@@ -29,10 +32,11 @@ type User = {
   menuChat: Friend[];
 };
 
-const MenuFriends = ({ item }: MenuFriendProps) => {
+const MenuFriends = ({ item,setActiveMenuFriend,activeMenuFriend }: MenuFriendProps) => {
   const { user,setUser } = useUserContext();
   const navigate = useNavigate();
   const { setFriendId,onlineFriends } = useUserContext();
+  
 
   const setFriend = async () => {
     setFriendId(item._id);
@@ -73,9 +77,10 @@ const MenuFriends = ({ item }: MenuFriendProps) => {
     <div
       onClick={() => {
         setFriend();
-        navigate("/friendchat");
+        navigate(`/friendchat/${item._id}`);
+        setActiveMenuFriend(item._id);
       }}
-      className="w-full h-12 flex items-center px-6 gap-3  hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all text-gray-400 hover:text-white relative group"
+      className={`w-full h-12 flex items-center px-6 gap-3 ${activeMenuFriend === item._id ? "bg-[#4c515a] text-white rounded-md" : ""}  hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all text-gray-400 hover:text-white relative group`}
     >
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
