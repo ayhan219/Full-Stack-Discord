@@ -468,6 +468,48 @@ const joinChannel = async (req, res) => {
       res.status(500).json({ message: "Internal server error" });
     }
   };
+
+  const kickUser = async (req, res) => {
+    const { channelId, userId, kickUserId } = req.body;
+
+    if (!channelId || !userId || !kickUserId) {
+        return res.status(400).json({ message: "Provide all required fields" });
+    }
+
+    try {
+        const findChannel = await Channel.findById(channelId);
+        const findKickedUser = await User.findById(kickUserId);
+
+        if (!findChannel) {
+            return res.status(404).json({ message: "Channel not found" });
+        }
+        if (!findKickedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (!findChannel.admin.includes(userId)) {
+            return res.status(403).json({ message: "User is not an admin" });
+        }
+
+        if (!findChannel.channelUsers.some(user => user.toString() === kickUserId)) {
+            return res.status(400).json({ message: "User is not in the channel" });
+        }
+
+        await Channel.findByIdAndUpdate(channelId, {
+            $pull: { channelUsers: kickUserId }
+        });
+
+        await User.findByIdAndUpdate(kickUserId, {
+            $pull: { joinedChannel: channelId }
+        });
+
+        return res.status(200).json({ message: "User kicked successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
   
   
 
@@ -482,5 +524,6 @@ joinChannel,
 addUserToVoiceChannel,
 deleteUserFromVoiceChannel,
 deleteChannel,
-uploadChannelPhoto
+uploadChannelPhoto,
+kickUser
 }
