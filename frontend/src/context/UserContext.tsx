@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Socket, io } from "socket.io-client";
 
 type User = {
@@ -171,6 +171,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [chattingFriend, setChattingFriend] = useState<string>("");
   const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
 
+  
   const getCurrentUser = async () => {
     try {
       const response = await axios.get(
@@ -443,6 +444,16 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         });
       }
     });
+
+    socket.on("kickedFromChannel",(channelId)=>{
+      setChannels((prev)=>{
+        if(!prev){
+          return prev;
+        }
+        const filteredChannel = prev.filter((data)=>data._id !== channelId);
+        return filteredChannel;
+      })
+    })
 
     // Temizleme işlemi
     return () => {

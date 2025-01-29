@@ -413,6 +413,13 @@ io.on('connection', (socket) => {
             io.to(onlineUsers[id]).emit("cameraToggled",({senderId,isCameraOn}))
         })
     })
+
+    socket.on("userKickedFromChannel",(data)=>{
+        const {channelId,kickUserId} = data;
+        console.log(channelId,kickUserId);
+        
+        io.to(onlineUsers[kickUserId]).emit("kickedFromChannel",(channelId))
+    })
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {

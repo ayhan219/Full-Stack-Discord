@@ -13,7 +13,7 @@ import {
   RoomAudioRenderer,
   useTracks,
 } from "@livekit/components-react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Track } from "livekit-client";
 import "@livekit/components-styles";
 
@@ -40,7 +40,10 @@ const Channel = () => {
     selectedChatRoom,
     setSelectedChatRoom,
     activeRoom,
-    setActiveRoom
+    setActiveRoom,
+    setChannels,
+    setActiveChannel,
+    setConnectedToVoice
   } = useUserContext();
 
   const { channelId } = useParams();
@@ -49,6 +52,7 @@ const Channel = () => {
     []
   );
   
+  const navigate = useNavigate();
 
 
 
@@ -171,6 +175,21 @@ const Channel = () => {
       console.log(`${senderId} is opened camera?`, isCameraOn);
     });
 
+    socket.on("kickedFromChannel",(channelId)=>{
+      setChannels((prev)=>{
+        if(!prev){
+          return prev;
+        }
+        const filteredChannel = prev.filter((data)=>data._id !== channelId);
+        return filteredChannel;
+      })
+      setActiveChannel("");
+      setActiveRoom("");
+      setConnectedToVoice(false);
+      setActiveRoom("");
+      navigate("/home")
+    })
+
     return () => {
       if (socket) {
         socket.off("userJoinedVoiceRoom");
@@ -180,6 +199,7 @@ const Channel = () => {
         socket.off("onlineAllChannelUsers");
         // socket.off("userThatDisconnected");
         socket.off("cameraToggled");
+        socket.off("kickedFromChannel")
       }
     };
   }, [socket, user, singleChannel,onlineChannelUsers]);
