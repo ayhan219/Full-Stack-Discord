@@ -13,6 +13,9 @@ interface Member {
   profilePic: string;
 }
 
+
+
+
 interface ChannelGeneralSettingsAreaProps {
   setOpenChannelGeneralSettingsArea: (isOpen: boolean) => void;
 }
@@ -28,6 +31,7 @@ const ChannelGeneralSettingsArea = ({
     setChannels,
     channels,
     setSingleChannel,
+    socket,
   } = useUserContext();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [openDeleteArea, setOpenDeleteArea] = useState<boolean>(false);
@@ -142,6 +146,37 @@ const ChannelGeneralSettingsArea = ({
       setIsSucces(false);
     }
   };
+
+  const kickUserFromChannel = async(kickUserId:string)=>{
+    try {
+      const channelId = singleChannel?._id
+      const response = await axios.delete("http://localhost:5000/api/channel/kickuser",{
+        data:{
+          channelId:channelId,
+          userId:user?.userId,
+          kickUserId:kickUserId
+        }
+      })
+      if(response.status===200){
+        setSingleChannel((prev)=>{
+          if(!prev){
+            return prev;
+          }
+          return {
+            ...prev,
+            channelUsers: prev.channelUsers.filter((item: Member) => item._id !== kickUserId),
+          };
+          
+        })
+        socket.emit("userKickedFromChannel",{channelId,kickUserId})
+      }
+      
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
 
   const initials = singleChannel?.channelName
     .split(" ")
@@ -316,9 +351,12 @@ const ChannelGeneralSettingsArea = ({
                     </div>
                   </div>
 
-                  <div className="flex flex-col items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-lg shadow-md transition-all cursor-pointer">
+                  {
+                    !singleChannel.admin.includes(member._id) &&
+                    <div onClick={()=>kickUserFromChannel(member._id)} className="flex flex-col items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-lg shadow-md transition-all cursor-pointer">
                     <p className="text-sm font-medium">Kick User</p>
                   </div>
+                  }
                 </div>
               ))}
             </div>

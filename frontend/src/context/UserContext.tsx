@@ -119,7 +119,7 @@ interface SingleChannel {
   chatChannel: ChatChannel[];
   voiceChannel: VoiceChannel[];
   admin: string[];
-  channelUsers: [];
+  channelUsers: VoiceUser[];
   channelPic: string;
 }
 

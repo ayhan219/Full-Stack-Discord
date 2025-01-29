@@ -17,6 +17,6 @@ router.post("/addusertovoicechannel",addUserToVoiceChannel)
 router.delete("/deleteuserfromvoicechannel",deleteUserFromVoiceChannel)
 router.delete("/deletechannel",deleteChannel);
 router.post("/uploadchannelphoto",upload.single("channelPic"),uploadChannelPhoto)
-router.post("/kickuser",kickUser)
+router.delete("/kickuser",kickUser)
 
 module.exports = router;
