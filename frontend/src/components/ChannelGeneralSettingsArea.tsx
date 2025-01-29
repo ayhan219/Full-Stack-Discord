@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 import { CiSearch } from "react-icons/ci";
+import { FaBan } from "react-icons/fa";
 
 interface Member {
   username: string;
@@ -148,9 +149,6 @@ const ChannelGeneralSettingsArea = ({
     .join("")
     .toUpperCase();
 
-  const show = () => {
-    console.log(singleChannel);
-  };
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
       <div className="w-[90%] max-w-[800px] h-[90%] bg-[#23272A] rounded-2xl shadow-lg flex overflow-hidden">
@@ -196,10 +194,7 @@ const ChannelGeneralSettingsArea = ({
 
         <div className="w-3/4 bg-[#36393F] flex flex-col">
           <div className="flex justify-between items-center p-4 border-b border-gray-700">
-            <h2
-              onClick={() => show()}
-              className="text-xl font-semibold text-white"
-            >
+            <h2 className="text-xl font-semibold text-white">
               Channel {channelGeneralSettings}
             </h2>
             <IoMdCloseCircle
@@ -301,24 +296,28 @@ const ChannelGeneralSettingsArea = ({
           )}
 
           {channelGeneralSettings === "members" && (
-            <div className="w-full h-auto p-5 flex flex-col gap-4 rounded-md overflow-y-auto custom-scrollbar ">
+            <div className="w-full h-auto p-5 flex flex-col gap-2 rounded-md overflow-y-auto custom-scrollbar ">
               {singleChannel?.channelUsers.map((member: Member) => (
                 <div
                   key={member._id}
-                  className="w-full flex items-center gap-4 p-3  rounded-lg  transition-shadow"
+                  className="w-full flex items-center gap-4 p-3 justify-between  rounded-lg  transition-shadow"
                 >
-                  <div>
+                  <div className="flex gap-2 items-center">
                     <img
                       className="w-12 h-12 rounded-full object-cover  "
                       src={`http://localhost:5000${member.profilePic}`}
                       alt={`${member.username}'s profile`}
                     />
+                    <div className="flex flex-col">
+                      <p className="text-base font-semibold text-white">
+                        {member.username}
+                      </p>
+                      <p className="text-sm text-gray-500">Member</p>
+                    </div>
                   </div>
-                  <div className="flex flex-col">
-                    <p className="text-base font-semibold text-white">
-                      {member.username}
-                    </p>
-                    <p className="text-sm text-gray-500">Member</p>
+
+                  <div className="flex flex-col items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-lg shadow-md transition-all cursor-pointer">
+                    <p className="text-sm font-medium">Kick User</p>
                   </div>
                 </div>
               ))}
