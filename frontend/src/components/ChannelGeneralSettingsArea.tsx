@@ -168,7 +168,7 @@ const ChannelGeneralSettingsArea = ({
           };
           
         })
-        socket.emit("userKickedFromChannel",{channelId,kickUserId})
+        socket.emit("userKickedFromChannel",{channelId,kickUserId,channelName:singleChannel?.channelName})
       }
       
       

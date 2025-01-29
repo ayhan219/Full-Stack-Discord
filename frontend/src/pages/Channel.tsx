@@ -43,7 +43,7 @@ const Channel = () => {
     setActiveRoom,
     setChannels,
     setActiveChannel,
-    setConnectedToVoice
+    setConnectedToVoice,
   } = useUserContext();
 
   const { channelId } = useParams();
@@ -51,10 +51,8 @@ const Channel = () => {
   const [onlineChannelUsers, setOnlineChannelUsers] = useState<ChannelUser[]>(
     []
   );
-  
+
   const navigate = useNavigate();
-
-
 
   useEffect(() => {
     socket.on("userJoinedVoiceRoom", (data) => {
@@ -161,7 +159,7 @@ const Channel = () => {
     });
 
     socket.on("userThatDisconnected", (senderId) => {
-      setOnlineChannelUsers((prev) => {     
+      setOnlineChannelUsers((prev) => {
         if (!prev) {
           return prev;
         }
@@ -175,20 +173,29 @@ const Channel = () => {
       console.log(`${senderId} is opened camera?`, isCameraOn);
     });
 
-    socket.on("kickedFromChannel",(channelId)=>{
-      setChannels((prev)=>{
-        if(!prev){
+    socket.on("kickedFromChannel", (channelId) => {
+      setChannels((prev) => {
+        if (!prev) {
           return prev;
         }
-        const filteredChannel = prev.filter((data)=>data._id !== channelId);
+        const filteredChannel = prev.filter((data) => data._id !== channelId);
         return filteredChannel;
-      })
+      });
       setActiveChannel("");
       setActiveRoom("");
       setConnectedToVoice(false);
       setActiveRoom("");
-      navigate("/home")
-    })
+      navigate("/home");
+    });
+
+    socket.on("userJoinedChannel", (data) => {
+      setOnlineChannelUsers((prev) => {
+        if (!prev) {
+          return [data]; 
+        }
+        return [...prev, data]; 
+      });
+    });
 
     return () => {
       if (socket) {
@@ -199,15 +206,15 @@ const Channel = () => {
         socket.off("onlineAllChannelUsers");
         // socket.off("userThatDisconnected");
         socket.off("cameraToggled");
-        socket.off("kickedFromChannel")
+        socket.off("kickedFromChannel");
+        socket.off("userJoinedChannel");
       }
     };
-  }, [socket, user, singleChannel,onlineChannelUsers]);
+  }, [socket, user, singleChannel, onlineChannelUsers]);
 
   useEffect(() => {
     socket.emit("sendChannelUsers", { allUser, senderId: user?.userId });
   }, [singleChannel]);
-  
 
   function MyVideoConference() {
     // `useTracks` returns all camera and screen share tracks. If a user
@@ -234,7 +241,12 @@ const Channel = () => {
 
   return (
     <div className="w-full flex bg-[#313338]" key={channelId}>
-      <ChannelMenu setIsCameraOn={setIsCameraOn} isCameraOn={isCameraOn} setActiveRoom={setActiveRoom} activeRoom={activeRoom} />
+      <ChannelMenu
+        setIsCameraOn={setIsCameraOn}
+        isCameraOn={isCameraOn}
+        setActiveRoom={setActiveRoom}
+        activeRoom={activeRoom}
+      />
 
       {/* {
           connectedToVoice ? <div className="w-[70%]">
@@ -243,17 +255,15 @@ const Channel = () => {
          
          } */}
 
-      {connectedToVoice && activeRoom==="video"   ? (
+      {connectedToVoice && activeRoom === "video" ? (
         <div className={`w-[70%]`}>
           <MyVideoConference />
-          
         </div>
-      ) :
-      activeRoom === 'chat' || activeRoom ==='' ? (
+      ) : activeRoom === "chat" || activeRoom === "" ? (
         <ChatArea />
       ) : null}
-      
-      <ChatRightArea onlineChannelUsers={onlineChannelUsers}  />
+
+      <ChatRightArea onlineChannelUsers={onlineChannelUsers} />
     </div>
   );
 };

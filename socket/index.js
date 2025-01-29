@@ -66,7 +66,6 @@ io.on('connection', (socket) => {
     socket.on("getOnlineUser", ({userIds,senderId}) => {
       
         const onlineFriendsFromSocket = [];
-        console.log(userIds,senderId);
         
                 
        userIds.forEach((user)=>{
@@ -123,7 +122,6 @@ io.on('connection', (socket) => {
     
     socket.on('sendDataToChannelUsers', (data) => {
       const { serverName, chatRoom } = data;
-      console.log(serverName, chatRoom);
 
       const uniqueServerName = serverNamesWithUUID[serverName]; 
 
@@ -136,7 +134,6 @@ io.on('connection', (socket) => {
     } else {
         console.log(`Chat room "${chatRoom}" already exists in server "${uniqueServerName}"`);
     }
-    console.log(servers);
 
       if (servers[uniqueServerName]) {
           const ownerUserId = servers[uniqueServerName].owner;
@@ -160,7 +157,6 @@ io.on('connection', (socket) => {
 
     socket.on('sendDataToChannelVoiceUsers', (data) => {
         const { serverName, voiceRoom } = data;
-        console.log(serverName, voiceRoom);
   
         const uniqueServerName = serverNamesWithUUID[serverName]; 
   
@@ -191,18 +187,25 @@ io.on('connection', (socket) => {
       });
 
    
-    socket.on('joinServer', (serverName, userId) => {
-      const uniqueServerName = serverNamesWithUUID[serverName];  
-      console.log(serverName, userId);
-
+    socket.on('joinServer', (data) => {  
+        const {serverName,userId,profilePic,username} = data
+        
+      const uniqueServerName = serverNamesWithUUID[serverName];
+        
       if (servers[uniqueServerName]) {
           if (!servers[uniqueServerName].members.includes(userId)) {
               servers[uniqueServerName].members.push(userId);
+              servers[uniqueServerName].members.map((user)=>{
+                const data = {
+                    username,
+                    _id:userId,
+                    profilePic
+                }
+                io.to(onlineUsers[user]).emit("userJoinedChannel",(data))
+              })
               saveDataToFile();
               console.log(`${userId} has joined the server "${uniqueServerName}"`);
               socket.emit('serverJoined', `You have joined the server "${uniqueServerName}" successfully.`);
-          } else {
-              socket.emit('serverError', `You are already a member of "${uniqueServerName}".`);
           }
       } else {
           socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
@@ -415,9 +418,11 @@ io.on('connection', (socket) => {
     })
 
     socket.on("userKickedFromChannel",(data)=>{
-        const {channelId,kickUserId} = data;
-        console.log(channelId,kickUserId);
-        
+        const {channelId,kickUserId,channelName} = data;
+        const uniqueServerName = serverNamesWithUUID[channelName];
+        const updatedChannelUsers=servers[uniqueServerName].members.filter((item)=>item!==kickUserId);
+        servers[uniqueServerName].members =updatedChannelUsers
+        saveDataToFile();
         io.to(onlineUsers[kickUserId]).emit("kickedFromChannel",(channelId))
     })
     socket.on('disconnect', () => {

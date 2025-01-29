@@ -83,7 +83,9 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
           return [...prev, response.data];
         });
         setIsModalOpen(false);
-        socket.emit("joinServer", singleChannel?.channelName, user?.userId);
+        socket.emit("joinServer", {
+          serverName:singleChannel?.channelName, userId:user?.userId ,username:user?.username,profilePic:user?.profilePic
+        });
       }
     } catch (error) {
       console.log(error);
