@@ -7,6 +7,7 @@ interface Message {
   receiverId: string | null;
   message: string;
   time: string;
+  isImage:boolean
 }
 
 interface PrivateChatProps {
@@ -96,49 +97,42 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
     }
   };
 
+  const isOwnUser = user?.userId === item.receiverId
+
+
+
   return (
+    <div className={`flex items-start gap-4 mb-4`}>
+  <img
+    className="w-10 h-10 rounded-full object-cover"
+    src={isOwnUser ? `http://localhost:5000${user?.profilePic}` : `http://localhost:5000${localStorage.getItem("profilePic")}`}
+    alt="Sender"
+  />
+
+  <div className={`flex flex-col w-full`}>
+    <div className="flex items-center gap-2 mb-1">
+      <p className="font-semibold text-gray-200">{isOwnUser ? user?.username : localStorage.getItem("username")}</p>
+      <span className="text-xs text-gray-400 mt-1">{item.time}</span>
+    </div>
+
     <div
-      className={`flex items-center gap-3 mb-4 ${
-        isOwnMessage ? "justify-end" : "justify-start"
-      }`}
+      className={`rounded-lg max-w-lg text-white  relative`}
+      style={{
+        wordWrap: "break-word",
+        whiteSpace: "pre-wrap",
+        overflowWrap: "break-word",
+      }}
     >
-      {!isOwnMessage && (
-        <img
-          className="w-8 h-8 rounded-full object-cover"
-          src={`http://localhost:5000${localStorage.getItem("profilePic")}`}
-          alt="Sender"
-        />
-      )}
+      {
+        !item.isImage ? 
+        <p className="text-sm text-[#A6A9AC]">{parseMessage(item.message)}</p> :
+        <img src={item.message} alt="sent" className="w-40 h-auto rounded-lg" />
+      }
+    </div>
 
-      <div className={`flex flex-col ${isOwnMessage ? "items-end" : ""}`}>
-        {!isOwnMessage && (
-          <div>
-            <p>{localStorage.getItem("username")}</p>
-          </div>
-        )}
-        <div
-          className={`bg-[#40444B] text-white p-3 rounded-lg max-w-xs ${
-            isOwnMessage ? "ml-2" : "mr-2"
-          }`}
-          style={{
-            maxWidth: "100%",
-            wordWrap: "break-word",
-            whiteSpace: "pre-wrap",
-            overflowWrap: "break-word",
-          }}
-        >
-          <p>{parseMessage(item.message)}</p>
-        </div>
-        <span className="text-xs text-gray-500 mt-1">{item.time} PM</span>
-      </div>
-
-      {isOwnMessage && (
-        <img
-          className="w-8 h-8 rounded-full object-cover"
-          src={`http://localhost:5000${user?.profilePic}`}
-          alt="Sender"
-        />
-      )}
+   
+  </div>
+      
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
           <div className="bg-[#2F3136] p-6 rounded-lg shadow-lg w-[400px]">

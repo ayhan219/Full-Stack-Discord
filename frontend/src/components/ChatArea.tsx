@@ -13,6 +13,7 @@ interface Message {
   profilePic: string;
   time: string;
   userId: string;
+  image:string
 }
 
 const ChatArea = () => {
@@ -55,23 +56,36 @@ const ChatArea = () => {
     handleActiveRoom();
   }, [selectedChatRoom, singleChannel]);
 
-  const handleSend = () => {
-    if (message.trim() !== "") {
-      socket.emit(
-        "sendMessageToChat",
-        singleChannel?.channelName,
-        selectedChatRoom,
-        user?.userId,
-        user?.username,
-        user?.profilePic,
-        message
-      );
+  const handleSend = (imageData?: string) => {
+    if (message.trim() !== "" || imageData) {
+      socket.emit("sendMessageToChat", {
+        serverName: singleChannel?.channelName,
+        channelName: selectedChatRoom,
+        userId: user?.userId,
+        username: user?.username,
+        profilePic: user?.profilePic,
+        message: message,
+        image: imageData || "",
+      });
       setMessage("");
+    }
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        handleSend(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   useEffect(() => {
     socket.on("sendMessageToChatArea", (newMessage) => {
+      console.log("received newMessage",newMessage);
+      
       if (
         newMessage.channelName === selectedChatRoom &&
         newMessage.serverName === singleChannel?.channelName
@@ -93,9 +107,9 @@ const ChatArea = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  useEffect(()=>{
+  useEffect(() => {
     setSelectedChatRoom("");
-  },[])
+  }, []);
 
   return (
     <div className="w-[70%] h-screen bg-[#313338] flex flex-col">
@@ -187,10 +201,12 @@ const ChatArea = () => {
                       </div>
                     ) : (
                       <>
-                        {messages.map((item, index) => (
-                          <ChatComplement key={index} item={item} />
-                        ))}
-                        <div ref={messagesEndRef} />
+                        <div className="flex flex-col gap-2">
+                          {messages.map((item, index) => (
+                            <ChatComplement key={index} item={item} />
+                          ))}
+                          <div ref={messagesEndRef} />
+                        </div>
                       </>
                     )}
                   </>
@@ -202,39 +218,36 @@ const ChatArea = () => {
           {/* Message Input */}
           {selectedChatRoom !== "" && (
             <div className="w-full h-16 bg-[#2B2D31] flex items-center px-5 gap-3">
-            <input
-              type="text"
-              placeholder="Type a message..."
-              className="w-full h-10 bg-[#40444B] text-gray-200 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 placeholder-gray-400"
-              onChange={(e) => setMessage(e.target.value)}
-              value={message}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSend();
-                }
-              }}
-            />
-            <label
-              htmlFor="image-upload"
-              className="cursor-pointer h-10 w-10 flex items-center justify-center bg-gray-500 text-white rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200"
-            >
-              📷
               <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                className="hidden"
+                type="text"
+                placeholder="Type a message..."
+                className="w-full h-10 bg-[#40444B] text-gray-200 rounded-lg px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 placeholder-gray-400"
+                onChange={(e) => setMessage(e.target.value)}
+                value={message}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSend();
+                  }
+                }}
               />
-            </label>
-          
-            <button
-              onClick={handleSend}
-              className="h-10 px-6 bg-gray-500 text-white font-medium rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200"
-            >
-              Send
-            </button>
-          </div>
-          
+              <label htmlFor="image-upload" className="cursor-pointer">
+                📷
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload} 
+                />
+              </label>
+
+              <button
+                onClick={()=>handleSend()}
+                className="h-10 px-6 bg-gray-500 text-white font-medium rounded-lg hover:bg-blue-600 active:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition-all duration-200"
+              >
+                Send
+              </button>
+            </div>
           )}
         </>
       )}

@@ -5,7 +5,7 @@ const User = require("../model/User")
 
 
 const saveChat = async(req,res)=>{
-    const {senderId,receiverId,message,time} = req.body;
+    const {senderId,receiverId,message,time,isImage} = req.body;
     
     
 
@@ -17,7 +17,8 @@ const saveChat = async(req,res)=>{
             senderId,
             receiverId,
             message,
-            time
+            time,
+            isImage
         })
 
         

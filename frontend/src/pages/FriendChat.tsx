@@ -12,12 +12,12 @@ import { useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-
 interface Message {
   senderId?: string;
   receiverId: string | null;
   message: string;
   time: string;
+  isImage: boolean;
 }
 
 type User = {
@@ -38,18 +38,18 @@ interface Friend {
 }
 
 const FriendChat = () => {
-  const { user, socket, setUser,setLoading,loading,setChattingFriend } = useUserContext();
+  const { user, socket, setUser, setLoading, loading, setChattingFriend } =
+    useUserContext();
 
-  const { activeMenu, setActiveMenu,onlineFriends } = useUserContext();
+  const { activeMenu, setActiveMenu, onlineFriends } = useUserContext();
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const {id} = useParams();
-  
+  const { id } = useParams();
 
   useEffect(() => {
-    socket.on("receive_message", (newMessage) => {
+    socket.on("receive_message", (newMessage) => {   
       setMessages((prev: Message[]) => {
         return [...prev, newMessage];
       });
@@ -77,7 +77,7 @@ const FriendChat = () => {
     } catch (error) {
       console.log(error);
       setMessages([]);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -87,7 +87,7 @@ const FriendChat = () => {
       getMessages();
       setChattingFriend(id || "");
     }
-  }, [user,localStorage.getItem("friendId")]);
+  }, [user, localStorage.getItem("friendId")]);
 
   const saveMessagesToDB = async () => {
     try {
@@ -98,9 +98,9 @@ const FriendChat = () => {
           receiverId: localStorage.getItem("friendId"),
           message,
           time: new Date().toLocaleTimeString(),
+          isImage: false,
         }
       );
-      console.log(response.data);
 
       if (response.status === 200) {
         setUser((prev: User | null) => {
@@ -125,10 +125,11 @@ const FriendChat = () => {
       senderId: user?.userId,
       receiverId: localStorage.getItem("friendId") || null,
       message,
-      time: new Date().toLocaleTimeString(),
+      isImage: false,
+      time: getCurrentTime()
     };
 
-    socket.emit("send_message", ({newMessage,profilePic:user?.profilePic}));
+    socket.emit("send_message", { newMessage, profilePic: user?.profilePic });
     setMessages((prevMessages) => [...prevMessages, newMessage]);
     saveMessagesToDB();
     setMessage("");
@@ -138,12 +139,54 @@ const FriendChat = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+      const base64Image = reader.result as string;
+
+      const newMessage = {
+        senderId: user?.userId,
+        receiverId: localStorage.getItem("friendId") || null,
+        message: base64Image,
+        time: getCurrentTime(),
+        isImage: true,
+      };
+
+      socket.emit("send_message", { newMessage, profilePic: user?.profilePic });
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      try {
+        await axios.post("http://localhost:5000/api/message/savechat", {
+          senderId: user?.userId,
+          receiverId: localStorage.getItem("friendId"),
+          message: base64Image,
+          time: new Date().toLocaleTimeString(),
+          isImage: true,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const getCurrentTime = () => {
+    const now = new Date();
+    return now.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div className="w-full h-screen flex bg-[#313338]">
       <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
       <div className="flex flex-col w-[calc(100%-270px)] h-full bg-[#2F3136]">
-         {/* Top Bar */}
-         <div className="w-full h-16 bg-[#292B2F] flex justify-between items-center px-4 border-b border-gray-700">
+        {/* Top Bar */}
+        <div className="w-full h-16 bg-[#292B2F] flex justify-between items-center px-4 border-b border-gray-700">
           {/* Profile Section */}
           <div className="flex items-center gap-3">
             <img
@@ -155,15 +198,15 @@ const FriendChat = () => {
               alt="Profile"
             />
             <div>
-            <h3 className="text-white font-semibold text-lg">
-              {localStorage.getItem("username")}
-              {
-                onlineFriends.map((item)=>(
-                  item.username === localStorage.getItem("username") &&
-                  <p className="text-xs text-green-500">online</p> 
-                ))
-              }
-            </h3>
+              <h3 className="text-white font-semibold text-lg">
+                {localStorage.getItem("username")}
+                {onlineFriends.map(
+                  (item) =>
+                    item.username === localStorage.getItem("username") && (
+                      <p className="text-xs text-green-500">online</p>
+                    )
+                )}
+              </h3>
             </div>
           </div>
 
@@ -201,10 +244,12 @@ const FriendChat = () => {
               </div>
             ) : (
               <>
+                <div className="flex flex-col gap-4">
                 {messages.map((item, index) => (
                   <PrivateChat key={index} item={item} />
                 ))}
                 <div ref={messagesEndRef} />
+                </div>
               </>
             )}
           </div>
@@ -220,13 +265,25 @@ const FriendChat = () => {
               value={message}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
-                  sendMessage(); 
+                  sendMessage();
                 }
               }}
             />
-            <button onClick={() => sendMessage()} className="text-blue-500">
-              Send
-            </button>
+            <div className="flex gap-5">
+              <label htmlFor="image-upload" className="cursor-pointer text-2xl">
+                📷
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                />
+              </label>
+              <button onClick={() => sendMessage()} className="text-blue-500">
+                Send
+              </button>
+            </div>
           </div>
         </div>
       </div>

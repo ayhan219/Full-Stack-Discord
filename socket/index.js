@@ -241,18 +241,14 @@ io.on('connection', (socket) => {
       } 
     });
 
-    socket.on("sendMessageToChat", (serverName, channelName, userId, username, profilePic, message) => {
-        console.log("Message received:", serverName, channelName, userId, message);
+    socket.on("sendMessageToChat", (data) => {
+        const {serverName, channelName, userId, username, profilePic, message,image} = data
     
         const uniqueServerName = serverNamesWithUUID[serverName]; 
     
         if (servers[uniqueServerName]) {
             servers[uniqueServerName].members.forEach((memberUserId) => {
-                const memberSocketId = onlineUsers[memberUserId]; 
-                console.log("Member Socket ID:", memberSocketId);
-    
-                console.log(memberSocketId);
-                
+                const memberSocketId = onlineUsers[memberUserId];         
                 if (memberSocketId) {
                     io.to(memberSocketId).emit("sendMessageToChatArea", {
                         serverName,
@@ -261,14 +257,11 @@ io.on('connection', (socket) => {
                         username,
                         profilePic,
                         message,
+                        image,
                         time: new Date().toISOString(),
                     });
                 }
             });
-    
-            console.log(`Message sent to channel "${channelName}" in server "${uniqueServerName}"`);
-        } else {
-            socket.emit("serverError", `Server "${uniqueServerName}" does not exist.`);
         }
     });
 
@@ -396,7 +389,6 @@ io.on('connection', (socket) => {
         servers[uniqueServerName].members.forEach((memberUserId)=>{
             const memberSocketId = onlineUsers[memberUserId];
             if (memberSocketId && memberSocketId!==socket.id) {
-                console.log("sending users");
                 io.to(memberSocketId).emit("sendUserChangedRoom",{_id,roomName});
             }
         })
@@ -411,8 +403,6 @@ io.on('connection', (socket) => {
     })
 
     socket.on("toggleCamera",({userIdCameraToSend,senderId,isCameraOn})=>{
-        console.log(userIdCameraToSend);
-        
         userIdCameraToSend.forEach((id)=>{
             io.to(onlineUsers[id]).emit("cameraToggled",({senderId,isCameraOn}))
         })
