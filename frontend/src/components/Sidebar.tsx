@@ -40,7 +40,7 @@ const Sidebar = () => {
         }
       );
       setChannels(response.data.channels);
-      console.log(response.data);
+      console.log("data getted from channel",response.data);
     } catch (error) {
       console.log(error);
     } finally {

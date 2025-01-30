@@ -12,7 +12,7 @@ type ChannelProps = {
 };
 
 const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
-  const { singleChannel, loading } = useUserContext();
+  const { singleChannel, loading,allUser } = useUserContext();
   const [onlineAdmin, setOnlineAdmin] = useState<number>(0);
 
   const findOnlineAdmin = () => {
@@ -31,7 +31,12 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
   }, [singleChannel,onlineChannelUsers]);
 
   return (
-    <div className="w-[300px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar">
+    <div onClick={(()=>{
+      console.log("onlineChannel:",onlineChannelUsers)
+      console.log("allUser",allUser);
+      
+
+    })} className="w-[300px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <span className="text-gray-400 text-lg animate-pulse">

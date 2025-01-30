@@ -66,7 +66,7 @@ interface UserContextType {
   onlineFriends: Friend[];
   setOnlineFriends: React.Dispatch<React.SetStateAction<Friend[]>>;
   allUser: string[];
-  setAllUser: (allUser: string[]) => void;
+  setAllUser: React.Dispatch<React.SetStateAction<string[]>>;
   isCameraOn: boolean;
   setIsCameraOn: (isCameraOn: boolean) => void;
   activeRoom: string;
@@ -204,7 +204,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       socket.emit("getOnlineUser", {
         userIds: userIds,
         senderId: senderData,
-      });
+      });   
       const uniqueUsers: any[] = [];
       channels.forEach((item) => {
         item.channelUsers.forEach((data: any) => {

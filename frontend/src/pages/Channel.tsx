@@ -189,13 +189,25 @@ const Channel = () => {
     });
 
     socket.on("userJoinedChannel", (data) => {
+      console.log("user joined channel",data);
+      console.log("allUser",allUser);
+      console.log("onlinechannelUser",onlineChannelUsers);
+      
       setOnlineChannelUsers((prev) => {
-        if (!prev) {
-          return [data]; 
+        if(!prev){
+          return [prev];
         }
-        return [...prev, data]; 
+        return [...prev,data] 
       });
+      setAllUser((prev)=>{
+        if(!prev){
+          return prev;
+        }
+        return [...prev,data];
+      })
     });
+
+    
 
     return () => {
       if (socket) {
@@ -210,9 +222,10 @@ const Channel = () => {
         socket.off("userJoinedChannel");
       }
     };
-  }, [socket, user, singleChannel, onlineChannelUsers]);
+  }, [socket, user, singleChannel, onlineChannelUsers,allUser]);
 
   useEffect(() => {
+    console.log(allUser);
     socket.emit("sendChannelUsers", { allUser, senderId: user?.userId });
   }, [singleChannel]);
 

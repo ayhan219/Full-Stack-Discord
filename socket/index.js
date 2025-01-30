@@ -86,6 +86,7 @@ io.on('connection', (socket) => {
       });
 
       socket.on("sendChannelUsers",({allUser,senderId})=>{
+        
        const onlineChannelUserFromSocket = []
        
        allUser.forEach((user)=>{
@@ -197,9 +198,9 @@ io.on('connection', (socket) => {
               servers[uniqueServerName].members.push(userId);
               servers[uniqueServerName].members.map((user)=>{
                 const data = {
-                    username,
                     _id:userId,
-                    profilePic
+                    username:username,
+                    profilePic:profilePic
                 }
                 io.to(onlineUsers[user]).emit("userJoinedChannel",(data))
               })

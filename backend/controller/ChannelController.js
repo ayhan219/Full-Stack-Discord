@@ -31,8 +31,11 @@ const createChannel = async(req,res)=>{
         await findUser.save();
         await newChannel.save();
 
+        const populatedChannel = await Channel.findById(newChannel._id)
+            .populate("channelUsers", "_id username profilePic")
+
         
-        return res.status(201).json(newChannel);
+        return res.status(201).json(populatedChannel);
         
 
     } catch (error) {
@@ -209,7 +212,7 @@ const joinChannel = async (req, res) => {
   
     try {
       await addUserToChannel(userId, channelId);
-      const channel = await Channel.findById(channelId);
+      const channel = await Channel.findById(channelId).populate("channelUsers","username profilePic _id");
       return res.json(channel);
     } catch (error) {
       console.error(error);
