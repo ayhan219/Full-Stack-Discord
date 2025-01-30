@@ -159,9 +159,8 @@ const FriendChat = () => {
               {localStorage.getItem("username")}
               {
                 onlineFriends.map((item)=>(
-                  item.username === localStorage.getItem("username") ?
-                  <p className="text-xs text-green-500">online</p> :
-                  <p className="text-xs text-gray-400">offline</p>
+                  item.username === localStorage.getItem("username") &&
+                  <p className="text-xs text-green-500">online</p> 
                 ))
               }
             </h3>
