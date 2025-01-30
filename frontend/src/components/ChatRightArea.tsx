@@ -53,7 +53,7 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
               <div className="w-full">
                 {
                   onlineAdmin > 0 &&
-                  <p className="text-sm font-semibold px-3 text-[#949BA1] mb-2">
+                  <p className="text-xs font-semibold px-3 text-[#949BA1] mb-2">
                   ADMIN - {onlineAdmin}
                 </p>
                 }
@@ -74,7 +74,7 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
               {/* Member Group */}
               <div className="w-full">
                 {onlineChannelUsers.length - onlineAdmin > 0 && (
-                  <p className="text-sm font-semibold px-3 text-[#949BA1] mb-2">
+                  <p className="text-xs font-semibold px-3 text-[#949BA1] mb-2">
                     MEMBERS - {onlineChannelUsers.length - onlineAdmin}
                   </p>
                 )}
