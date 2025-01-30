@@ -20,14 +20,14 @@
 
 
   .custom-scrollbar2::-webkit-scrollbar {
-    width: 2px;  /* Scrollbar'ın genişliği */
-    height: 2px;  /* Yatay scrollbar için */
+    width: 1px;  /* Scrollbar'ın genişliği */
+    height: 1px;  /* Yatay scrollbar için */
   }
   
   /* Scrollbar'ın "thumb" kısmı (görünür kısmı) */
   .custom-scrollbar2::-webkit-scrollbar-thumb {
     background-color: #888;  /* Thumb rengi */
-    border-radius: 2px;      /* Yuvarlak köşeler */
+    border-radius: 1px;      /* Yuvarlak köşeler */
   }
   
   /* Scrollbar'ı hover ederken biraz daha koyu yapmak */
@@ -38,6 +38,9 @@
   /* Firefox için */
   .custom-scrollbar2 {
     scrollbar-width:thin;  /* Scrollbar'ı ince yapar */
-    scrollbar-color: #242424 #1E1F22;  /* Thumb rengi ve scrollbar arka planı */
+    scrollbar-color: #2F3136 #2F3136;  /* Thumb rengi ve scrollbar arka planı */
+  }
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
   }
 }

@@ -10,6 +10,7 @@ import { useUserContext } from "../context/UserContext";
 import FriendChat from "../pages/FriendChat";
 import HomeFriend from "./HomeFriend";
 import { useState } from "react";
+import "../index.css"
 
 type MenuProps ={
   activeMenu:string,
@@ -73,7 +74,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         <h3>DIRECT MESSAGES</h3>
         <GoPlus className=" text-xl cursor-pointer" />
         </div>
-        <div className="w-full h-auto flex flex-col gap-2 overflow-y-auto custom-scrollbar">
+        <div className="w-full h-[570px] flex flex-col gap-4 overflow-y-auto scrollbar-hidden">
           {
             user?.menuChat.map((item,index)=>(
               <MenuFriends key={index} item={item} setActiveMenuFriend={setActiveMenuFriend} activeMenuFriend={activeMenuFriend} />
