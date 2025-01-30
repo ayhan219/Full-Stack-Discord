@@ -36,7 +36,7 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
       console.log("allUser",allUser);
       
 
-    })} className="w-[300px] h-full bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar">
+    })} className="w-[300px] max-h-screen bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <span className="text-gray-400 text-lg animate-pulse">

@@ -189,22 +189,29 @@ const Channel = () => {
     });
 
     socket.on("userJoinedChannel", (data) => {
-      console.log("user joined channel",data);
-      console.log("allUser",allUser);
-      console.log("onlinechannelUser",onlineChannelUsers);
-      
+      console.log("user joined channel", data);
+      console.log("allUser", allUser);
+      console.log("onlinechannelUser", onlineChannelUsers);
+    
       setOnlineChannelUsers((prev) => {
-        if(!prev){
-          return [prev];
+        if (!prev) {
+          return [data];
         }
-        return [...prev,data] 
-      });
-      setAllUser((prev)=>{
-        if(!prev){
+        if (prev.some(user => user._id === data.id)) {
           return prev;
         }
-        return [...prev,data];
-      })
+        return [...prev, data];
+      });
+    
+      setAllUser((prev) => {
+        if (!prev) {
+          return [data];
+        }
+        if (prev.some(user => user === data.id)) {
+          return prev;
+        }
+        return [...prev, data];
+      });
     });
 
     

@@ -455,6 +455,24 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       })
     })
 
+    socket.on("userJoinedChannel",(data)=>{
+      console.log("usercontext userjoinedchannel works");
+      
+      setAllUser((prev) => {
+        if (!prev) {
+          return [data];
+        }
+        if (prev.some(user => user === data.id)) {
+          return prev;
+        }
+        return [...prev, data];
+      });
+      console.log("after updated",allUser);
+      
+    })
+
+      
+
     // Temizleme işlemi
     return () => {
       if (socket) {
@@ -466,6 +484,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         socket.off("ImOnline");
         socket.off("userThatDisconnected");
         socket.off("messageNotification");
+        socket.off("userJoinedChannel");
       }
     };
   }, [socket, user, onlineFriends, chattingFriend]);
