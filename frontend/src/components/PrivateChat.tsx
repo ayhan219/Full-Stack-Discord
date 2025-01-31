@@ -97,7 +97,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
     }
   };
 
-  const isOwnUser = user?.userId === item.receiverId
+  const isOwnUser = user?.userId === item.senderId
 
 
 

@@ -80,7 +80,7 @@ const MenuFriends = ({ item,setActiveMenuFriend,activeMenuFriend }: MenuFriendPr
         navigate(`/friendchat/${item._id}`);
         setActiveMenuFriend(item._id);
       }}
-      className={`w-full h-12 flex items-center px-6 gap-3 ${activeMenuFriend === item._id ? "bg-[#4c515a] text-white rounded-md" : ""}  hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all text-gray-400 hover:text-white relative group`}
+      className={`w-full h-12 flex items-center px-6 p-1 gap-3 ${activeMenuFriend === item._id ? "bg-[#4c515a] text-white rounded-md" : ""}  hover:bg-gray-600 cursor-pointer hover:rounded-lg transition-all text-gray-400 hover:text-white relative group`}
     >
       <div className="flex items-center justify-between w-full">
         <div className="flex items-center gap-3">
