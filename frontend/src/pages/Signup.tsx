@@ -2,6 +2,7 @@ import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {toast } from 'react-toastify';
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -84,14 +85,17 @@ const Signup = () => {
           }
         );
         if(response.status===200){
+          toast.success("Signup successfull!")
           navigate("/login")
         }
       } catch (error) {
+        toast.error("error while signup")
         console.log(error);
       }
-    } else {
-      alert("error");
     }
+    else{
+      toast.error("Fill all area!")
+    } 
   };
 
   return (

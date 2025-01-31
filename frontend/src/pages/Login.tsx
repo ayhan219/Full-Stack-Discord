@@ -3,6 +3,7 @@ import dcbackgroung from "../assets/discordback.png";
 import axios from "axios";
 import { useUserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
+import {toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState<string>("");
@@ -38,9 +39,11 @@ const Login = () => {
           userIds: userIds,
           senderId: senderData,
         });
+        toast.success("Login successfull!")
         navigate("/home");
       }
     } catch (error) {
+      toast.error("Error while login")
       console.log(error);
     }
   };

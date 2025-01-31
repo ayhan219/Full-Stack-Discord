@@ -9,6 +9,7 @@ import { useUserContext } from "./context/UserContext";
 import FriendChat from "./pages/FriendChat";
 import Profile from "./pages/Profile";
 import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
+import { ToastContainer } from "react-toastify";
 
 interface PrivateRouteProps {
   children: ReactNode;
@@ -34,6 +35,7 @@ function App() {
 
   return (
     <BrowserRouter>
+    <ToastContainer />
       <LiveKitRoom
         video={false}
         audio={true}
