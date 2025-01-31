@@ -74,7 +74,7 @@ const Menu = ({activeMenu,setActiveMenu}:MenuProps ) => {
         <h3>DIRECT MESSAGES</h3>
         <GoPlus className=" text-xl cursor-pointer" />
         </div>
-        <div className="w-full h-[570px] flex flex-col gap-4 overflow-y-auto custom-scrollbar2 ">
+        <div className="w-full h-[570px] flex flex-col gap-4 overflow-y-auto scrollbar-hidden ">
           {
             user?.menuChat.map((item,index)=>(
               <MenuFriends key={index} item={item} setActiveMenuFriend={setActiveMenuFriend} activeMenuFriend={activeMenuFriend} />
