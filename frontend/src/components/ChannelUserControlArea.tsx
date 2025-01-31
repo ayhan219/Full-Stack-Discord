@@ -3,10 +3,11 @@ import { ImConnection } from "react-icons/im";
 import { PiPhoneDisconnectFill } from "react-icons/pi";
 import { useUserContext } from "../context/UserContext";
 import { useRoomContext } from "@livekit/components-react";
-import { BsCameraVideoFill } from "react-icons/bs";
-import { MdScreenShare } from "react-icons/md";
+import { BsCameraVideoFill, BsCameraVideoOff, BsCameraVideoOffFill } from "react-icons/bs";
+import { MdScreenShare, MdStopScreenShare } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { LocalVideoTrack } from "livekit-client";
+
 
 interface ChannelProps {
   setIsCameraOn:(isCameraOn:boolean)=>void;
@@ -139,6 +140,7 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
   const handleShareScreen = ()=>{
     const state = !isUserSharingScreen;
     room.localParticipant.setScreenShareEnabled(state);
+    setIsUserSharingScreen(state)
   }
 
   return (
@@ -172,11 +174,17 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
       <div className="w-full h-full">
         <div className="flex text-gray-400 px-2 gap-3 ">
           <div onClick={()=>handleCameraToggle()} className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
-            <BsCameraVideoFill />
+            {
+              !isCameraOn  ?<BsCameraVideoFill /> :
+              <BsCameraVideoOffFill className="text-red-600" />
+            }
           </div>
 
           <div onClick={()=>handleShareScreen()} className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
-            <MdScreenShare />
+            {
+              !isUserSharingScreen ? <MdScreenShare />:
+              <MdStopScreenShare className="text-red-600" /> 
+            }
           </div>
         </div>
       </div>
