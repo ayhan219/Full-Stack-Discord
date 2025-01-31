@@ -30,7 +30,8 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
   } = useUserContext();
   const room = useRoomContext();
 
-  const [connectionState, setConnectionState] = useState(room.state); 
+  const [connectionState, setConnectionState] = useState(room.state);
+  const [isUserSharingScreen,setIsUserSharingScreen] = useState<boolean>(false); 
 
   const handleDisconnectFromVoice = async () => {
     setActiveRoom("chat");
@@ -135,6 +136,11 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
  
   };
 
+  const handleShareScreen = ()=>{
+    const state = !isUserSharingScreen;
+    room.localParticipant.setScreenShareEnabled(state);
+  }
+
   return (
     <div className="w-full h-24 bg-[#232428]">
       <div className="flex justify-between p-2 items-center">
@@ -169,7 +175,7 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
             <BsCameraVideoFill />
           </div>
 
-          <div className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
+          <div onClick={()=>handleShareScreen()} className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
             <MdScreenShare />
           </div>
         </div>

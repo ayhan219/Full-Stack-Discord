@@ -169,9 +169,6 @@ const Channel = () => {
       });
     });
 
-    socket.on("cameraToggled", ({ senderId, isCameraOn }) => {
-      console.log(`${senderId} is opened camera?`, isCameraOn);
-    });
 
     socket.on("kickedFromChannel", (channelId) => {
       setChannels((prev) => {
@@ -224,7 +221,6 @@ const Channel = () => {
         socket.off("onlineChannelUsers");
         socket.off("onlineAllChannelUsers");
         // socket.off("userThatDisconnected");
-        socket.off("cameraToggled");
         socket.off("kickedFromChannel");
         socket.off("userJoinedChannel");
       }
@@ -242,7 +238,7 @@ const Channel = () => {
     const tracks = useTracks(
       [
         { source: Track.Source.Camera, withPlaceholder: true },
-        // { source: Track.Source.ScreenShare, withPlaceholder: false },
+        { source: Track.Source.ScreenShare, withPlaceholder: false },
       ],
       { onlySubscribed: false }
     );
