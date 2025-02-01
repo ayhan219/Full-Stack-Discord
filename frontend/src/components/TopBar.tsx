@@ -15,7 +15,7 @@ const TopBar = ({ activeTopBarMenu, setActiveTopBarMenu }: TopBarProps) => {
   const { user } = useUserContext();
 
   return (
-    <div className="w-full h-12  bg-[#313338] px-0 md:px-10  border-b-2 border-gray-800 flex justify-center md:justify-normal">
+    <div className="w-full h-12  bg-[#313338] px-0 md:px-10  border-b-2 border-gray-800 flex justify-start sm:justify-center md:justify-normal">
       <div className="w-36 h-full text-gray-400 font-semibold hidden md:flex items-center gap-2  ">
         <FaUserFriends className="text-base md:text-3xl" />
         <h3 className="text-lg text-white">Friends</h3>

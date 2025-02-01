@@ -177,7 +177,7 @@ const BottomProfile = () => {
           </div>
 
           <div className="w-full h-14 bg-[#232428] rounded-b-lg flex items-center justify-between px-6 py-3">
-            <h3 className="text-gray-400 font-semibold text-xs  md:text-base">Logout</h3>
+            <h3 className="text-gray-400 font-semibold">Logout</h3>
             <IoLogOutSharp
               onClick={handleLogout}
               className="text-red-600 text-xl md:text-2xl cursor-pointer hover:scale-110 hover:text-red-800 transition-all duration-200 ease-in-out"
