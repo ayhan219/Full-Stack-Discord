@@ -13,9 +13,6 @@ interface Member {
   profilePic: string;
 }
 
-
-
-
 interface ChannelGeneralSettingsAreaProps {
   setOpenChannelGeneralSettingsArea: (isOpen: boolean) => void;
 }
@@ -147,36 +144,41 @@ const ChannelGeneralSettingsArea = ({
     }
   };
 
-  const kickUserFromChannel = async(kickUserId:string)=>{
+  const kickUserFromChannel = async (kickUserId: string) => {
     try {
-      const channelId = singleChannel?._id
-      const response = await axios.delete("http://localhost:5000/api/channel/kickuser",{
-        data:{
-          channelId:channelId,
-          userId:user?.userId,
-          kickUserId:kickUserId
+      const channelId = singleChannel?._id;
+      const response = await axios.delete(
+        "http://localhost:5000/api/channel/kickuser",
+        {
+          data: {
+            channelId: channelId,
+            userId: user?.userId,
+            kickUserId: kickUserId,
+          },
         }
-      })
-      if(response.status===200){
-        setSingleChannel((prev)=>{
-          if(!prev){
+      );
+      if (response.status === 200) {
+        setSingleChannel((prev) => {
+          if (!prev) {
             return prev;
           }
           return {
             ...prev,
-            channelUsers: prev.channelUsers.filter((item: Member) => item._id !== kickUserId),
+            channelUsers: prev.channelUsers.filter(
+              (item: Member) => item._id !== kickUserId
+            ),
           };
-          
-        })
-        socket.emit("userKickedFromChannel",{channelId,kickUserId,channelName:singleChannel?.channelName})
+        });
+        socket.emit("userKickedFromChannel", {
+          channelId,
+          kickUserId,
+          channelName: singleChannel?.channelName,
+        });
       }
-      
-      
     } catch (error) {
       console.log(error);
-      
     }
-  }
+  };
 
   const initials = singleChannel?.channelName
     .split(" ")
@@ -186,13 +188,15 @@ const ChannelGeneralSettingsArea = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
-      <div className="w-[90%] max-w-[800px] h-[90%] bg-[#23272A] rounded-2xl shadow-lg flex overflow-hidden">
-        <div className="w-1/4 bg-[#2C2F33] flex flex-col p-4">
-          <h2 className="text-lg font-bold text-white mb-6">Settings</h2>
+      <div className="w-[80%] md:w-[90%] max-w-[800px] h-[90%] bg-[#23272A] rounded-2xl shadow-lg flex overflow-hidden">
+        <div className="w-1/4 bg-[#2C2F33] flex flex-col p-2 md:p-4">
+          <h2 className="text-xs md:text-lg font-bold text-white mb-6">
+            Settings
+          </h2>
           <nav className="space-y-3">
             <button
               onClick={() => setChannelGeneralSettings("overview")}
-              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
+              className={`w-full text-left py-2 px-1 md:px-4 bg-[#40444B] rounded-lg !text-xs !md:text-xl ${
                 channelGeneralSettings === "overview" &&
                 "bg-blue-700 text-white"
               } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
@@ -201,7 +205,7 @@ const ChannelGeneralSettingsArea = ({
             </button>
             <button
               onClick={() => setChannelGeneralSettings("members")}
-              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
+              className={`w-full text-left py-2 px-1 md:px-4 bg-[#40444B] rounded-lg !text-xs !md:text-xl ${
                 channelGeneralSettings === "members" && "bg-blue-700 text-white"
               } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
             >
@@ -209,27 +213,18 @@ const ChannelGeneralSettingsArea = ({
             </button>
             <button
               onClick={() => setChannelGeneralSettings("roles")}
-              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
+              className={`w-full text-left py-2 px-1 md:px-4 bg-[#40444B] rounded-lg !text-xs !md:text-xl ${
                 channelGeneralSettings === "roles" && "bg-blue-700 text-white"
               } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
             >
               Roles
-            </button>
-            <button
-              onClick={() => setChannelGeneralSettings("integrations")}
-              className={`w-full text-left py-2 px-4 bg-[#40444B] rounded-lg text-sm ${
-                channelGeneralSettings === "integrations" &&
-                "bg-blue-700 text-white"
-              } text-gray-300 hover:bg-[#5865F2] hover:text-white`}
-            >
-              Integrations
             </button>
           </nav>
         </div>
 
         <div className="w-3/4 bg-[#36393F] flex flex-col">
           <div className="flex justify-between items-center p-4 border-b border-gray-700">
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-sm md:text-xl font-semibold text-white">
               Channel {channelGeneralSettings}
             </h2>
             <IoMdCloseCircle
@@ -239,16 +234,16 @@ const ChannelGeneralSettingsArea = ({
           </div>
           {channelGeneralSettings === "overview" && (
             <>
-              <div className="flex  p-6">
-                <div className="relative group flex ">
+              <div className="md:flex  p-2 md:p-6">
+                <div className="relative group flex justify-center  ">
                   {singleChannel?.channelPic ? (
                     <img
-                      className="w-32 h-32 rounded-full border-4 shadow-lg border-gray-600  transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl"
+                      className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 shadow-lg border-gray-600  transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl"
                       src={`http://localhost:5000${singleChannel?.channelPic}`}
                       alt="Channel"
                     />
                   ) : (
-                    <div className="w-32 h-32 rounded-full bg-white flex items-center justify-center shadow-md transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl">
+                    <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-white flex items-center justify-center shadow-md transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl">
                       <p className="text-black font-bold text-2xl">
                         {initials}
                       </p>
@@ -273,7 +268,7 @@ const ChannelGeneralSettingsArea = ({
                   className="hidden"
                 />
 
-                <div className="text-xs w-48 p-4 text-gray-400">
+                <div className="text-xs w-48 text-center md:text-start p-4 text-gray-400">
                   <p>
                     We recommended an image of at least 512x512 for the channel
                   </p>
@@ -281,10 +276,10 @@ const ChannelGeneralSettingsArea = ({
                     Click to the image for change channel picture
                   </p>
                 </div>
-                <div className="p-4">
+                <div className="p-4 ">
                   <p className="text-[#A9B6C1] text-sm">SERVER NAME</p>
                   <input
-                    className="w-52 h-10 bg-[#1E1F22] outline-none text-white px-2"
+                    className="w-40 md:w-52 h-10 bg-[#1E1F22] outline-none text-white px-2"
                     placeholder={singleChannel?.channelName}
                     type="text"
                   />
@@ -335,28 +330,32 @@ const ChannelGeneralSettingsArea = ({
               {singleChannel?.channelUsers.map((member: Member) => (
                 <div
                   key={member._id}
-                  className="w-full flex items-center gap-4 p-3 justify-between  rounded-lg  transition-shadow"
+                  className="w-full flex items-center gap-4 p-2 justify-between  rounded-lg  transition-shadow"
                 >
                   <div className="flex gap-2 items-center">
                     <img
-                      className="w-12 h-12 rounded-full object-cover  "
+                      className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover  "
                       src={`http://localhost:5000${member.profilePic}`}
                       alt={`${member.username}'s profile`}
                     />
                     <div className="flex flex-col">
-                      <p className="text-base font-semibold text-white">
+                      <p className="text-xs md:text-base font-semibold text-white">
                         {member.username}
                       </p>
-                      <p className="text-sm text-gray-500">Member</p>
+                      <p className="text-xs md:text-sm text-gray-500">Member</p>
                     </div>
                   </div>
 
-                  {
-                    !singleChannel.admin.includes(member._id) &&
-                    <div onClick={()=>kickUserFromChannel(member._id)} className="flex flex-col items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded-lg shadow-md transition-all cursor-pointer">
-                    <p className="text-sm font-medium">Kick User</p>
-                  </div>
-                  }
+                  {!singleChannel.admin.includes(member._id) && (
+                    <div
+                      onClick={() => kickUserFromChannel(member._id)}
+                      className="w-14 h-10 md:w-16 md:h-12 flex flex-col justify-center items-center gap-2  bg-gray-600 hover:bg-red-700 text-white px-3 py-2 rounded-xl shadow-lg transition-all duration-300 cursor-pointer transform hover:scale-105"
+                    >
+                      <p className="text-xs md:text-sm font-medium">
+                        Kick
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -371,16 +370,16 @@ const ChannelGeneralSettingsArea = ({
                 </p>
               </div>
 
-              <div className="w-full flex p-4 gap-4">
+              <div className="w-full flex flex-col md:flex md:flex-row items-center md:items-start p-4 gap-4">
                 <div className="relative flex-1">
                   <input
-                    className="w-full h-12 bg-[#1E1F22] outline-none rounded-md px-4 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-blue-500"
+                    className="w-full h-12 placeholder:text-xs md:placeholder:text-base bg-[#1E1F22] outline-none rounded-md px-4 text-gray-300 placeholder-gray-500 focus:ring-2 focus:ring-blue-500"
                     placeholder="Search role"
                     type="text"
                   />
-                  <CiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-2xl text-gray-400 cursor-pointer hover:text-gray-200" />
+                  <CiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-base md:text-2xl text-gray-400 cursor-pointer hover:text-gray-200" />
                 </div>
-                <button className="bg-[#5865F2] w-32 h-12 rounded-md text-sm font-medium text-white hover:bg-[#4a55c1] transition-all duration-200">
+                <button className="bg-[#5865F2] w-24 h-10 md:w-32 md:h-12 rounded-md text-sm font-medium text-white hover:bg-[#4a55c1] transition-all duration-200">
                   Create Role
                 </button>
               </div>
@@ -391,11 +390,11 @@ const ChannelGeneralSettingsArea = ({
               </div>
 
               <div className="w-full">
-                <div className="w-full px-5 py-4 flex justify-between text-sm font-semibold text-red-500 bg-[#292B2F] rounded-md mt-4 shadow">
+                <div className="w-full px-5 py-4 flex justify-between text-xs md:text-sm font-semibold text-red-500 bg-[#292B2F] rounded-md mt-4 shadow">
                   <span>ADMIN</span>
                   <p>{singleChannel?.admin.length}</p>
                 </div>
-                <div className="w-full px-5 py-4 flex justify-between text-sm font-semibold text-blue-500 bg-[#292B2F] rounded-md mt-4 shadow">
+                <div className="w-full px-5 py-4 flex justify-between text-xs md:text-sm font-semibold text-blue-500 bg-[#292B2F] rounded-md mt-4 shadow">
                   <span>DEFAULT</span>
                   <p>{singleChannel?.channelUsers.length}</p>
                 </div>
