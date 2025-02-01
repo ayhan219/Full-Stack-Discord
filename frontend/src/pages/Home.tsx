@@ -108,7 +108,7 @@ const Home = ({isAreaOpen,setIsAreaOpen}:HomeProps) => {
             </div>
           )}
           {activeTopBarMenu === "all" && (
-            <div className="w-full h-[calc(100%-60px)] p-4  overflow-y-auto  custom-scrollbar flex flex-col gap-2 ">
+            <div className="w-full h-[calc(100%-60px)] p-8  overflow-y-auto  custom-scrollbar flex flex-col gap-2 ">
               {activeMenu === "friends" &&
                 (user?.friends && user?.friends.length > 0 ? (
                   user?.friends.map((item, index) => (
