@@ -30,13 +30,14 @@ const BottomProfile = () => {
       );
       if (response.status === 200) {
         const userIds = user?.friends.map((friend: any) => friend);
-        console.log(userIds);
 
         socket.emit("userDisconnected", {
           userIds: userIds,
           senderId: user?.userId,
         });
         setUser(null);
+        setTurnHeadOff(false);
+        setTurnMicOff(false);
 
         
         window.location.reload();
