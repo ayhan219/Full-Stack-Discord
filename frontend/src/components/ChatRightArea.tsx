@@ -33,7 +33,7 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
   }, [singleChannel,onlineChannelUsers]);
 
   return (
-    <div className={`${openChannelMemberArea ? "w-[200px] md:w-[300px]" : "w-[20px] bg-[#33343a] md:bg-[#2B2D31]  md:w-[300px]"} h-full flex max-h-screen bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar absolute md:static right-0 transition-all duration-200 ease-in-out`}>
+    <div className={`${openChannelMemberArea ? "w-[200px] md:w-[300px]" : "w-[20px] bg-[#33343a] md:bg-[#2B2D31]  md:w-[300px] overflow-y-hidden"} h-full flex max-h-screen bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar absolute md:static right-0 transition-all duration-200 ease-in-out`}>
       <div onClick={()=>setOpenChannelMemberArea(true)} className={`w-full flex ${!openChannelMemberArea ? "flex":"hidden" } justify-center pt-3 cursor-pointer md:hidden`}>
       <FaArrowLeft />
       </div>
