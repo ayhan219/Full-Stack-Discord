@@ -2,7 +2,7 @@
 
 # 🌍 Still have some bugs(fixing) 
 
-This project is a **Discord Clone** developed using **React**, **TypeScript**, **Node.js**, **Express.js**, **Socket.IO**, and **LiveKit** for voice communication. The app allows users to chat in real-time, join voice channels, and send direct messages, simulating a Discord-like experience.
+This project is a **Discord Clone** developed using **React**, **TypeScript**, **Node.js**, **Express.js**, **MongoDB**, **Socket.IO**, and **LiveKit** for voice communication. The app allows users to chat in real-time, join voice channels, and send direct messages, simulating a Discord-like experience.
 
 ## Features
 
