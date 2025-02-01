@@ -3,15 +3,17 @@ import { FaHashtag } from "react-icons/fa6";
 import { useUserContext } from "../context/UserContext";
 
 type ChannelChatItemProps={
-chatName:string
+chatName:string;
+setIsAreaOpen:(data:boolean)=>void;
 }
 
-const ChannelChatItem = ({chatName}:ChannelChatItemProps) => {
+const ChannelChatItem = ({chatName,setIsAreaOpen}:ChannelChatItemProps) => {
 
   const {setSelectedChatRoom,setActiveRoom} = useUserContext();
 
   const handleSelectedRoom = ()=>{
     setSelectedChatRoom(chatName);
+    setIsAreaOpen(false);
     setActiveRoom("chat")
     
   }

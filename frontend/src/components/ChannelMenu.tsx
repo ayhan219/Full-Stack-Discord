@@ -93,7 +93,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom,isAreaOp
 
               <div className="w-full h-auto flex flex-col gap-5">
                 {singleChannel?.chatChannel.map((item, index) => (
-                  <ChannelChatItem key={index} chatName={item.roomName} />
+                  <ChannelChatItem key={index} chatName={item.roomName} setIsAreaOpen={setIsAreaOpen} />
                 ))}
               </div>
 
