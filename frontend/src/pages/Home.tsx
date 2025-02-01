@@ -8,7 +8,12 @@ import { useEffect, useState } from "react";
 import AddFriendMenu from "../components/AddFriendMenu";
 import PendingFriend from "../components/PendingFriend";
 
-const Home = () => {
+interface HomeProps {
+  isAreaOpen:boolean;
+  setIsAreaOpen:(isAreaOpen:boolean)=>void;
+}
+
+const Home = ({isAreaOpen,setIsAreaOpen}:HomeProps) => {
   const {
     user,
     activeMenu,
@@ -28,10 +33,10 @@ const Home = () => {
   },[])
 
   return (
-    <div className="w-full h-screen flex bg-[#313338]">
-      <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+    <div className={`w-full h-screen flex bg-[#313338]`}>
+      <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
       {activeMenu === "friends" && (
-        <div className="w-[70%] flex flex-col ">
+        <div className="w-full md:w-[70%] flex flex-col px-10 md:px-0">
           <TopBar
             activeTopBarMenu={activeTopBarMenu}
             setActiveTopBarMenu={setActiveTopBarMenu}

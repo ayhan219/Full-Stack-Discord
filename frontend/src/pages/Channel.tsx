@@ -23,7 +23,12 @@ interface ChannelUser {
   profilePic: string;
 }
 
-const Channel = () => {
+interface ChannelProps {
+  isAreaOpen:boolean;
+  setIsAreaOpen:(isAreaOpen:boolean)=>void;
+}
+
+const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
   const {
     user,
     token,
@@ -186,9 +191,6 @@ const Channel = () => {
     });
 
     socket.on("userJoinedChannel", (data) => {
-      console.log("user joined channel", data);
-      console.log("allUser", allUser);
-      console.log("onlinechannelUser", onlineChannelUsers);
     
       setOnlineChannelUsers((prev) => {
         if (!prev) {
@@ -228,7 +230,6 @@ const Channel = () => {
   }, [socket, user, singleChannel, onlineChannelUsers,allUser]);
 
   useEffect(() => {
-    console.log(allUser);
     socket.emit("sendChannelUsers", { allUser, senderId: user?.userId });
   }, [singleChannel]);
 
@@ -256,12 +257,14 @@ const Channel = () => {
   }
 
   return (
-    <div className="w-full flex bg-[#313338]" key={channelId}>
+    <div className="w-full flex  bg-[#313338] justify-center md:justify-between " key={channelId}>
       <ChannelMenu
         setIsCameraOn={setIsCameraOn}
         isCameraOn={isCameraOn}
         setActiveRoom={setActiveRoom}
         activeRoom={activeRoom}
+        isAreaOpen={isAreaOpen}
+        setIsAreaOpen={setIsAreaOpen}
       />
 
       {/* {

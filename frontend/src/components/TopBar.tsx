@@ -15,14 +15,14 @@ const TopBar = ({ activeTopBarMenu, setActiveTopBarMenu }: TopBarProps) => {
   const { user } = useUserContext();
 
   return (
-    <div className="w-full h-12  bg-[#313338] px-7  border-b-2 border-gray-800 flex">
-      <div className="w-36 h-full text-gray-400 font-semibold flex items-center gap-3 ">
-        <FaUserFriends className="text-3xl" />
+    <div className="w-full h-12  bg-[#313338] px-0 md:px-10  border-b-2 border-gray-800 flex justify-center md:justify-normal">
+      <div className="w-36 h-full text-gray-400 font-semibold hidden md:flex items-center gap-2  ">
+        <FaUserFriends className="text-base md:text-3xl" />
         <h3 className="text-lg text-white">Friends</h3>
         <div className="w-[0.13px] h-[40%] bg-gray-300"></div>
       </div>
-      <div className=" w-[70%] md:w-full h-full px-3 flex">
-        <div className="text-gray-400 font-semibold hidden md:flex items-center cursor-pointer gap-7 text-base ">
+      <div className=" w-[70%] md:w-full h-full px-0 md:px-3 flex ">
+        <div className="text-gray-400 font-semibold flex items-center cursor-pointer gap-1 md:gap-10 text-xs md:text-base ">
           <div className="flex items-center">
             <a
               onClick={() => handleActiveMenu("online")}
@@ -66,19 +66,6 @@ const TopBar = ({ activeTopBarMenu, setActiveTopBarMenu }: TopBarProps) => {
             </a>
           </div>
 
-          <div className="flex items-center">
-            <a
-              onClick={() => handleActiveMenu("suggestions")}
-              className={`px-2 py-1 text-center flex items-center gap-2 ${
-                activeTopBarMenu === "suggestions" &&
-                " bg-[#44474d] rounded-sm text-white"
-              }`}
-            >
-              Suggestions
-              
-            </a>
-          </div>
-
           <a
             onClick={() => handleActiveMenu("blocked")}
             className={`px-2 py-1 text-center ${
@@ -91,7 +78,7 @@ const TopBar = ({ activeTopBarMenu, setActiveTopBarMenu }: TopBarProps) => {
           <div className="w-auto h-auto">
             <button
               onClick={() => handleActiveMenu("addfriend")}
-              className="bg-green-800 w-24 h-8 rounded-lg text-white"
+              className="bg-green-800 w-16 md:w-24 h-8  rounded-lg text-white"
             >
               Add Friend
             </button>

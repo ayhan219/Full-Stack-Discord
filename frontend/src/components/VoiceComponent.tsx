@@ -38,18 +38,18 @@ const VoiceComponent = ({ item, roomName }: UserProps) => {
   return (
     <div className="w-full flex flex-col space-y-2">
       <div className="flex items-center px-2 gap-4 rounded-lg transition-colors duration-300">
-        <div className="flex items-center gap-3 w-full justify-between">
+        <div className="flex items-center gap-1 md:gap-3 w-full justify-between">
           <img
-            className={`w-7 h-7 rounded-full border-2 ${
+            className={`w-5 h-5 md:w-7 md:h-7 rounded-full border-2 ${
               isSpeaking ? "border-green-500 border-2" : "border-blue-500"
             }`}
             src={`http://localhost:5000${item.profilePic}`}
             alt={`${item.username}'s profile`}
           />
-          <div className="flex w-full justify-between px-1">
-            <p className="text-white font-semibold text-sm">{item.username}</p>
+          <div className="flex w-full justify-between px-0 md:px-1">
+            <p className="text-white font-semibold text-xs md:text-sm">{item.username}</p>
             {isCurrentUser && (
-              <div className="flex gap-2 items-center text-sm">
+              <div className="flex gap-1 md:gap-2 items-center text-xs md:text-sm">
                 {!turnMicOff ? (
                   <FaMicrophone />
                 ) : (

@@ -148,23 +148,23 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
       <div className="flex justify-between p-2 items-center">
         <div>
           <div className="flex text-green-500 items-center gap-2">
-            <ImConnection className="text-xl" />
+            <ImConnection className="text-sm md:text-xl" />
             {connectionState === "connected" && (
-              <p className="text-green-500">Voice Connected</p>
+              <p className="text-green-500 text-xs md:text-base">Voice Connected</p>
             )}
             {connectionState === "connecting" && (
-              <p className="text-orange-500">Connecting...</p>
+              <p className="text-orange-500 text-xs md:text-base">Connecting...</p>
             )}
             {connectionState === "disconnected" && (
-              <p className="text-red-500">Disconnected</p>
+              <p className="text-red-500 text-xs md:text-base">Disconnected</p>
             )}
             {connectionState === "reconnecting" && (
-              <p className="text-blue-500">Connecting...</p>
+              <p className="text-blue-500 text-xs md:text-base">Connecting...</p>
             )}
           </div>
-          <p className="text-[#9C9A8E] px-1 text-sm">{voiceRoomName}</p>
+          <p className="text-[#9C9A8E] px-1 text-xs md:text-sm">{voiceRoomName}</p>
         </div>
-        <div className="pr-2 text-2xl text-red-600 cursor-pointer">
+        <div className="pr-2 text-base md:text-2xl text-red-600 cursor-pointer">
           <PiPhoneDisconnectFill onClick={() => {
             handleDisconnectFromVoice();
             setIsCameraOn(false)
@@ -175,15 +175,15 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
         <div className="flex text-gray-400 px-2 gap-3 ">
           <div onClick={()=>handleCameraToggle()} className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
             {
-              !isCameraOn  ?<BsCameraVideoFill /> :
-              <BsCameraVideoOffFill className="text-red-600" />
+              !isCameraOn  ?<BsCameraVideoFill className="text-base" /> :
+              <BsCameraVideoOffFill className="text-red-600 text-base " />
             }
           </div>
 
           <div onClick={()=>handleShareScreen()} className="w-10 h-8 bg-[#2B2D31] cursor-pointer rounded-md text-xl flex items-center justify-center">
             {
-              !isUserSharingScreen ? <MdScreenShare />:
-              <MdStopScreenShare className="text-red-600" /> 
+              !isUserSharingScreen ? <MdScreenShare className="text-base" />:
+              <MdStopScreenShare className="text-red-600 text-base" /> 
             }
           </div>
         </div>

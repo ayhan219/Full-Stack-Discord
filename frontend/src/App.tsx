@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
@@ -32,6 +32,7 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
 function App() {
   const { user, token,setConnectedToVoice,setHandleDisconnect } = useUserContext();
   const serverUrl = "wss://discord-clone-6tnm5nqn.livekit.cloud";
+  const [isAreaOpen,setIsAreaOpen] = useState<boolean>(false);
 
   return (
     <BrowserRouter>
@@ -47,7 +48,7 @@ function App() {
       >
         <RoomAudioRenderer />
         <div className="flex">
-          {user && <Sidebar />}
+          {user && <Sidebar isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />}
           <Routes>
             <Route
               path="/signup"
@@ -71,7 +72,7 @@ function App() {
               path="/channel/:id"
               element={
                 <PrivateRoute>
-                  <Channel />
+                  <Channel isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
                 </PrivateRoute>
               }
             />
@@ -79,7 +80,7 @@ function App() {
               path="/home"
               element={
                 <PrivateRoute>
-                  <Home />
+                  <Home isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
                 </PrivateRoute>
               }
             />

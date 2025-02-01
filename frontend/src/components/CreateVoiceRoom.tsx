@@ -11,19 +11,26 @@ interface ChatChannel {
   messages: string[];
 }
 
-interface VoiceChannel {
-  voiceRoomName: string;
-  voiceUsers: string[]; 
-  _id: string;
-}
-
 interface SingleChannel {
   _id: string;
   channelName: string;
   chatChannel: ChatChannel[];
   voiceChannel: VoiceChannel[];
-  admin:string[],
-  channelUsers: [];
+  admin: string[];
+  channelUsers: VoiceUser[];
+  channelPic: string;
+}
+
+type VoiceUser = {
+  _id: string;
+  username: string;
+  profilePic: string;
+};
+
+interface VoiceChannel {
+  voiceRoomName: string;
+  voiceUsers: VoiceUser[];
+  _id: string;
 }
 
 
@@ -67,7 +74,7 @@ const CreateVoiceRoom = () => {
 
     
   return (
-    <div className="absolute inset-0 bg-opacity-60 z-10 bg-black flex justify-center items-center">
+    <div className="absolute inset-0 bg-opacity-60 z-50 bg-black flex justify-center items-center">
       <div className="w-[500px] bg-[#2c2f33] rounded-lg shadow-lg relative">
         <div className="bg-[#202225] p-4 rounded-t-lg flex justify-between items-center">
                   <h2 className="text-white text-lg font-semibold">Enter room name</h2>

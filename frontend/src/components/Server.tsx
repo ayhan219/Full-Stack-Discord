@@ -59,11 +59,11 @@ const Server = ({
           setActiveMenuFriend(item._id)
         }}
         to={`/channel/${item._id}`}
-        className="w-14 h-14 rounded-full bg-white flex items-center justify-center cursor-pointer relative"
+        className="w-11 h-11 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center cursor-pointer relative"
       >
         {
           item.channelPic !== "" ?
-          <img className="w-14 h-14 rounded-full" src={`http://localhost:5000${item.channelPic}`} alt="" /> :
+          <img className="w-11 h-11  md:w-14 md:h-14 rounded-full" src={`http://localhost:5000${item.channelPic}`} alt="" /> :
           <p className="text-black font-bold text-lg">{initials}</p>
         }
         

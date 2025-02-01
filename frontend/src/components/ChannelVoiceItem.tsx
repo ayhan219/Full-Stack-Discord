@@ -39,15 +39,21 @@ interface VoiceChannel {
   _id: string;
 }
 
+interface VoiceChannel {
+  voiceRoomName: string;
+  voiceUsers: VoiceUser[];
+  _id: string;
+}
+
 interface SingleChannel {
   _id: string;
   channelName: string;
   chatChannel: ChatChannel[];
   voiceChannel: VoiceChannel[];
-  admin:string[],
-  channelUsers: [];
+  admin: string[];
+  channelUsers: VoiceUser[];
+  channelPic: string;
 }
-
 
 const ChannelVoiceItem = ({
   item,activeRoom,setActiveRoom
@@ -152,9 +158,9 @@ const ChannelVoiceItem = ({
   className="w-full h-auto text-gray-400 flex flex-col items-start gap-2 px-7 py-1 rounded-lg hover:text-white hover:bg-gray-700 cursor-pointer transition-all"
 >
   <div className="w-full flex items-center gap-4">
-    <HiMiniSpeakerWave className="text-2xl" />
-    <p className="font-semibold text-md">{item.voiceRoomName}</p>
-    <p>{item.voiceUsers.length}/10</p>
+    <HiMiniSpeakerWave className="text-sm md:text-2xl" />
+    <p className="font-semibold text-sm md:text-md">{item.voiceRoomName}</p>
+    <p className="text-xs md:text-base">{item.voiceUsers.length}/10</p>
   </div>
   
   {singleChannel?.voiceChannel

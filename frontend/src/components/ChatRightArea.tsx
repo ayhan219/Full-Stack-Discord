@@ -2,6 +2,7 @@ import { useUserContext } from "../context/UserContext";
 import ChannelMember from "./ChannelMember";
 import "../index.css";
 import { useEffect, useState } from "react";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 type ChannelProps = {
   onlineChannelUsers: {
@@ -14,6 +15,7 @@ type ChannelProps = {
 const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
   const { singleChannel, loading,allUser } = useUserContext();
   const [onlineAdmin, setOnlineAdmin] = useState<number>(0);
+  const [openChannelMemberArea,setOpenChannelMemberArea] = useState<boolean>(false);
 
   const findOnlineAdmin = () => {
     var count = 0;
@@ -31,23 +33,23 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
   }, [singleChannel,onlineChannelUsers]);
 
   return (
-    <div onClick={(()=>{
-      console.log("onlineChannel:",onlineChannelUsers)
-      console.log("allUser",allUser);
-      
-
-    })} className="w-[300px] max-h-screen bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar">
+    <div className={`${openChannelMemberArea ? "w-[200px] md:w-[300px]" : "w-[20px] bg-[#33343a] md:bg-[#2B2D31]  md:w-[300px]"} h-full flex max-h-screen bg-[#2B2D31] shadow-lg rounded-lg overflow-hidden overflow-y-auto custom-scrollbar absolute md:static right-0 transition-all duration-200 ease-in-out`}>
+      <div onClick={()=>setOpenChannelMemberArea(true)} className={`w-full flex ${!openChannelMemberArea ? "flex":"hidden" } justify-center pt-3 cursor-pointer md:hidden`}>
+      <FaArrowLeft />
+      </div>
+      <div onClick={()=>setOpenChannelMemberArea(false)} className={`w-full flex ${!openChannelMemberArea ? "hidden":"flex" } justify-center pt-3 cursor-pointer md:hidden absolute right-0`}>
+      <FaArrowRight />
+      </div>
+      <div className={`${openChannelMemberArea ? "flex" : "hidden"}hidden md:flex flex-col`}>
       {loading ? (
-        <div className="flex items-center justify-center w-full h-full">
-          <span className="text-gray-400 text-lg animate-pulse">
-            Loading...
-          </span>
+        <div className="flex items-center justify-center text-center w-full h-full">
+  
         </div>
       ) : (
         <>
           {/* Online Members */}
-          <div className="p-3  rounded-lg">
-            <h4 className="text-gray-400 text-sm font-medium mb-4">Online</h4>
+          <div className="p-4 rounded-lg">
+            <h4 className="text-gray-400 text-xs md:text-sm font-medium mb-4">Online</h4>
             <div className="space-y-6">
               {/* Admin Group */}
               <div className="w-full">
@@ -115,6 +117,7 @@ const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 };

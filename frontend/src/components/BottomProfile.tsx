@@ -54,18 +54,18 @@ const BottomProfile = () => {
       <div className="w-full h-full flex justify-between items-center">
         <div className="flex gap-3 items-center relative">
           <img
-            className="w-10 h-10 rounded-full border-2 border-gray-600"
+            className="w-7 h-7 md:w-10 md:h-10 rounded-full border-2 border-gray-600"
             src={`http://localhost:5000${user?.profilePic}`}
             alt="user-avatar"
           />
-          <div className="w-3 h-3 rounded-full bg-green-700 absolute left-7 bottom-0 "></div>
+          <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-700 absolute left-5 bottom-[0.15rem] md:left-7 md:bottom-0 "></div>
           <div>
-          <p className="text-white text-base font-medium">{user?.username}</p>
-          <p className="text-xs text-green-500">online</p>
+          <p className="text-white text-xs md:text-base font-medium">{user?.username}</p>
+          <p className="text-xs  text-green-500">online</p>
           </div>
         </div>
 
-        <div className="flex text-white text-base gap-4 items-center">
+        <div className="flex text-white text-xs md:text-base gap-2 md:gap-4 items-center">
           {/* Microphone Button */}
           <div
             onClick={() => {

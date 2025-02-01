@@ -42,7 +42,7 @@ const AddFriendMenu = () => {
     <div className="w-full h-full bg-[#313338]">
       <div className="w-auto h-auto text-[#E8EAEB] flex flex-col gap-2 p-6">
         <h3 className="font-bold">ADD FRIEND</h3>
-        <p className="text-sm text-[#969BA1]">
+        <p className=" text-xs md:text-sm text-[#969BA1]">
           You can add friends with their Discord username.
         </p>
       </div>
@@ -51,13 +51,13 @@ const AddFriendMenu = () => {
           <input
             onChange={(e) => setFriendName(e.target.value)}
             value={friendName}
-            className={`flex-grow bg-transparent outline-none text-white p-3`}
+            className={`flex-grow bg-transparent outline-none placeholder:text-xs text-white p-3`}
             placeholder="Enter friend's username"
             type="text"
           />
           <button
             onClick={handleAddFriend}
-            className={`w-40 h-8 text-white rounded-md ${
+            className={`w-40 h-8 text-white rounded-md !text-xs !md:text-base ${
               isSuccess === true
                 ? "bg-green-500"
                 : isSuccess === false
@@ -65,7 +65,7 @@ const AddFriendMenu = () => {
                 : "bg-blue-600"
             }`}
           >
-            Send friend request
+            Send
           </button>
         </div>
       </div>

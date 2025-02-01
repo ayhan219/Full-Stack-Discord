@@ -19,9 +19,11 @@ interface ChannelProps {
   isCameraOn:boolean;
   activeRoom:string;
   setActiveRoom:(activeRoom:string)=>void;
+  isAreaOpen:boolean;
+  setIsAreaOpen:(isAreaOpen:boolean)=>void;
 }
 
-const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:ChannelProps) => {
+const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom,isAreaOpen,setIsAreaOpen}:ChannelProps) => {
   const {
     singleChannel,
     setOpenCreateRoom,
@@ -49,8 +51,9 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
   
 
   return (
-    <>
-      <div className="w-[270px] h-screen bg-[#2B2D31] flex flex-col relative">
+    <><div  className={`w-[170px] md:w-[270px] h-full bg-[#2B2D31] ${!isAreaOpen ? "opacity-0 invisible md:visible md:opacity-100" : "opacity-100 visible" } absolute z-20 md:static left-[4.4rem] md:flex flex-col transition-all duration-200 ease-in-out`}>
+
+        <div className="flex flex-col w-full h-full gap-2 relative transform hover:scale-100">
         {loading ? (
           <div className="flex items-center justify-center w-full h-full">
             <div className="flex flex-col items-center">
@@ -61,7 +64,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
         ) : (
           <>
             <div className="w-full h-16 flex items-center border-b border-gray-800 justify-between px-5">
-              <div className="font-bold text-[#D6D9DC] text-xl  ">
+              <div className="font-bold text-[#D6D9DC] text-base md:text-xl  ">
                 {singleChannel?.channelName}
               </div>
               {user?.userId === singleChannel?.admin[0] && (
@@ -77,7 +80,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
             </div>
             <div className="w-full h-auto">
               <div className="w-full text-gray-400 flex items-center justify-between p-5 font-bold">
-                <p className="hover:text-gray-200 cursor-pointer">
+                <p className="hover:text-gray-200 text-sm md:text-base cursor-pointer">
                   Chat Channel
                 </p>
                 {user?.userId === singleChannel?.admin[0] && (
@@ -95,7 +98,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
               </div>
 
               <div className="w-full text-gray-400 flex items-center justify-between p-5 font-bold mt-5">
-                <p className="hover:text-gray-200 cursor-pointer">
+                <p className="hover:text-gray-200 text-sm md:text-base cursor-pointer">
                   Voice Channel
                 </p>
                 {user?.userId === singleChannel?.admin[0] && (
@@ -116,9 +119,9 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
               <div className="w-full max-w-md h-auto bg-[#313338] absolute top-0 rounded-lg shadow-2xl overflow-hidden">
               {/* Header Section */}
               <div className="w-full p-4 bg-[#2D2F33] border-b border-gray-700 flex items-center justify-between">
-                <h2 className="text-white text-xl font-semibold">Channel Settings</h2>
+                <h2 className="text-white text-sm md:text-xl font-semibold">Channel Settings</h2>
                 <button onClick={()=>setOpenChannelSettingArea(!openChannelSettingArea)} className="p-2 rounded-lg hover:bg-gray-600 transition">
-                  <CiSettings className="text-white text-2xl" />
+                  <CiSettings className="text-white text-xl md:text-2xl" />
                 </button>
               </div>
             
@@ -128,16 +131,16 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
                   setOpenChannelGeneralSettingsArea(true)
                   setOpenChannelSettingArea(false)
                 }} className="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-[#2D2F33] p-3 rounded-lg cursor-pointer transition">
-                  <CiSettings className="text-2xl" />
-                  <p className="text-md">General Settings</p>
+                  <CiSettings className=" text-base md:text-2xl" />
+                  <p className="text-sm md:text-md">General Settings</p>
                 </div>
                 <div className="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-[#2D2F33] p-3 rounded-lg cursor-pointer transition">
-                  <CiSettings className="text-2xl" />
-                  <p className="text-md">Privacy</p>
+                  <CiSettings className="text-base md:text-2xl" />
+                  <p className="text-sm md:text-md">Privacy</p>
                 </div>
                 <div className="flex items-center gap-3 text-gray-300 hover:text-white hover:bg-[#2D2F33] p-3 rounded-lg cursor-pointer transition">
-                  <CiSettings className="text-2xl" />
-                  <p className="text-md">Notifications</p>
+                  <CiSettings className="text-base md:text-2xl" />
+                  <p className="text-sm md:text-md">Notifications</p>
                 </div>
               </div>
             </div>
@@ -152,6 +155,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom}:Channel
         )}
         <div className="absolute bottom-0 w-full">
           <BottomProfile />
+        </div>
         </div>
       </div>
       
