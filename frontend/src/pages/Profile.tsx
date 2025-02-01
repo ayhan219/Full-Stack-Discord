@@ -92,13 +92,13 @@ const Profile = () => {
 
   return (
     <div className="w-full h-screen bg-[#2B2D31] flex flex-col items-center p-10 gap-10">
-      <h3 className="text-4xl font-extrabold text-white mb-8">My Account</h3>
-      <div className="w-[600px] h-auto bg-[#2F3136] flex flex-col items-center rounded-xl shadow-2xl p-8">
+      <h3 className="text-3xl md:text-4xl font-extrabold text-white mb-8">My Account</h3>
+      <div className="w-[300px] md:w-[600px] h-auto bg-[#2F3136] flex flex-col items-center rounded-xl shadow-2xl p-5 md:p-8">
         {/* Profile Picture */}
         <div className="flex items-center justify-between w-full mb-8">
           <div className="flex items-center gap-6">
             <div
-              className="w-24 h-24 bg-gray-700 rounded-full flex items-center justify-center overflow-hidden cursor-pointer relative hover:ring-4 hover:ring-blue-500 transition-all duration-300"
+              className="w-20 h-20 md:w-24 md:h-24 bg-gray-700 rounded-full flex items-center justify-center overflow-hidden cursor-pointer relative hover:ring-4 hover:ring-blue-500 transition-all duration-300"
               onClick={() => document.getElementById("fileInput")?.click()}
             >
               <img
@@ -113,12 +113,12 @@ const Profile = () => {
                 onChange={handleProfilePicChange}
               />
             </div>
-            <h2 className="text-2xl font-semibold text-white">{user?.username}</h2>
+            <h2 className="text-xl md:text-2xl font-semibold text-white">{user?.username}</h2>
           </div>
         </div>
 
         {/* Editable Fields */}
-        <div className="w-full bg-[#393C43] rounded-lg p-6 space-y-6">
+        <div className="w-full bg-[#393C43] rounded-lg p-3 md:p-6 space-y-6">
           {[{ label: "Display Name", value: user?.displayName, key: "displayName" },
             { label: "Username", value: user?.username, key: "username" },
             { label: "Email", value: userEmailWithPrivate, key: "email" }]
@@ -156,7 +156,7 @@ const Profile = () => {
                     </>
                   ) : (
                     <button
-                      className="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-blue-500 transition-all duration-200"
+                      className="px-3 md:px-6 py-1 md:py-2 bg-gray-600 text-white rounded-md hover:bg-blue-500 transition-all duration-200 !text-sm !md:text-base"
                       onClick={() => {
                         setEditSection(item.key);
                         setNewParam(item.value || "");
