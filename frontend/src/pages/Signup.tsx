@@ -2,7 +2,8 @@ import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import { TiTick } from "react-icons/ti";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -84,18 +85,17 @@ const Signup = () => {
             password,
           }
         );
-        if(response.status===200){
-          toast.success("Signup successfull!")
-          navigate("/login")
+        if (response.status === 200) {
+          toast.success("Signup successfull!");
+          navigate("/login");
         }
       } catch (error) {
-        toast.error("error while signup")
+        toast.error("error while signup");
         console.log(error);
       }
+    } else {
+      toast.error("Fill all area!");
     }
-    else{
-      toast.error("Fill all area!")
-    } 
   };
 
   return (
@@ -103,83 +103,122 @@ const Signup = () => {
       className="w-full h-screen bg-cover bg-center flex justify-center items-center"
       style={{ backgroundImage: `url(${dcbackgroung})` }}
     >
-      <div className="w-[600px] h-auto bg-[#2f3136] rounded-lg shadow-lg p-6">
-        <div className="w-full h-auto text-white font-bold text-3xl flex justify-center py-4">
+      <div className=" w-[350px] sm:w-[500px] md:w-[600px] h-[650px] md:h-auto bg-[#2f3136] rounded-lg shadow-lg p-6">
+        <div className="w-full h-auto text-white font-bold text-xl md:text-3xl flex justify-center py-4">
           <h3>Create an account</h3>
         </div>
 
-        <div className="w-full h-auto">
-          <div className="w-full h-auto text-white font-medium flex flex-col p-4">
-            <label className="px-7 text-sm">EMAIL</label>
-            <div className="w-full h-auto flex items-center justify-center">
+        <div className="w-full h-auto ">
+          <div className="w-full h-auto text-white font-medium flex flex-col gap-2 p-2 md:p-4">
+            <label className="px-4 md:px-7 text-xs md:text-sm">EMAIL</label>
+            <div className="w-full h-auto flex items-center justify-center  relative">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
-                  !isEmailValid && email !== "" && "border border-red-600"
+                className={`w-[90%] h-10 rounded-sm px-2 bg-[#1E1F23] outline-none text-white ${
+                  email === ""
+                    ? ""
+                    : !isEmailValid
+                    ? "border-2 border-red-600"
+                    : "border-2 border-green-600"
                 } `}
                 type="email"
                 onChange={(e) => handleEmail(e.target.value)}
                 value={email}
+                
               />
+              {
+                isEmailValid && email!=="" &&
+                <TiTick className=" text-2xl text-green-500 absolute right-9" />
+              }
             </div>
           </div>
 
-          <div className="w-full h-auto text-white font-medium flex flex-col p-4">
-            <label className="px-7 text-sm">DISPLAY NAME</label>
-            <div className="w-full h-auto flex items-center justify-center">
+          <div className="w-full h-auto text-white font-medium flex flex-col gap-2 p-2 md:p-4">
+            <label className="px-4 md:px-7 text-xs md:text-sm">
+              DISPLAY NAME
+            </label>
+            <div className="w-full h-auto flex items-center justify-center relative">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
-                  !isDisplayNameValid &&
-                  displayName !== "" &&
-                  "border border-red-600"
+                className={`w-[90%] h-10 rounded-sm px-2 bg-[#1E1F23] outline-none text-white ${
+                  displayName === ""
+                    ? ""
+                    : !isDisplayNameValid
+                    ? "border-2 border-red-600"
+                    : "border-2 border-green-600"
                 }`}
                 type="text"
                 onChange={(e) => handleDisplayName(e.target.value)}
                 value={displayName}
               />
+              {
+                isDisplayNameValid && displayName!=="" &&
+                <TiTick className=" text-2xl text-green-500 absolute right-9" />
+              }
             </div>
           </div>
 
-          <div className="w-full h-auto text-white font-medium flex flex-col p-4">
-            <label className="px-7 text-sm">USERNAME</label>
-            <div className="w-full h-auto flex items-center justify-center">
+          <div className="w-full h-auto text-white font-medium flex flex-col gap-2 p-2 md:p-4">
+            <label className="px-4 md:px-7 text-xs md:text-sm">USERNAME</label>
+            <div className="w-full h-auto flex items-center justify-center relative">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
-                  !isUsernameValid && username !== "" && "border border-red-600"
+                className={`w-[90%] h-10 rounded-sm px-2 bg-[#1E1F23] outline-none text-white ${
+                  username === ""
+                    ? ""
+                    : !isUsernameValid
+                    ? "border-2 border-red-600"
+                    : "border-2 border-green-600"
                 }`}
                 type="text"
                 onChange={(e) => handleUsername(e.target.value)}
                 value={username}
               />
+              {
+                isUsernameValid && username!=="" &&
+                <TiTick className=" text-2xl text-green-500 absolute right-9" />
+              }
             </div>
           </div>
 
-          <div className="w-full h-auto text-white font-medium flex flex-col p-4">
-            <label className="px-7 text-sm">PASSWORD</label>
-            <div className="w-full h-auto flex items-center justify-center">
+          <div className="w-full h-auto text-white font-medium flex flex-col gap-2 p-2 md:p-4">
+            <label className="px-4 md:px-7 text-xs md:text-sm">PASSWORD</label>
+            <div className="w-full h-auto flex items-center justify-center relative">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
-                  !isPasswordValid && password !== "" && "border border-red-600"
+                className={`w-[90%] h-10 rounded-sm px-2 bg-[#1E1F23] outline-none text-white ${
+                  password === ""
+                    ? ""
+                    : !isPasswordValid
+                    ? "border-2 border-red-600"
+                    : "border-2 border-green-600"
                 }`}
                 type="password"
                 onChange={(e) => handlePassword(e.target.value)}
                 value={password}
               />
+              {
+                isPasswordValid && password!=="" &&
+                <TiTick className=" text-2xl text-green-500 absolute right-9" />
+              }
             </div>
           </div>
 
-          <div className="w-full h-auto text-white font-medium flex flex-col p-4">
-            <label className="px-7 text-sm">CONFIRM PASSWORD</label>
-            <div className="w-full h-auto flex items-center justify-center">
+          <div className="w-full h-auto text-white font-medium flex flex-col gap-2 p-2 md:p-4">
+            <label className="px-4 md:px-7 text-xs md:text-sm">
+              CONFIRM PASSWORD
+            </label>
+            <div className="w-full h-auto flex items-center justify-center relative">
               <input
-                className={`w-[90%] h-10 rounded-sm bg-[#1E1F23] outline-none text-white ${
-                  !isPasswordMatching &&
-                  rePassword !== "" &&
-                  "border border-red-600"
+                className={`w-[90%] h-10 rounded-sm px-2 bg-[#1E1F23] outline-none text-white ${ rePassword==="" ? "":
+                  !isPasswordMatching ? "border-2 border-red-600" : "border-2 border-green-600"
+
+                  
                 } `}
                 type="password"
                 onChange={(e) => handleRePassword(e.target.value)}
                 value={rePassword}
               />
+              {
+                isPasswordMatching && rePassword!=="" &&
+                <TiTick className=" text-2xl text-green-500 absolute right-9" />
+              }
             </div>
           </div>
           <div className="w-full h-12 flex items-center px-8">
@@ -209,7 +248,7 @@ const Signup = () => {
                   />
                 </svg>
               </span>
-              <span className="ml-3 text-white text-sm">
+              <span className="ml-3 text-white text-xs md:text-sm">
                 I agree to the{" "}
                 <a href="#" className="text-blue-400 underline">
                   Terms of Service
@@ -226,7 +265,7 @@ const Signup = () => {
           <div className="w-full h-auto flex justify-center py-4">
             <button
               onClick={() => handleSubmit()}
-              className="w-[90%] h-12 bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition duration-300"
+              className="w-[85%] h-8 md:h-12 bg-blue-500 text-white !text-sm !md:text-base rounded-sm hover:bg-blue-600 transition duration-300"
             >
               Sign Up
             </button>
