@@ -171,7 +171,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [chattingFriend, setChattingFriend] = useState<string>("");
   const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
 
-  
   const getCurrentUser = async () => {
     try {
       const response = await axios.get(
@@ -191,6 +190,41 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     getCurrentUser();
   }, []);
 
+  // useEffect(()=>{
+  //   const handleBeforeUnload = async (event:any) => {
+  //     event.preventDefault();
+  //     await handleUserRefreshPage(); 
+  //   };
+
+  //   window.addEventListener("beforeunload", handleBeforeUnload);
+    
+  //   return () => {
+  //     window.removeEventListener("beforeunload", handleBeforeUnload);
+  //   };
+  // },[])
+
+  // const handleUserRefreshPage = async () => {
+  //   console.log("channels",channels);
+    
+    
+  //   const findChannel = channels.find((item)=>item.chann)
+  //   console.log("is it working?", findChannel);
+  //   try {
+  //     const response = await axios.delete(
+  //       "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
+  //       {
+  //         data: {
+  //           userId: user?.userId,
+  //           channelId: findChannel?._id,
+  //         },
+  //       }
+  //     );
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
   // Register user with socket after they are fetched
   useEffect(() => {
     if (user?.userId) {
@@ -204,7 +238,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       socket.emit("getOnlineUser", {
         userIds: userIds,
         senderId: senderData,
-      });   
+      });
       const uniqueUsers: any[] = [];
       channels.forEach((item) => {
         item.channelUsers.forEach((data: any) => {
@@ -338,7 +372,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           username: string,
           profilePic: string
         ) => {
-
           if (selectedValue === "accept") {
             setUser((prev: User | null) => {
               if (!prev) return prev;
@@ -445,33 +478,30 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       }
     });
 
-    socket.on("kickedFromChannel",(channelId)=>{
-      setChannels((prev)=>{
-        if(!prev){
+    socket.on("kickedFromChannel", (channelId) => {
+      setChannels((prev) => {
+        if (!prev) {
           return prev;
         }
-        const filteredChannel = prev.filter((data)=>data._id !== channelId);
+        const filteredChannel = prev.filter((data) => data._id !== channelId);
         return filteredChannel;
-      })
-    })
+      });
+    });
 
-    socket.on("userJoinedChannel",(data)=>{
+    socket.on("userJoinedChannel", (data) => {
       console.log("usercontext userjoinedchannel works");
-      
+
       setAllUser((prev) => {
         if (!prev) {
           return [data];
         }
-        if (prev.some(user => user === data.id)) {
+        if (prev.some((user) => user === data.id)) {
           return prev;
         }
         return [...prev, data];
       });
-      console.log("after updated",allUser);
-      
-    })
-
-      
+      console.log("after updated", allUser);
+    });
 
     // Temizleme işlemi
     return () => {

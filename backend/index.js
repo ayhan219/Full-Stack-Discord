@@ -27,17 +27,16 @@ app.use("/api/message",MessageRoutes)
 
 
 const createToken = async (roomName,username) => {
-    console.log("createToken çalıştı");
   
     const roomCall = `${roomName}`;
     const participantName = username;
   
     const at = new AccessToken(
-      "APIqbEWDGcADnYn", // API Key
-      "HSukfX16x5NECKfxxGlGDFiT6b7dvDClzSPXZAzoAb9", // Secret Key
+      process.env.LIVEKIT_API_KEY, 
+      process.env.LIVEKIT_SECRET_KEY, 
       {
         identity: participantName,
-        ttl: "10m", // Token 10 dakika sonra süresi dolacak
+        ttl: "10m", 
       }
     );
   
@@ -45,7 +44,6 @@ const createToken = async (roomName,username) => {
     return await at.toJwt();
   };
   
-  // **Yeni /getToken endpointi**
   app.get("/getToken", async (req, res) => {
     const {roomName,username} = req.query;
     try {
@@ -53,7 +51,7 @@ const createToken = async (roomName,username) => {
       res.json({ token });
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: "Token oluşturulamadı" });
+      res.status(500).json({ message: "Token couldn't create" });
     }
   });
   
