@@ -39,7 +39,6 @@ const createToken = async (roomName,username) => {
         ttl: "10m", 
       }
     );
-  
     at.addGrant({ roomJoin: true, room: roomCall });
     return await at.toJwt();
   };
