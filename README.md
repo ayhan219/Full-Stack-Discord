@@ -40,7 +40,9 @@ npm install
 ### 4. Configure environment variables
 
 ```bash
-MONGODB_URI=your-mongodb-uri
+PORT=your-port-number
+MONGO_URL=your-mongodb-uri
+JWT_SECRET=your-jwt-secret
 LIVEKIT_API_KEY=your-livekit-api-key
 LIVEKIT_SECRET=your-livekit-secret
 ```
