@@ -59,6 +59,7 @@ const Sidebar = ({isAreaOpen,setIsAreaOpen}:SidebarProps) => {
   }, []);
 
   return (
+    <>
     <div className={`${!isAreaOpen ? "w-[30px] bg-[#33343a] md:bg-[#1E1F22]" : "w-[70px]   z-50"} md:w-[80px] absolute z-50 md:static   h-screen bg-[#1E1F22] flex flex-col  overflow-y-auto custom-scrollbar2   pt-4 gap-3 transition-all duration-200 ease-in-out`}>
       <div className="flex md:hidden w-full justify-center">
         {
@@ -128,9 +129,10 @@ const Sidebar = ({isAreaOpen,setIsAreaOpen}:SidebarProps) => {
           </div>
         </div>
       </div>
-      {openCreateChannel && <CreateChannel />}
       </div>
     </div>
+    {openCreateChannel && <CreateChannel />}
+    </>
   );
 };
 

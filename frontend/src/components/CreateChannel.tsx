@@ -18,7 +18,7 @@ const CreateChannel = () => {
     setChannels,
     socket,
     setActiveChannel,
-    getSingleChannel
+    getSingleChannel,
   } = useUserContext();
   const [channelName, setChannelName] = useState<string>("");
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const CreateChannel = () => {
       if (response.status === 201) {
         setSingleChannel(response.data);
         console.log("here worked");
-        
+
         setChannels((prev: Channel[]) => {
           return [response.data, ...prev];
         });
@@ -43,17 +43,16 @@ const CreateChannel = () => {
       }
       socket.emit("createServer", channelName, user?.userId);
       console.log(response.data);
-      setActiveChannel(response.data._id)
+      setActiveChannel(response.data._id);
       getSingleChannel(response.data._id);
-      navigate(`/channel/${response.data._id}`)
-
+      navigate(`/channel/${response.data._id}`);
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <div className="absolute inset-0 bg-opacity-60 z-10 bg-black flex justify-center items-center">
+    <div className="absolute inset-0 bg-opacity-60 z-50 bg-black flex justify-center items-center">
       <div className="w-[500px] bg-[#2c2f33] rounded-lg shadow-lg relative">
         {/* Header */}
         <div className="bg-[#202225] p-4 rounded-t-lg flex justify-between items-center">

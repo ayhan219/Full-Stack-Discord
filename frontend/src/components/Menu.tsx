@@ -27,7 +27,7 @@ const Menu = ({activeMenu,setActiveMenu,isAreaOpen,setIsAreaOpen}:MenuProps ) =>
   
   
   return (
-    <div className={`w-[170px] md:w-[270px] h-full bg-[#2B2D31] ${!isAreaOpen ? "opacity-0 invisible md:visible md:opacity-100" : "flex opacity-100 visible  "} absolute z-50 md:static left-[4.4rem]  md:flex flex-col transition-all ease-in-out duration-200`}>
+    <div className={`w-[170px] md:w-[270px] h-full bg-[#2B2D31] ${!isAreaOpen ? "opacity-0 invisible md:visible md:opacity-100" : "flex opacity-100 visible  "} absolute z-10 md:static left-[4.4rem]  md:flex flex-col transition-all ease-in-out duration-200`}>
 
       <div className="flex flex-col w-full h-full gap-2 relative  transform hover:scale-100">
       <div className="w-full h-16 flex justify-center items-center">

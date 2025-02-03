@@ -30,13 +30,14 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
 };
 
 function App() {
-  const { user, token,setConnectedToVoice,setHandleDisconnect } = useUserContext();
-  const serverUrl = "wss://discord-clone-994yw68j.livekit.cloud";
-  const [isAreaOpen,setIsAreaOpen] = useState<boolean>(false);
+  const { user, token, setConnectedToVoice, setHandleDisconnect } =
+    useUserContext();
+  const serverUrl = "wss://discord-clone2-k8nlwhsb.livekit.cloud";
+  const [isAreaOpen, setIsAreaOpen] = useState<boolean>(false);
 
   return (
     <BrowserRouter>
-    <ToastContainer />
+      <ToastContainer />
       <LiveKitRoom
         video={false}
         audio={true}
@@ -48,7 +49,9 @@ function App() {
       >
         <RoomAudioRenderer />
         <div className="flex">
-          {user && <Sidebar isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />}
+          {user && (
+            <Sidebar isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
+          )}
           <Routes>
             <Route
               path="/signup"
@@ -72,7 +75,10 @@ function App() {
               path="/channel/:id"
               element={
                 <PrivateRoute>
-                  <Channel isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
+                  <Channel
+                    isAreaOpen={isAreaOpen}
+                    setIsAreaOpen={setIsAreaOpen}
+                  />
                 </PrivateRoute>
               }
             />
@@ -88,7 +94,10 @@ function App() {
               path="/friendchat/:id"
               element={
                 <PrivateRoute>
-                  <FriendChat isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
+                  <FriendChat
+                    isAreaOpen={isAreaOpen}
+                    setIsAreaOpen={setIsAreaOpen}
+                  />
                 </PrivateRoute>
               }
             />
