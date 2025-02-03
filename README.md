@@ -44,8 +44,9 @@ PORT=your-port-number
 MONGO_URL=your-mongodb-uri
 JWT_SECRET=your-jwt-secret
 LIVEKIT_API_KEY=your-livekit-api-key
-LIVEKIT_SECRET=your-livekit-secret
+LIVEKIT_SECRET_KEY=your-livekit-secret
 ```
+#### then in frontend app.tsx,find serverUrl and change with your livekit URL 
 
 ### 5. Run the development servers
 
