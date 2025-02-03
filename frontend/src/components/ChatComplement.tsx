@@ -9,7 +9,12 @@ interface ChatComplementProps {
     profilePic: string;
     time: string;
     userId: string;
-    image: string;
+    senderId?:{
+      _id:string,
+      username:string,
+      profilePic:string
+    }
+    isImage:boolean
   };
 }
 
@@ -25,7 +30,7 @@ const ChatComplement = ({ item }: ChatComplementProps) => {
     <div className={`flex items-center `}>
       <img
         className="w-10 h-10 rounded-full object-cover border border-gray-500"
-        src={`http://localhost:5000${item.profilePic}`}
+        src={`${item.senderId ? `http://localhost:5000${item.senderId.profilePic}` :`http://localhost:5000${item.profilePic}`} `}
         alt="Avatar"
       />
 
@@ -33,17 +38,19 @@ const ChatComplement = ({ item }: ChatComplementProps) => {
         <div className="flex items-center gap-2">
           {
             <h3
-              className={`font-medium text-base  ${
-                singleChannel?.admin.includes(item.userId) && "text-red-500"
-              }`}
-            >
-              {item.username}
-            </h3>
+            className={`font-medium text-sm ${
+              singleChannel?.admin.includes(item.userId) || singleChannel?.admin.includes(item.senderId?._id || "") 
+                ? "text-red-500" 
+                : "text-gray-400"
+            }`}
+          >
+            {item.senderId ? item.senderId.username : item.username}
+          </h3>
           }
-          <p className="text-xs text-gray-400">{formatTime(item.time)}</p>
+          <p className="text-xs text-gray-400">{item.senderId ? item.time : formatTime(item.time)}</p>
         </div>
-        {item.image ? (
-          <img src={item.image} alt="sent" className="w-40 h-auto rounded-lg" />
+        {item.isImage? (
+          <img src={item.message} alt="sent" className="w-40 h-auto rounded-lg" />
         ) : (
           <p className="font-normal text-sm">{item.message}</p>
         )}

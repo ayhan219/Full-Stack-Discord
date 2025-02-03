@@ -242,7 +242,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on("sendMessageToChat", (data) => {
-        const {serverName, channelName, userId, username, profilePic, message,image} = data
+        const {serverName, channelName, userId, username, profilePic, message,isImage} = data
     
         const uniqueServerName = serverNamesWithUUID[serverName]; 
     
@@ -257,7 +257,7 @@ io.on('connection', (socket) => {
                         username,
                         profilePic,
                         message,
-                        image,
+                        isImage,
                         time: new Date().toISOString(),
                     });
                 }

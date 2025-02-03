@@ -196,7 +196,7 @@ const handleUserRefreshPage = async () => {
     let getChannelId = localStorage.getItem("whichChannelConnected");
     let getUserId = localStorage.getItem("userId");
     try {
-      const response = await axios.delete(
+      await axios.delete(
           "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
           {
               data: {
@@ -206,7 +206,6 @@ const handleUserRefreshPage = async () => {
           }
       );
   } catch (error) {
-      console.log(error);
   }finally{
     localStorage.removeItem("whichChannelConnected")
   }

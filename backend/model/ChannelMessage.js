@@ -1,16 +1,19 @@
 const mongoose = require("mongoose");
 
-const MessageSchema = new mongoose.Schema({
-    
+const ChannelMessageSchema = new mongoose.Schema({
+    chatName:{
+        type:String,
+        required:true
+    },
+    channelId:{
+        type:mongoose.Schema.Types.ObjectId,
+        required:true,
+        ref:"Channel"
+    },
     senderId:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
-        ref:"User"
-    },
-    receiverId:{
-        type:mongoose.Schema.Types.ObjectId,
-        required:true,
-        ref:"User"
+        ref:"User",
     },
     message: { type: String, required: true },
     time:{
@@ -21,10 +24,10 @@ const MessageSchema = new mongoose.Schema({
         type:Boolean,
         required:true
     },
-    
- 
-},
-{ timestamps: true }
+
+},{ timestamps: true },
+
+
 )
 
-module.exports = mongoose.model("Message",MessageSchema)
+module.exports = mongoose.model("ChannelMessage",ChannelMessageSchema);

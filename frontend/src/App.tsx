@@ -31,7 +31,7 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
 
 function App() {
   const { user, token,setConnectedToVoice,setHandleDisconnect } = useUserContext();
-  const serverUrl = "wss://discord-clone-6tnm5nqn.livekit.cloud";
+  const serverUrl = "wss://discord-clone-994yw68j.livekit.cloud";
   const [isAreaOpen,setIsAreaOpen] = useState<boolean>(false);
 
   return (
@@ -88,7 +88,7 @@ function App() {
               path="/friendchat/:id"
               element={
                 <PrivateRoute>
-                  <FriendChat />
+                  <FriendChat isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
                 </PrivateRoute>
               }
             />

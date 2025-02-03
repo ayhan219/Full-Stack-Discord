@@ -29,7 +29,7 @@ const Menu = ({activeMenu,setActiveMenu,isAreaOpen,setIsAreaOpen}:MenuProps ) =>
   return (
     <div className={`w-[170px] md:w-[270px] h-full bg-[#2B2D31] ${!isAreaOpen ? "opacity-0 invisible md:visible md:opacity-100" : "flex opacity-100 visible  "} absolute z-50 md:static left-[4.4rem]  md:flex flex-col transition-all ease-in-out duration-200`}>
 
-      <div className="flex flex-col gap-2 relative transform hover:scale-100">
+      <div className="flex flex-col w-full h-full gap-2 relative  transform hover:scale-100">
       <div className="w-full h-16 flex justify-center items-center">
         <input
           className="bg-[#1E1F22] w-[70%] md:w-[85%] h-9 outline-none text-white text-xs md:text-sm pl-2 rounded-lg placeholder:text-xs"
@@ -73,12 +73,12 @@ const Menu = ({activeMenu,setActiveMenu,isAreaOpen,setIsAreaOpen}:MenuProps ) =>
           </div>
         </div>
       </div>
-      <div className="w-full h-auto">
+      <div className="w-full h-auto overflow-hidden">
         <div className="w-full text-gray-400 text-xs md:text-sm font-semibold flex justify-between px-5 py-6 ">
         <h3>DIRECT MESSAGES</h3>
         <GoPlus className=" text-xl cursor-pointer" />
         </div>
-        <div className="w-full h-[570px] flex flex-col gap-4 overflow-y-auto scrollbar-hidden ">
+        <div className="w-full h-[570px]  flex flex-col gap-4 overflow-y-auto  scrollbar-hidden ">
           {
             user?.menuChat.map((item,index)=>(
               <MenuFriends key={index} item={item} setActiveMenuFriend={setActiveMenuFriend} activeMenuFriend={activeMenuFriend} />
@@ -89,7 +89,7 @@ const Menu = ({activeMenu,setActiveMenu,isAreaOpen,setIsAreaOpen}:MenuProps ) =>
         
       </div>
 
-      <div className="absolute -bottom-8 w-full">
+      <div className="absolute bottom-0 w-full">
       <BottomProfile />
       </div>
       </div>

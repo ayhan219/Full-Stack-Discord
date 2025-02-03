@@ -37,7 +37,12 @@ interface Friend {
   profilePic: string;
 }
 
-const FriendChat = () => {
+interface FriendChatProps {
+  isAreaOpen:boolean;
+  setIsAreaOpen:(isAreaOpen:boolean)=>void;
+}
+
+const FriendChat = ({isAreaOpen,setIsAreaOpen}:FriendChatProps) => {
   const { user, socket, setUser, setLoading, loading, setChattingFriend } =
     useUserContext();
 
@@ -45,6 +50,7 @@ const FriendChat = () => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const [friendId, setFriendId] = useState(localStorage.getItem("friendId") || "");
 
   const { id } = useParams();
 
@@ -68,12 +74,13 @@ const FriendChat = () => {
         {
           params: {
             senderId: user?.userId,
-            receiverId: localStorage.getItem("friendId"),
+            receiverId: friendId
           },
         }
       );
 
       setMessages(response.data);
+      
     } catch (error) {
       console.log(error);
       setMessages([]);
@@ -83,11 +90,13 @@ const FriendChat = () => {
   };
 
   useEffect(() => {
-    if (user && localStorage.getItem("friendId")) {
+    if (user && friendId) {
       getMessages();
       setChattingFriend(id || "");
     }
-  }, [user, localStorage.getItem("friendId")]);
+  
+    
+  }, [user]);
 
   const saveMessagesToDB = async () => {
     try {
@@ -103,6 +112,7 @@ const FriendChat = () => {
       );
 
       if (response.status === 200) {
+        
         setUser((prev: User | null) => {
           if (!prev) {
             return prev;
@@ -136,7 +146,7 @@ const FriendChat = () => {
   };
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,7 +193,7 @@ const FriendChat = () => {
 
   return (
     <div className="w-full h-screen flex bg-[#313338]">
-      <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
+      <Menu activeMenu={activeMenu} setActiveMenu={setActiveMenu} isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
       <div className="flex flex-col w-[calc(100%-270px)] h-full bg-[#2F3136]">
         {/* Top Bar */}
         <div className="w-full h-16 bg-[#292B2F] flex justify-between items-center px-4 border-b border-gray-700">
