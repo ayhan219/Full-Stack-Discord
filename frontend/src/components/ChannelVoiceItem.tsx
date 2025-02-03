@@ -90,6 +90,8 @@ const ChannelVoiceItem = ({
   
       if (response.status === 200) {
         setWhichChannelConnected(singleChannel?.channelName ?? "");
+        localStorage.setItem("whichChannelConnected",singleChannel?._id || "")
+        localStorage.setItem("userId",user?.userId || "");
         setSingleChannel((prev: SingleChannel | null) => {
           if (!prev) return prev;
   

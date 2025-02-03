@@ -40,7 +40,7 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom,isAreaOp
 
   const navigate = useNavigate();
 
-  const { user, setActiveChannel, setSelectedChatRoom, setChannels } =
+  const { user, setActiveChannel, setSelectedChatRoom, setChannels,whichChannelConnected } =
     useUserContext();
 
 
@@ -51,7 +51,8 @@ const ChannelMenu = ({setIsCameraOn,isCameraOn,setActiveRoom,activeRoom,isAreaOp
   
 
   return (
-    <><div  className={`w-[170px] md:w-[270px] h-full bg-[#2B2D31] ${!isAreaOpen ? "opacity-0 invisible md:visible md:opacity-100" : "opacity-100 visible" } absolute z-20 md:static left-[4.4rem] md:flex flex-col transition-all duration-200 ease-in-out`}>
+    <><div onClick={()=>console.log(whichChannelConnected)
+    }  className={`w-[170px] md:w-[270px] h-full bg-[#2B2D31] ${!isAreaOpen ? "opacity-0 invisible md:visible md:opacity-100" : "opacity-100 visible" } absolute z-20 md:static left-[4.4rem] md:flex flex-col transition-all duration-200 ease-in-out`}>
 
         <div className="flex flex-col w-full h-full gap-2 relative transform hover:scale-100">
         {loading ? (

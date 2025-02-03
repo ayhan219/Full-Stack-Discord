@@ -188,44 +188,33 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   useEffect(() => {
     getCurrentUser();
+    handleUserRefreshPage();
   }, []);
 
-  // useEffect(()=>{
-  //   const handleBeforeUnload = async (event:any) => {
-  //     event.preventDefault();
-  //     await handleUserRefreshPage(); 
-  //   };
-
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
+const handleUserRefreshPage = async () => {
+  if(localStorage.getItem("whichChannelConnected")!==""){
+    let getChannelId = localStorage.getItem("whichChannelConnected");
+    let getUserId = localStorage.getItem("userId");
+    try {
+      const response = await axios.delete(
+          "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
+          {
+              data: {
+                  userId: getUserId,
+                  channelId: getChannelId
+              },
+          }
+      );
+  } catch (error) {
+      console.log(error);
+  }finally{
+    localStorage.removeItem("whichChannelConnected")
+  }
+  }
     
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //   };
-  // },[])
+};
 
-  // const handleUserRefreshPage = async () => {
-  //   console.log("channels",channels);
-    
-    
-  //   const findChannel = channels.find((item)=>item.chann)
-  //   console.log("is it working?", findChannel);
-  //   try {
-  //     const response = await axios.delete(
-  //       "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
-  //       {
-  //         data: {
-  //           userId: user?.userId,
-  //           channelId: findChannel?._id,
-  //         },
-  //       }
-  //     );
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
-  // Register user with socket after they are fetched
   useEffect(() => {
     if (user?.userId) {
       socket.emit("userOnline", user?.userId);
@@ -294,7 +283,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           userId: user?.userId,
         }
       );
-      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -308,7 +296,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           userId: user?.userId,
         }
       );
-      console.log(response);
       setNotificationNumber(response.data);
     } catch (error) {
       console.log(error);
@@ -348,7 +335,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
           if (user?.userId) {
             addNotification();
           }
-          console.log("Notification received:", senderId);
           setUser((prev: User | null) => {
             if (!prev) return prev;
 
@@ -419,7 +405,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         });
       });
       socket.on("dataToServerVoice", (voiceRoom) => {
-        console.log(voiceRoom);
 
         setSingleChannel((prev: SingleChannel | null) => {
           if (!prev) {
@@ -489,8 +474,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     });
 
     socket.on("userJoinedChannel", (data) => {
-      console.log("usercontext userjoinedchannel works");
-
       setAllUser((prev) => {
         if (!prev) {
           return [data];
@@ -500,7 +483,6 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
         }
         return [...prev, data];
       });
-      console.log("after updated", allUser);
     });
 
     // Temizleme işlemi
