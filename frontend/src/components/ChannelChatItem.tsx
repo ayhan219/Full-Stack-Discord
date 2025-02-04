@@ -9,7 +9,7 @@ setIsAreaOpen:(data:boolean)=>void;
 
 const ChannelChatItem = ({chatName,setIsAreaOpen}:ChannelChatItemProps) => {
 
-  const {setSelectedChatRoom,setActiveRoom} = useUserContext();
+  const {setSelectedChatRoom,setActiveRoom,selectedChatRoom} = useUserContext();
 
   const handleSelectedRoom = ()=>{
     setSelectedChatRoom(chatName);
@@ -18,7 +18,7 @@ const ChannelChatItem = ({chatName,setIsAreaOpen}:ChannelChatItemProps) => {
     
   }
   return (
-    <div onClick={()=>handleSelectedRoom()} className='w-full h-10 text-gray-400 flex items-center gap-3 px-7 hover:bg-gray-700 rounded-lg cursor-pointer hover:text-white  '>
+    <div onClick={()=>handleSelectedRoom()} className={`w-full h-10 ${selectedChatRoom === chatName && "text-white bg-[#51555c] font-extrabold"} text-gray-400 flex items-center gap-3 px-7 hover:bg-gray-700 rounded-lg cursor-pointer hover:text-white `}>
             <FaHashtag className='text-xl md:text-2xl' />
             <p className='font-semibold text-sm md:text-base'>{chatName}</p>
         </div>
