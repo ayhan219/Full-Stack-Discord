@@ -134,7 +134,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
   </div>
       
       {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60">
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60">
           <div className="bg-[#2F3136] p-6 rounded-lg shadow-lg w-[400px]">
             <div className="flex items-center justify-center mb-6 gap-6">
               <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center shadow-lg cursor-pointer transition-transform transform hover:scale-105">

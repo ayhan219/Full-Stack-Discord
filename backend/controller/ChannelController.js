@@ -513,7 +513,35 @@ const joinChannel = async (req, res) => {
     }
 };
 
-  
+const leaveChannel = async (req, res) => {
+  const { userId, channelId } = req.body;
+
+  if (!userId || !channelId) {
+    return res.status(400).json({ message: "Provide all required fields" });
+  }
+
+  try {
+    const updatedChannel = await Channel.findByIdAndUpdate(
+      channelId,  
+      { $pull: { channelUsers: userId } },  
+      { new: true } 
+    );
+    const updatedUser = await User.findByIdAndUpdate(
+      userId, 
+      { $pull: { joinedChannel: channelId } }, 
+      { new: true }
+    );
+
+    if (!updatedChannel) {
+      return res.status(404).json({ message: "Channel not found" });
+    }
+
+    res.status(200).json(userId);
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
   
 
 module.exports ={
@@ -528,5 +556,6 @@ addUserToVoiceChannel,
 deleteUserFromVoiceChannel,
 deleteChannel,
 uploadChannelPhoto,
-kickUser
+kickUser,
+leaveChannel
 }

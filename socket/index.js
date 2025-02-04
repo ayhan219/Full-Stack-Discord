@@ -409,6 +409,8 @@ io.on('connection', (socket) => {
     })
 
     socket.on("userKickedFromChannel",(data)=>{
+        console.log("userkick worked?");
+        
         const {channelId,kickUserId,channelName} = data;
         const uniqueServerName = serverNamesWithUUID[channelName];
         const updatedChannelUsers=servers[uniqueServerName].members.filter((item)=>item!==kickUserId);
@@ -416,6 +418,26 @@ io.on('connection', (socket) => {
         saveDataToFile();
         io.to(onlineUsers[kickUserId]).emit("kickedFromChannel",(channelId))
     })
+
+    socket.on("userLeftChannel",(data)=>{
+        const {userId,channelName} = data;
+        console.log("userId",userId);
+        console.log("channelName",channelName);
+        
+        
+        const uniqueServerName = serverNamesWithUUID[channelName];
+        const updatedChannelUsers=servers[uniqueServerName].members.filter((item)=>item!==userId);
+        servers[uniqueServerName].members =updatedChannelUsers;
+        servers[uniqueServerName].members.forEach((user)=>{
+            const memberSocketId = onlineUsers[user];
+            if(memberSocketId){
+                io.to(memberSocketId).emit("userLeftChannel",(userId))
+            }
+        })
+        saveDataToFile();
+        
+    })
+
     socket.on('disconnect', () => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {

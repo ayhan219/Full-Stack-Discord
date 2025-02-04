@@ -213,7 +213,17 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
       });
     });
 
-    
+    socket.on("userLeftChannel",(userId)=>{   
+      setSingleChannel((prev)=>{
+        if(!prev){
+          return prev;
+        }
+        const filteredUser = prev.channelUsers.filter((item)=>item._id !==userId);
+        return {
+          ...prev,channelUsers:filteredUser
+        }
+      })
+    })
 
     return () => {
       if (socket) {
@@ -225,6 +235,7 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
         // socket.off("userThatDisconnected");
         socket.off("kickedFromChannel");
         socket.off("userJoinedChannel");
+        socket.off("userLeftChannel");
       }
     };
   }, [socket, user, singleChannel, onlineChannelUsers,allUser]);

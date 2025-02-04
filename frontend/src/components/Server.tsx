@@ -32,7 +32,7 @@ const Server = ({
   } = useUserContext();
 
   const initials = item.channelName
-    .split(" ")
+    ?.split(" ")
     .map((word) => word.substring(0, 2))
     .join("")
     .toUpperCase();
