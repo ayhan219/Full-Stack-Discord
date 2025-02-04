@@ -135,7 +135,7 @@ type UserProviderProps = {
   children: ReactNode;
 };
 
-const socket = io("http://localhost:3001"); // Socket.IO client instance
+const socket = io("https://full-stack-discord-socket.onrender.com"); // Socket.IO client instance
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
