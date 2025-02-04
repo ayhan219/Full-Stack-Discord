@@ -2,7 +2,7 @@ import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
 import axios from "axios";
 import { useUserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {toast } from 'react-toastify';
 
 const Login = () => {
@@ -93,9 +93,9 @@ const Login = () => {
           <div className="w-full h-auto text-center mt-4 text-sm text-gray-400">
             <p>
               You don't have an account?{" "}
-              <a href="/signup" className="text-blue-400 hover:underline">
+              <Link to="/signup" className="text-blue-400 hover:underline">
                 Sign up
-              </a>
+              </Link>
             </p>
           </div>
         </div>
