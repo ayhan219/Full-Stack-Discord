@@ -390,7 +390,7 @@ const handleUserRefreshPage = async () => {
         }
       );
       socket.on("dataToServer", (data) => {
-        const { roomName, messages } = data;
+        const { roomName } = data;
         setSingleChannel((prev: SingleChannel | null) => {
           if (!prev) {
             return prev;
