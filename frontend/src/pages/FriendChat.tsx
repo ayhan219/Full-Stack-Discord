@@ -50,7 +50,7 @@ const FriendChat = ({isAreaOpen,setIsAreaOpen}:FriendChatProps) => {
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<Message[]>([]);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const [friendId, setFriendId] = useState(localStorage.getItem("friendId") || "");
+  const [friendId] = useState(localStorage.getItem("friendId") || "");
 
   const { id } = useParams();
 

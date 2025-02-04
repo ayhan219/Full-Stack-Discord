@@ -24,7 +24,6 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
     useUserContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tokenForInv, setTokenForInv] = useState<string>("");
-  const [channelURL, setChannelURL] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
 
@@ -38,10 +37,9 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
   const saveURLPart = async (part: string) => {
     setIsModalOpen(true);
     setTokenForInv(part.split("/")[5]);
-    setChannelURL(part.split("/")[4]);
     setLoading(true);
     try {
-      await getSingleChannel(part.split("/")[4]);
+      getSingleChannel(part.split("/")[4]);
       setLoading(false);
     } catch (error) {
       console.error("Error fetching channel:", error);

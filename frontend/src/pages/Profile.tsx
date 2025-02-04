@@ -25,7 +25,6 @@ const Profile = () => {
   const [userEmailWithPrivate, setUserEmailWithPrivate] = useState<string>("");
   const [editSection, setEditSection] = useState<string | null>(null);
   const [newParam, setNewParam] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
 
   const handleEmail = () => {
     if (!user?.email) return;
@@ -62,8 +61,6 @@ const Profile = () => {
     const formData = new FormData();
     formData.append("profilePic", file);
     formData.append("userId", user?.userId || "");
-
-    setLoading(true);
     try {
       const response = await axios.post(`${url}/api/auth/upload-profile`, formData, {
         headers: {
@@ -84,8 +81,6 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("Error updating profile picture:", error);
-    } finally {
-      setLoading(false);
     }
   };
 

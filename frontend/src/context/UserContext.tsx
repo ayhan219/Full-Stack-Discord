@@ -6,7 +6,6 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { useNavigate, useParams } from "react-router-dom";
 import { Socket, io } from "socket.io-client";
 
 type User = {

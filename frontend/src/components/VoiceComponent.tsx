@@ -13,7 +13,7 @@ interface UserProps {
   roomName: string;
 }
 
-const VoiceComponent = ({ item, roomName }: UserProps) => {
+const VoiceComponent = ({ item }: UserProps) => {
   const room = useRoomContext();
   const { turnHeadOff, turnMicOff, user } = useUserContext(); 
   const [isSpeaking, setIsSpeaking] = useState(false);
