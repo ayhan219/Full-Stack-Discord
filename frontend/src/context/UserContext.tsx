@@ -171,7 +171,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   >([]);
   const [chattingFriend, setChattingFriend] = useState<string>("");
   const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
-  const [url,setUrl] = useState<string>("http://localhost:5000")
+  const [url,setUrl] = useState<string>("https://full-stack-discord.onrender.com")
 
   const getCurrentUser = async () => {
     try {
