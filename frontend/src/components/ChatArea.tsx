@@ -3,7 +3,6 @@ import ChatComplement from "./ChatComplement";
 import "../index.css";
 import { useUserContext } from "../context/UserContext";
 import { useEffect, useRef, useState } from "react";
-import VideoConferenceRoom from "./VideoConferenceRoom";
 import axios from "axios";
 
 interface Message {
@@ -25,8 +24,7 @@ const ChatArea = () => {
     socket,
     user,
     loading,
-    setLoading,
-    connectedToVoice,
+    url
   } = useUserContext();
   const [containsMessage, setContainsMessage] = useState<boolean>(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -71,8 +69,8 @@ const ChatArea = () => {
         isImage: false,
       });
       try {
-        const response = await axios.post(
-          "http://localhost:5000/api/message/savechannelmessage",
+            await axios.post(
+          `${url}/api/message/savechannelmessage`,
           {
             chatName: selectedChatRoom,
             channelId: singleChannel?._id,
@@ -109,7 +107,7 @@ const ChatArea = () => {
 
       try {
         await axios.post(
-          "http://localhost:5000/api/message/savechannelmessage",
+          `${url}/api/message/savechannelmessage`,
           {
             chatName: selectedChatRoom,
             channelId: singleChannel?._id,
@@ -157,7 +155,7 @@ const ChatArea = () => {
     setLoadingForChat(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/message/getchannelmessages",
+        `${url}/api/message/getchannelmessages`,
         {
           params: {
             channelId: singleChannel?._id,

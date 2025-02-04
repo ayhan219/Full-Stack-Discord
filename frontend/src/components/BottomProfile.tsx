@@ -11,7 +11,7 @@ import { useUserContext } from "../context/UserContext";
 import { useRoomContext } from "@livekit/components-react";
 
 const BottomProfile = () => {
-  const { user, socket } = useUserContext();
+  const { user, socket,url } = useUserContext();
   const { turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff } =
     useUserContext();
   const [openSettings, setOpenSettings] = useState<boolean>(false);
@@ -23,7 +23,7 @@ const BottomProfile = () => {
   const handleLogout = async () => {
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/auth/logout",
+        `${url}/api/auth/logout`,
         {
           withCredentials: true,
         }

@@ -33,12 +33,12 @@ interface Friend {
 const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
   const navigate = useNavigate();
 
-  const { user, setUser, setFriendId,setChattingFriend,setOnlineFriends } = useUserContext();
+  const { user, setUser,url, setFriendId,setChattingFriend,setOnlineFriends } = useUserContext();
 
   const addToMenuChat = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/addtomenuchat",
+        `${url}/api/auth/addtomenuchat`,
         {
           userId: user?.userId,
           friendUserId: item._id,
@@ -70,7 +70,7 @@ const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
   const handleDeleteFriend = async () => {
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/auth/deleteuser",
+        `${url}/api/auth/deleteuser`,
         {
           data: {
             userId: user?.userId,

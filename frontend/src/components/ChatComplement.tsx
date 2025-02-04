@@ -19,7 +19,7 @@ interface ChatComplementProps {
 }
 
 const ChatComplement = ({ item }: ChatComplementProps) => {
-  const { user, singleChannel } = useUserContext();
+  const {singleChannel } = useUserContext();
 
   const formatTime = (timeString: string) => {
     const date = new Date(timeString);

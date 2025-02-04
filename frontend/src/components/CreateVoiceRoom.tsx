@@ -38,13 +38,13 @@ interface VoiceChannel {
 
 const CreateVoiceRoom = () => {
 
-    const {openCreateVoiceRoom,setOpenCreateVoiceRoom} = useUserContext();
+    const {openCreateVoiceRoom,setOpenCreateVoiceRoom,url} = useUserContext();
     const [voiceRoomName,setVoiceRoomName] = useState<string>("");
     const {user,singleChannel,setSingleChannel,socket} = useUserContext();
 
     const handleAddVoiceRoom = async()=>{
         try {
-          const response = await axios.post("http://localhost:5000/api/channel/createvoiceroom",{
+          const response = await axios.post(`${url}/api/channel/createvoiceroom`,{
             channelId:singleChannel?._id,
             userId:user?.userId,
             voiceRoomName:voiceRoomName

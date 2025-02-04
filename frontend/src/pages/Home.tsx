@@ -18,7 +18,6 @@ const Home = ({isAreaOpen,setIsAreaOpen}:HomeProps) => {
     user,
     activeMenu,
     setActiveMenu,
-    onlineFriendUserIds,
     onlineFriends,
     setChattingFriend
   } = useUserContext();

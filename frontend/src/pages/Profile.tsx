@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useUserContext } from "../context/UserContext";
-import { IoIosCloseCircle } from "react-icons/io";
 import axios from "axios";
 
 type User = {
@@ -21,7 +20,7 @@ interface Friend {
 }
 
 const Profile = () => {
-  const { user, setUser } = useUserContext();
+  const { user, setUser,url } = useUserContext();
 
   const [userEmailWithPrivate, setUserEmailWithPrivate] = useState<string>("");
   const [editSection, setEditSection] = useState<string | null>(null);
@@ -42,7 +41,7 @@ const Profile = () => {
 
   const handleEditProfile = async () => {
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/edituserprofile", {
+      const response = await axios.post(`${url}/api/auth/edituserprofile`, {
         userId: user?.userId,
         editedPartName: editSection,
         newParam,
@@ -66,7 +65,7 @@ const Profile = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/upload-profile", formData, {
+      const response = await axios.post(`${url}/api/auth/upload-profile`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

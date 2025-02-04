@@ -1,4 +1,3 @@
-import React, { act, useState } from "react";
 import { FaUserFriends } from "react-icons/fa";
 import { useUserContext } from "../context/UserContext";
 
@@ -55,10 +54,11 @@ const TopBar = ({ activeTopBarMenu, setActiveTopBarMenu }: TopBarProps) => {
               }`}
             >
               Pending
-             
-                <div
+              <div
                 className={`w-4 h-4 items-center justify-center rounded-full text-white bg-red-600 text-xs ${
-                 user?.pendingFriend && user?.pendingFriend?.length > 0 ? "flex" : "hidden"
+                  user?.pendingFriend && user?.pendingFriend?.length > 0
+                    ? "flex"
+                    : "hidden"
                 }`}
               >
                 <p>{user?.pendingFriend.length}</p>

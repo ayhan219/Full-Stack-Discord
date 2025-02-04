@@ -30,7 +30,7 @@ const PublicRoute = ({ children }: PublicRouteProps) => {
 };
 
 function App() {
-  const { user, token, setConnectedToVoice, setHandleDisconnect } =
+  const { user, token} =
     useUserContext();
   const serverUrl = "wss://discord-clone2-k8nlwhsb.livekit.cloud";
   const [isAreaOpen, setIsAreaOpen] = useState<boolean>(false);

@@ -3,7 +3,6 @@ import {
   GridLayout,
   LiveKitRoom,
   ParticipantTile,
-  RoomAudioRenderer,
   useTracks,
 } from '@livekit/components-react';
 
@@ -16,7 +15,7 @@ import { useUserContext } from '../context/UserContext';
 const serverUrl = 'wss://discord-clone-6tnm5nqn.livekit.cloud';
 
 export default function App() {
-  const { token, setConnectedToVoice, connectedToVoice,setHandleDisconnect } = useUserContext();
+  const { token, setConnectedToVoice,setHandleDisconnect } = useUserContext();
 
   // Handle the LiveKit room events (connected and disconnected)
   const handleConnected = () => {

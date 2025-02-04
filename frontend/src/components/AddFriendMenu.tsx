@@ -9,12 +9,12 @@ const AddFriendMenu = () => {
   const [friendName, setFriendName] = useState<string>("");
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
   const [messages, setMessages] = useState<string>("");
-  const { user,  socket } = useUserContext();
+  const { user,  socket,url } = useUserContext();
 
   const handleAddFriend = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/addfriend",
+        `${url}/api/auth/addfriend`,
         {
           userId: user?.userId,
           friendName,

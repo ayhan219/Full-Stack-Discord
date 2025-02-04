@@ -31,13 +31,13 @@ interface Friend {
 
 const PendingFriend = ({ item }: PendingFriendProps) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
-  const { user,socket,setUser,deleteNotification,setOnlineFriends,onlineFriends } = useUserContext();
+  const { user,socket,setUser,deleteNotification,setOnlineFriends,url} = useUserContext();
 
   const handleAction = async (action: string) => {
     try {
       setSelectedValue(action);
   
-      const response = await axios.post("http://localhost:5000/api/auth/acceptordeclinefriend", {
+      const response = await axios.post(`${url}/api/auth/acceptordeclinefriend`, {
         userId: user?.userId,
         request: action,
         friendUserId: item._id,

@@ -8,7 +8,6 @@ import CreateRoom from "./CreateRoom";
 import CreateVoiceRoom from "./CreateVoiceRoom";
 import { useState } from "react";
 import axios from "axios";
-import { PiPhoneDisconnectFill } from "react-icons/pi";
 import { useNavigate } from "react-router-dom";
 import ChannelUserControlArea from "./ChannelUserControlArea";
 import { CiSettings } from "react-icons/ci";
@@ -39,12 +38,13 @@ const ChannelMenu = ({
     openCreateVoiceRoom,
     loading,
     connectedToVoice,
+    url
   } = useUserContext();
 
   const [openChannelSettingArea, setOpenChannelSettingArea] =
     useState<boolean>(false);
 
-  const { user,setSingleChannel,socket,setChannels,setActiveChannel,setConnectedToVoice } = useUserContext();
+  const { user,socket,setChannels,setActiveChannel,setConnectedToVoice } = useUserContext();
   const navigate = useNavigate();
 
   const [openChannelGeneralSettingsArea, setOpenChannelGeneralSettingsArea] =
@@ -58,7 +58,7 @@ const ChannelMenu = ({
     const channelName = singleChannel?.channelName
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/channel/leavechannel",
+        `${url}/api/channel/leavechannel`,
         {
           data: {
             userId,

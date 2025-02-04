@@ -20,14 +20,13 @@ interface Channel {
 }
 
 const PrivateChat = ({ item }: PrivateChatProps) => {
-  const { user, setChannels, getSingleChannel, singleChannel, socket,setAllUser } =
+  const { user, setChannels, getSingleChannel, singleChannel, socket,url } =
     useUserContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tokenForInv, setTokenForInv] = useState<string>("");
   const [channelURL, setChannelURL] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const isOwnMessage = item.senderId === user?.userId;
 
   const initials = singleChannel?.channelName
     .split(" ")
@@ -72,7 +71,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/channel/join/${tokenForInv}`,
+        `${url}/api/channel/join/${tokenForInv}`,
         {
           params: {
             userId: user?.userId,

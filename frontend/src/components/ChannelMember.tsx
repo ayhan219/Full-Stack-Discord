@@ -15,7 +15,7 @@ type ChannelMemberProps = {
 };
 
 const ChannelMember = ({ item, onlineChannelUsers }: ChannelMemberProps) => {
-  const { user, singleChannel } = useUserContext();
+  const {singleChannel } = useUserContext();
   return (
     <div className="flex  items-center gap-2 md:gap-3 p-2 px-3 rounded-md hover:bg-gray-700  cursor-pointer transition-all">
       {/* Avatar Container */}

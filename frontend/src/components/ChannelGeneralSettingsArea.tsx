@@ -5,7 +5,6 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 import { CiSearch } from "react-icons/ci";
-import { FaBan } from "react-icons/fa";
 
 interface Member {
   username: string;
@@ -26,9 +25,9 @@ const ChannelGeneralSettingsArea = ({
     setActiveChannel,
     setSelectedChatRoom,
     setChannels,
-    channels,
     setSingleChannel,
     socket,
+    url
   } = useUserContext();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [openDeleteArea, setOpenDeleteArea] = useState<boolean>(false);
@@ -51,7 +50,7 @@ const ChannelGeneralSettingsArea = ({
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/channel/uploadchannelphoto",
+        `${url}/api/channel/uploadchannelphoto`,
         formData,
         {
           headers: {
@@ -95,7 +94,7 @@ const ChannelGeneralSettingsArea = ({
     setLoadingForDelete(true);
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/channel/deletechannel",
+        `${url}/api/channel/deletechannel`,
         {
           data: {
             userId: user?.userId,
@@ -129,7 +128,7 @@ const ChannelGeneralSettingsArea = ({
   const getLink = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/channel/createinvite",
+        `${url}/api/channel/createinvite`,
         {
           channelId: singleChannel?._id,
         }
@@ -148,7 +147,7 @@ const ChannelGeneralSettingsArea = ({
     try {
       const channelId = singleChannel?._id;
       const response = await axios.delete(
-        "http://localhost:5000/api/channel/kickuser",
+        `${url}/api/channel/kickuser`,
         {
           data: {
             channelId: channelId,

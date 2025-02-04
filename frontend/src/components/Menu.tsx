@@ -7,9 +7,6 @@ import MenuFriends from "./MenuFriends";
 import BottomProfile from "./BottomProfile";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
-import FriendChat from "../pages/FriendChat";
-import HomeFriend from "./HomeFriend";
-import { useState } from "react";
 import "../index.css"
 
 type MenuProps ={
@@ -19,7 +16,7 @@ type MenuProps ={
   setIsAreaOpen:(isAreaOpen:boolean)=>void;
 }
 
-const Menu = ({activeMenu,setActiveMenu,isAreaOpen,setIsAreaOpen}:MenuProps ) => {
+const Menu = ({setActiveMenu,isAreaOpen}:MenuProps ) => {
 
   const {user,activeMenuFriend,setActiveMenuFriend} = useUserContext();
 

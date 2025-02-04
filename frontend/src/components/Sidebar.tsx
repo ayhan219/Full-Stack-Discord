@@ -1,10 +1,10 @@
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import discordPNG from "../assets/pngegg.png";
 import Server from "./Server";
 import { GoPlus } from "react-icons/go";
 import { useUserContext } from "../context/UserContext";
 import CreateChannel from "./CreateChannel";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import axios from "axios";
 import FriendNotification from "./FriendNotification";
 import "../index.css";
@@ -21,7 +21,7 @@ const Sidebar = ({isAreaOpen,setIsAreaOpen}:SidebarProps) => {
     channels,
     setChannels,
     notificationNumber,
-    loading,
+    url,
     setLoading,
     userMessageNotification,
   } = useUserContext();
@@ -39,7 +39,7 @@ const Sidebar = ({isAreaOpen,setIsAreaOpen}:SidebarProps) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/channel/getchannel",
+        `${url}/api/channel/getchannel`,
         {
           params: {
             userId: user?.userId,

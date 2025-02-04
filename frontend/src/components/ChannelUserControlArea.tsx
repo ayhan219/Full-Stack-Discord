@@ -3,10 +3,9 @@ import { ImConnection } from "react-icons/im";
 import { PiPhoneDisconnectFill } from "react-icons/pi";
 import { useUserContext } from "../context/UserContext";
 import { useRoomContext } from "@livekit/components-react";
-import { BsCameraVideoFill, BsCameraVideoOff, BsCameraVideoOffFill } from "react-icons/bs";
+import { BsCameraVideoFill, BsCameraVideoOffFill } from "react-icons/bs";
 import { MdScreenShare, MdStopScreenShare } from "react-icons/md";
 import { useEffect, useState } from "react";
-import { LocalVideoTrack } from "livekit-client";
 
 
 interface ChannelProps {
@@ -23,11 +22,10 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
     setHandleDisconnect,
     handleDisconnect,
     voiceRoomName,
-    connectedToVoice,
     setConnectedToVoice,
-    setSelectedChatRoom,
     setActiveRoom,
-    setWhichChannelConnected
+    setWhichChannelConnected,
+    url
   } = useUserContext();
   const room = useRoomContext();
 
@@ -40,7 +38,7 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
 
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
+        `${url}/api/channel/deleteuserfromvoicechannel`,
         {
           data: {
             userId: user?.userId,

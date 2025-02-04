@@ -81,6 +81,8 @@ interface UserContextType {
   setChattingFriend: (chattingFriend: string) => void;
   activeMenuFriend: string;
   setActiveMenuFriend: (activeMenuFriend: string) => void;
+  url:string,
+  setUrl:(url:string)=>void;
 }
 
 interface Friend {
@@ -170,11 +172,12 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   >([]);
   const [chattingFriend, setChattingFriend] = useState<string>("");
   const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
+  const [url,setUrl] = useState<string>("http://localhost:5000")
 
   const getCurrentUser = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/getcurrent",
+        `${url}/api/auth/getcurrent`,
         {
           withCredentials: true,
         }
@@ -197,7 +200,7 @@ const handleUserRefreshPage = async () => {
     let getUserId = localStorage.getItem("userId");
     try {
       await axios.delete(
-          "http://localhost:5000/api/channel/deleteuserfromvoicechannel",
+          `${url}/api/channel/deleteuserfromvoicechannel`,
           {
               data: {
                   userId: getUserId,
@@ -258,7 +261,7 @@ const handleUserRefreshPage = async () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/channel/getchannelsingle",
+        `${url}/api/channel/getchannelsingle`,
         {
           params: {
             channelId: id,
@@ -276,8 +279,8 @@ const handleUserRefreshPage = async () => {
 
   const addNotification = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/auth/addnotification",
+      await axios.post(
+        `${url}/api/auth/addnotification`,
         {
           userId: user?.userId,
         }
@@ -290,7 +293,7 @@ const handleUserRefreshPage = async () => {
   const deleteNotification = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/deletenotification",
+        `${url}/api/auth/deletenotification`,
         {
           userId: user?.userId,
         }
@@ -304,7 +307,7 @@ const handleUserRefreshPage = async () => {
   const getNotification = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/auth/getnotification",
+        `${url}/api/auth/getnotification`,
         {
           params: {
             userId: user?.userId,
@@ -561,6 +564,8 @@ const handleUserRefreshPage = async () => {
         setChattingFriend,
         activeMenuFriend,
         setActiveMenuFriend,
+        url,
+        setUrl
       }}
     >
       {children}

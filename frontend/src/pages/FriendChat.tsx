@@ -43,7 +43,7 @@ interface FriendChatProps {
 }
 
 const FriendChat = ({isAreaOpen,setIsAreaOpen}:FriendChatProps) => {
-  const { user, socket, setUser, setLoading, loading, setChattingFriend } =
+  const { user, socket, setUser, setLoading, url, setChattingFriend } =
     useUserContext();
 
   const { activeMenu, setActiveMenu, onlineFriends } = useUserContext();
@@ -70,7 +70,7 @@ const FriendChat = ({isAreaOpen,setIsAreaOpen}:FriendChatProps) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/message/getmessages",
+        `${url}/api/message/getmessages`,
         {
           params: {
             senderId: user?.userId,
@@ -101,7 +101,7 @@ const FriendChat = ({isAreaOpen,setIsAreaOpen}:FriendChatProps) => {
   const saveMessagesToDB = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/message/savechat",
+        `${url}/api/message/savechat`,
         {
           senderId: user?.userId,
           receiverId: localStorage.getItem("friendId"),
@@ -169,7 +169,7 @@ const FriendChat = ({isAreaOpen,setIsAreaOpen}:FriendChatProps) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
       try {
-        await axios.post("http://localhost:5000/api/message/savechat", {
+        await axios.post(`${url}/api/message/savechat`, {
           senderId: user?.userId,
           receiverId: localStorage.getItem("friendId"),
           message: base64Image,

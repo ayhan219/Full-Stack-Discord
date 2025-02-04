@@ -13,7 +13,7 @@ type ChannelProps = {
 };
 
 const ChatRightArea = ({ onlineChannelUsers }: ChannelProps) => {
-  const { singleChannel, loading,allUser } = useUserContext();
+  const { singleChannel, loading } = useUserContext();
   const [onlineAdmin, setOnlineAdmin] = useState<number>(0);
   const [openChannelMemberArea,setOpenChannelMemberArea] = useState<boolean>(false);
 

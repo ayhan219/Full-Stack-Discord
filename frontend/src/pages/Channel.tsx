@@ -2,15 +2,10 @@ import { useEffect, useState } from "react";
 import ChannelMenu from "../components/ChannelMenu";
 import ChatArea from "../components/ChatArea";
 import ChatRightArea from "../components/ChatRightArea";
-import axios from "axios";
 import { useUserContext } from "../context/UserContext";
-import VideoConferenceRoom from "../components/VideoConferenceRoom";
 import {
-  ControlBar,
   GridLayout,
-  LiveKitRoom,
   ParticipantTile,
-  RoomAudioRenderer,
   useTracks,
 } from "@livekit/components-react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -31,19 +26,14 @@ interface ChannelProps {
 const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
   const {
     user,
-    token,
     socket,
     setSingleChannel,
     singleChannel,
     allUser,
     setAllUser,
-    activeChannel,
-    getSingleChannel,
     isCameraOn,
     setIsCameraOn,
     connectedToVoice,
-    selectedChatRoom,
-    setSelectedChatRoom,
     activeRoom,
     setActiveRoom,
     setChannels,

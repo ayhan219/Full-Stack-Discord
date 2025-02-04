@@ -1,11 +1,8 @@
-import { MdSettingsVoice } from "react-icons/md";
+
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import { useUserContext } from "../context/UserContext";
-
 import axios from "axios";
-import { useEffect, useState } from "react";
 import VoiceComponent from "./VoiceComponent";
-import VideoConferenceRoom from "./VideoConferenceRoom";
 import { useRoomContext } from "@livekit/components-react";
 
 type VoiceUser = {
@@ -56,9 +53,9 @@ interface SingleChannel {
 }
 
 const ChannelVoiceItem = ({
-  item,activeRoom,setActiveRoom
+  item,setActiveRoom
 }: ChannelVoiceItemProps) => {
-  const { user, socket, singleChannel,setSingleChannel,voiceRoomName,setConnectedToVoice,setToken ,setVoiceRoomName,connectedToVoice,setHandleDisconnect,setWhichChannelConnected} = useUserContext();
+  const { user, socket,url, singleChannel,setSingleChannel,voiceRoomName,setConnectedToVoice,setToken ,setVoiceRoomName,connectedToVoice,setWhichChannelConnected} = useUserContext();
 
   const room = useRoomContext();
 
@@ -80,7 +77,7 @@ const ChannelVoiceItem = ({
     }
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/channel/addusertovoicechannel",
+        `${url}/api/channel/addusertovoicechannel`,
         {
           userId: user?.userId,
           channelId: singleChannel?._id,
@@ -134,7 +131,7 @@ const ChannelVoiceItem = ({
 
         try {
           const channelAndVoiceRoomName = `${singleChannel?.channelName}-${item.voiceRoomName}`;
-          const response = await axios.get("http://localhost:5000/getToken", {
+          const response = await axios.get(`${url}/getToken`, {
             params: {
               roomName: channelAndVoiceRoomName,
               username: user?.username,

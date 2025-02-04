@@ -11,12 +11,12 @@ const Login = () => {
 
   const navigate = useNavigate();
 
-  const { setUser, user, socket } = useUserContext();
+  const { setUser, url, socket } = useUserContext();
 
   const handleLogin = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        `${url}/api/auth/login`,
         {
           email,
           password,

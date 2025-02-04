@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { MdClose } from "react-icons/md";
 import axios from "axios";
-import { useState } from "react";
 
 type MenuFriendProps = {
   item: {
@@ -33,7 +32,7 @@ type User = {
 };
 
 const MenuFriends = ({ item,setActiveMenuFriend,activeMenuFriend }: MenuFriendProps) => {
-  const { user,setUser } = useUserContext();
+  const { user,setUser,url } = useUserContext();
   const navigate = useNavigate();
   const { setFriendId,onlineFriends } = useUserContext();
   
@@ -48,7 +47,7 @@ const MenuFriends = ({ item,setActiveMenuFriend,activeMenuFriend }: MenuFriendPr
   const deleteMenuFriend = async () => {
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/auth/deletemenuchat",
+        `${url}/api/auth/deletemenuchat`,
         {
           data: {
             userId: user?.userId,

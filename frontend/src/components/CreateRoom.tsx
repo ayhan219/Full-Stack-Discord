@@ -31,14 +31,14 @@ interface VoiceChannel {
 }
 
 const CreateRoom = () => {
-  const { openCreateRoom, setOpenCreateRoom } = useUserContext();
+  const { openCreateRoom, setOpenCreateRoom,url } = useUserContext();
   const [chatRoomName, setChatRoomName] = useState<string>("");
   const { user, singleChannel, setSingleChannel, socket } = useUserContext();
 
   const handleAddChatRoom = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/channel/createchatroom",
+        `${url}/api/channel/createchatroom`,
         {
           channelId: singleChannel?._id,
           userId: user?.userId,

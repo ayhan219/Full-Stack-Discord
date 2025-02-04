@@ -4,9 +4,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TiTick } from "react-icons/ti";
+import { useUserContext } from "../context/UserContext";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const {url} = useUserContext();
   const [email, setEmail] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
 
@@ -77,7 +79,7 @@ const Signup = () => {
     ) {
       try {
         const response = await axios.post(
-          "http://localhost:5000/api/auth/signup",
+          `${url}/api/auth/signup`,
           {
             email,
             displayName,

@@ -2,7 +2,7 @@ import { IoMdArrowDropright } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../context/UserContext";
 import { useEffect } from "react";
-import { PiSpeakerHigh, PiSpeakerHighFill } from "react-icons/pi";
+import { PiSpeakerHighFill } from "react-icons/pi";
 
 interface ServerProps {
   item: {
@@ -24,7 +24,6 @@ const Server = ({
 }: ServerProps) => {
   const {
     getSingleChannel,
-    channels,
     setActiveRoom,
     setSelectedChatRoom,
     whichChannelConnected,

@@ -19,6 +19,7 @@ const CreateChannel = () => {
     socket,
     setActiveChannel,
     getSingleChannel,
+    url
   } = useUserContext();
   const [channelName, setChannelName] = useState<string>("");
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const CreateChannel = () => {
   const handleCreateChannel = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/channel/createchannel",
+        `${url}/api/channel/createchannel`,
         {
           channelName,
           userId: user?.userId,
