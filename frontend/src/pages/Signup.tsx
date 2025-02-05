@@ -1,7 +1,7 @@
 import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TiTick } from "react-icons/ti";
 import { useUserContext } from "../context/UserContext";

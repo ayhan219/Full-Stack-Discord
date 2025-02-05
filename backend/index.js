@@ -15,7 +15,7 @@ dotenv.config();
 
 
 app.use(cors({
-    origin:"https://full-stack-discord.onrender.com",
+    origin:"https://full-stack-discord-frontend.onrender.com",
     credentials:true
 }));
 app.use(express.json());
