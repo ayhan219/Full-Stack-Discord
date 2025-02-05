@@ -8,7 +8,7 @@ interface ServerProps {
   item: {
     _id: string;
     channelName: string;
-    channelPic:string
+    channelPic: string;
   };
   index: number;
   activeChannel: string;
@@ -27,7 +27,8 @@ const Server = ({
     setActiveRoom,
     setSelectedChatRoom,
     whichChannelConnected,
-    setActiveMenuFriend
+    setActiveMenuFriend,
+    url,
   } = useUserContext();
 
   const initials = item.channelName
@@ -54,18 +55,22 @@ const Server = ({
     >
       <Link
         onClick={() => {
-          getSingleChannel(item._id)
-          setActiveMenuFriend(item._id)
+          getSingleChannel(item._id);
+          setActiveMenuFriend(item._id);
         }}
         to={`/channel/${item._id}`}
         className="w-11 h-11 md:w-14 md:h-14 rounded-full bg-white flex items-center justify-center cursor-pointer relative"
       >
-        {
-          item.channelPic !== "" ?
-          <img className="w-11 h-11  md:w-14 md:h-14 rounded-full" src={`http://localhost:5000${item.channelPic}`} alt="" /> :
+        {item.channelPic !== "" ? (
+          <img
+            className="w-11 h-11  md:w-14 md:h-14 rounded-full"
+            src={`${url}${item.channelPic}`}
+            alt=""
+          />
+        ) : (
           <p className="text-black font-bold text-lg">{initials}</p>
-        }
-        
+        )}
+
         {whichChannelConnected === item.channelName && (
           <div className="absolute left-0 top-0 flex items-center gap-2 p-1 bg-red-500 text-white rounded-md shadow-lg animate-pulse">
             <PiSpeakerHighFill className="text-xs" />

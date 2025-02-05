@@ -119,7 +119,7 @@ const HomeFriend = ({ item, activeTopBarMenu }: HomeFriendProps) => {
       <div className="flex justify-center items-center gap-4">
         <div className="relative">
           <img
-            src={`http://localhost:5000${item.profilePic}`}
+            src={`${url}${item.profilePic}`}
             alt={`${item}'s profile`}
             className="w-8 h-8 md:w-10 md:h-10 rounded-full object-cover border-2 border-gray-500"
           />

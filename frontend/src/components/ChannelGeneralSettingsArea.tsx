@@ -238,7 +238,7 @@ const ChannelGeneralSettingsArea = ({
                   {singleChannel?.channelPic ? (
                     <img
                       className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 shadow-lg border-gray-600  transform transition-all duration-300 ease-in-out group-hover:scale-110 group-hover:shadow-xl"
-                      src={`http://localhost:5000${singleChannel?.channelPic}`}
+                      src={`${url}${singleChannel?.channelPic}`}
                       alt="Channel"
                     />
                   ) : (
@@ -334,7 +334,7 @@ const ChannelGeneralSettingsArea = ({
                   <div className="flex gap-2 items-center">
                     <img
                       className="w-8 h-8 md:w-12 md:h-12 rounded-full object-cover  "
-                      src={`http://localhost:5000${member.profilePic}`}
+                      src={`${url}${member.profilePic}`}
                       alt={`${member.username}'s profile`}
                     />
                     <div className="flex flex-col">

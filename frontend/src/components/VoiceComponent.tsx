@@ -15,7 +15,7 @@ interface UserProps {
 
 const VoiceComponent = ({ item }: UserProps) => {
   const room = useRoomContext();
-  const { turnHeadOff, turnMicOff, user } = useUserContext(); 
+  const { turnHeadOff, turnMicOff, user,url } = useUserContext(); 
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const VoiceComponent = ({ item }: UserProps) => {
             className={`w-5 h-5 md:w-7 md:h-7 rounded-full border-2 ${
               isSpeaking ? "border-green-500 border-2" : "border-blue-500"
             }`}
-            src={`http://localhost:5000${item.profilePic}`}
+            src={`${url}${item.profilePic}`}
             alt={`${item.username}'s profile`}
           />
           <div className="flex w-full justify-between px-0 md:px-1">

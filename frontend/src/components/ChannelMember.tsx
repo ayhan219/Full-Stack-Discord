@@ -15,14 +15,14 @@ type ChannelMemberProps = {
 };
 
 const ChannelMember = ({ item, onlineChannelUsers }: ChannelMemberProps) => {
-  const {singleChannel } = useUserContext();
+  const {singleChannel,url } = useUserContext();
   return (
     <div className="flex  items-center gap-2 md:gap-3 p-2 px-3 rounded-md hover:bg-gray-700  cursor-pointer transition-all">
       {/* Avatar Container */}
       <div className="relative">
         <img
           className="w-8 h-8 md:w-9 md:h-9 rounded-full"
-          src={`http://localhost:5000${item.profilePic}`}
+          src={`${url}${item.profilePic}`}
           alt="Avatar"
         />
         {

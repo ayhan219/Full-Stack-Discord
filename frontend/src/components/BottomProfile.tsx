@@ -56,7 +56,7 @@ const BottomProfile = () => {
         <div className="flex gap-3 items-center relative">
           <img
             className="w-7 h-7 md:w-10 md:h-10 rounded-full border-2 border-gray-600"
-            src={`http://localhost:5000${user?.profilePic}`}
+            src={`${url}${user?.profilePic}`}
             alt="user-avatar"
           />
           <div className="w-2 h-2 md:w-3 md:h-3 rounded-full bg-green-700 absolute left-5 bottom-[0.15rem] md:left-7 md:bottom-0 "></div>

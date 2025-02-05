@@ -11,7 +11,7 @@ interface FriendNotificationProps {
 }
 
 const FriendNotification = ({ item }: FriendNotificationProps) => {
-  const { setUserMessageNotification } = useUserContext();
+  const { setUserMessageNotification,url } = useUserContext();
 
   const handleDeleteNotification = () => {
     setUserMessageNotification((prev: NotificationData[]) => {
@@ -37,7 +37,7 @@ const FriendNotification = ({ item }: FriendNotificationProps) => {
       >
         <img
           className="w-14 h-14 rounded-full"
-          src={`http://localhost:5000${item.profilePic}`}
+          src={`${url}${item.profilePic}`}
           alt=""
         />
       </Link>

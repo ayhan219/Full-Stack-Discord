@@ -106,7 +106,7 @@ const PendingFriend = ({ item }: PendingFriendProps) => {
       <div className="w-auto h-full flex gap-4 items-center ">
         <img onClick={()=>show()}
           className="w-8 h-8 rounded-full"
-          src={`http://localhost:5000${item.profilePic}`}
+          src={`${url}${item.profilePic}`}
           alt=""
         />
         <p className="text-[#9CA3AF] text-base">{item.username}</p>

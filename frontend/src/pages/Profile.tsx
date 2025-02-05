@@ -97,7 +97,7 @@ const Profile = () => {
             >
               <img
                 className="w-full h-full object-cover"
-                src={`http://localhost:5000${user?.profilePic}`}
+                src={`${url}${user?.profilePic}`}
                 alt="Profile"
               />
               <input

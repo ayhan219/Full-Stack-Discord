@@ -202,7 +202,7 @@ const FriendChat = ({isAreaOpen,setIsAreaOpen}:FriendChatProps) => {
             <img
               className="w-10 h-10 rounded-full object-cover"
               src={
-                `http://localhost:5000${localStorage.getItem("profilePic")}` ||
+                `${url}${localStorage.getItem("profilePic")}` ||
                 "default-profile-pic.jpg"
               }
               alt="Profile"

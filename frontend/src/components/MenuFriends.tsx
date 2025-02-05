@@ -86,7 +86,7 @@ const MenuFriends = ({ item,setActiveMenuFriend,activeMenuFriend }: MenuFriendPr
           <div className="relative">
             <img
               className="w-7 h-7 md:w-9 md:h-9 rounded-full"
-              src={`http://localhost:5000${item.profilePic}`}
+              src={`${url}${item.profilePic}`}
               alt=""
             />
             {

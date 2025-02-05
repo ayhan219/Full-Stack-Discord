@@ -19,7 +19,7 @@ interface ChatComplementProps {
 }
 
 const ChatComplement = ({ item }: ChatComplementProps) => {
-  const {singleChannel } = useUserContext();
+  const {singleChannel,url } = useUserContext();
 
   const formatTime = (timeString: string) => {
     const date = new Date(timeString);
@@ -30,7 +30,7 @@ const ChatComplement = ({ item }: ChatComplementProps) => {
     <div className={`flex items-center `}>
       <img
         className="w-10 h-10 rounded-full object-cover border border-gray-500"
-        src={`${item.senderId ? `http://localhost:5000${item.senderId.profilePic}` :`http://localhost:5000${item.profilePic}`} `}
+        src={`${item.senderId ? `${url}${item.senderId.profilePic}` :`${url}${item.profilePic}`} `}
         alt="Avatar"
       />
 

@@ -102,7 +102,7 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
     <div className={`flex items-start gap-4 mb-4`}>
   <img
     className="w-10 h-10 rounded-full object-cover"
-    src={isOwnUser ? `http://localhost:5000${user?.profilePic}` : `http://localhost:5000${localStorage.getItem("profilePic")}`}
+    src={isOwnUser ? `${url}${user?.profilePic}` : `${url}${localStorage.getItem("profilePic")}`}
     alt="Sender"
   />
 
