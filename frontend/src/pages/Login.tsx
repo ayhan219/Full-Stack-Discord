@@ -2,7 +2,7 @@ import { useState } from "react";
 import dcbackgroung from "../assets/discordback.png";
 import axios from "axios";
 import { useUserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {toast } from 'react-toastify';
 
 const Login = () => {
