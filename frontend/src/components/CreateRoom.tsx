@@ -31,20 +31,20 @@ interface VoiceChannel {
 }
 
 const CreateRoom = () => {
-  const { openCreateRoom, setOpenCreateRoom,url } = useUserContext();
+  const { openCreateRoom, setOpenCreateRoom, url } = useUserContext();
   const [chatRoomName, setChatRoomName] = useState<string>("");
   const { user, singleChannel, setSingleChannel, socket } = useUserContext();
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const handleAddChatRoom = async () => {
+    if (isCreating) return;
+    setIsCreating(true);
     try {
-      const response = await axios.post(
-        `${url}/api/channel/createchatroom`,
-        {
-          channelId: singleChannel?._id,
-          userId: user?.userId,
-          chatRoomName: chatRoomName,
-        }
-      );
+      const response = await axios.post(`${url}/api/channel/createchatroom`, {
+        channelId: singleChannel?._id,
+        userId: user?.userId,
+        chatRoomName: chatRoomName,
+      });
 
       if (response.status === 200) {
         const newChatRoom = response.data;
@@ -67,11 +67,13 @@ const CreateRoom = () => {
         socket.emit("sendDataToChannelUsers", {
           channelId: singleChannel?._id,
           chatRoom: newChatRoom,
-          channelUsers:singleChannel?.channelUsers
+          channelUsers: singleChannel?.channelUsers,
         });
       }
     } catch (error) {
       console.log("Error while adding chat room:", error);
+    } finally {
+      setIsCreating(false);
     }
   };
 
@@ -98,18 +100,32 @@ const CreateRoom = () => {
               type="text"
               className="w-full px-4 py-2 rounded-lg bg-[#23272a] text-white border border-[#202225] focus:ring-2 focus:ring-blue-500 outline-none"
               placeholder="Enter the room name"
+              disabled={isCreating}
             />
           </div>
         </div>
         <div className="flex justify-end p-4 bg-[#202225] rounded-b-lg space-x-4">
-          <button className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-600 rounded-lg hover:bg-gray-500">
+          <button
+            onClick={() => setOpenCreateRoom(false)}
+            className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-600 rounded-lg hover:bg-gray-500"
+          >
             Cancel
           </button>
           <button
             onClick={() => handleAddChatRoom()}
+            disabled={isCreating}
             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500"
           >
             Create
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium text-white rounded-lg ${
+              isCreating ? "bg-gray-500" : "bg-blue-600 hover:bg-blue-500"
+            }`}
+            onClick={handleAddChatRoom}
+            disabled={isCreating}
+          >
+            {isCreating ? "Creating..." : "Create"}
           </button>
         </div>
       </div>
