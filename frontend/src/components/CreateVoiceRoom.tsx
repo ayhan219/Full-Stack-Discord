@@ -60,8 +60,9 @@ const CreateVoiceRoom = () => {
             })
             setOpenCreateVoiceRoom(!openCreateVoiceRoom);
             socket.emit("sendDataToChannelVoiceUsers",{
-              serverName: singleChannel?.channelName,
-              voiceRoom: voiceRoomName,
+              channelId:singleChannel?._id,
+              voiceRoomName,
+              channelUsers:singleChannel?.channelUsers
             })
           
           }

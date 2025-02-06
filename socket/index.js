@@ -9,7 +9,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://full-stack-discord-frontend.onrender.com", 
+    origin: "http://localhost:5173", 
     methods: ['GET', 'POST'],
   }
 });
@@ -85,7 +85,9 @@ io.on('connection', (socket) => {
          io.to(socket.id).emit("onlineFriends",onlineFriendsFromSocket)
       });
 
-      socket.on("sendChannelUsers",({allUser,senderId})=>{
+      socket.on("sendChannelUsers",(data)=>{
+        
+        const {allUser,senderId} = data;
         
        const onlineChannelUserFromSocket = []
        
@@ -106,111 +108,38 @@ io.on('connection', (socket) => {
 
       })
 
-   
-    socket.on('createServer', (serverName, userId) => {
-      if (serverNamesWithUUID[serverName]) {
-          socket.emit('serverError', `Server "${serverName}" already exists.`);
-      } else {
-          const uniqueServerName = `${serverName}-${uuidv4()}`;
-          servers[uniqueServerName] = { owner: userId, members: [userId] }; 
-          serverNamesWithUUID[serverName] = uniqueServerName; 
-          saveDataToFile();
-          console.log(`Server "${uniqueServerName}" has been created by ${userId}`);
-          socket.emit('serverCreated', `Server "${uniqueServerName}" created successfully.`);
-      }
-    });
-
     
     socket.on('sendDataToChannelUsers', (data) => {
-      const { serverName, chatRoom } = data;
-
-      const uniqueServerName = serverNamesWithUUID[serverName]; 
-
-      if (!servers[uniqueServerName].chatRooms) {
-        servers[uniqueServerName].chatRooms = []; 
-    }
-    if (!servers[uniqueServerName].chatRooms.includes(chatRoom)) {
-        servers[uniqueServerName].chatRooms.push(chatRoom);
-        console.log(`Chat room "${chatRoom}" added to the server "${uniqueServerName}"`);
-    } else {
-        console.log(`Chat room "${chatRoom}" already exists in server "${uniqueServerName}"`);
-    }
-
-      if (servers[uniqueServerName]) {
-          const ownerUserId = servers[uniqueServerName].owner;
-          servers[uniqueServerName].members.forEach(memberUserId => {
-              if (memberUserId !== ownerUserId) {
-                  const memberSocketId = onlineUsers[memberUserId];
-                  if (memberSocketId) {
-                      io.to(memberSocketId).emit('dataToServer', {
-                          roomName: chatRoom,
-                          messages: [],
-                      });
-                  }
-              }
-          });
-          console.log(`Data sent to all members of the server "${uniqueServerName}" except the owner`);
-      } else {
-          socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
-      }
+        const {channelId,chatRoom,channelUsers} = data;
+        channelUsers.forEach((item)=>{
+            if(onlineUsers[item._id] && onlineUsers[item._id] !== socket.id){
+                io.to(onlineUsers[item._id]).emit("chatChannelInfo",({channelId,chatRoom}))
+            }
+        })
     });
 
 
     socket.on('sendDataToChannelVoiceUsers', (data) => {
-        const { serverName, voiceRoom } = data;
-  
-        const uniqueServerName = serverNamesWithUUID[serverName]; 
-  
-        if (!servers[uniqueServerName].voiceRoom) {
-          servers[uniqueServerName].voiceRoom = []; 
-      }
-      if (!servers[uniqueServerName].voiceRoom.includes(voiceRoom)) {
-          servers[uniqueServerName].voiceRoom.push(voiceRoom);
-          console.log(`Voice room "${voiceRoom}" added to the server "${uniqueServerName}"`);
-      } else {
-          console.log(`Voice room "${voiceRoom}" already exists in server "${uniqueServerName}"`);
-      }
-  
-        if (servers[uniqueServerName]) {
-            const ownerUserId = servers[uniqueServerName].owner;
-            servers[uniqueServerName].members.forEach(memberUserId => {
-                if (memberUserId !== ownerUserId) {
-                    const memberSocketId = onlineUsers[memberUserId];
-                    if (memberSocketId) {
-                        io.to(memberSocketId).emit('dataToServerVoice',voiceRoom);
-                    }
-                }
-            });
-            console.log(`Data sent to all members of the server "${uniqueServerName}" except the owner`);
-        } else {
-            socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
-        }
+        const {channelId,voiceRoomName,channelUsers} = data;
+        channelUsers.forEach((item)=>{
+            if(onlineUsers[item._id] && onlineUsers[item._id] !== socket.id){
+                io.to(onlineUsers[item._id]).emit("chatVoiceInfo",({channelId,voiceRoomName}))
+            }
+        })
       });
 
    
     socket.on('joinServer', (data) => {  
-        const {serverName,userId,profilePic,username} = data
+        const {channelId,channelUsers,userData} =data;
+        channelUsers.forEach((item)=>{
+            if(onlineUsers[item._id] && onlineUsers[item._id] !== socket.id){
+                io.to(onlineUsers[item._id]).emit("userJoinedChannel",({channelId,userData}))
+                io.to(onlineUsers[item._id]).emit("addToAllUser",({userData}));
+            }
+        })
         
-      const uniqueServerName = serverNamesWithUUID[serverName];
         
-      if (servers[uniqueServerName]) {
-          if (!servers[uniqueServerName].members.includes(userId)) {
-              servers[uniqueServerName].members.push(userId);
-              servers[uniqueServerName].members.map((user)=>{
-                const data = {
-                    _id:userId,
-                    username:username,
-                    profilePic:profilePic
-                }
-                io.to(onlineUsers[user]).emit("userJoinedChannel",(data))
-              })
-              saveDataToFile();
-              console.log(`${userId} has joined the server "${uniqueServerName}"`);
-              socket.emit('serverJoined', `You have joined the server "${uniqueServerName}" successfully.`);
-          }
-      } else {
-          socket.emit('serverError', `Server "${uniqueServerName}" does not exist.`);
-      }
+      
     });
 
 
@@ -242,199 +171,68 @@ io.on('connection', (socket) => {
     });
 
     socket.on("sendMessageToChat", (data) => {
-        const {serverName, channelName, userId, username, profilePic, message,isImage} = data
-    
-        const uniqueServerName = serverNamesWithUUID[serverName]; 
-    
-        if (servers[uniqueServerName]) {
-            servers[uniqueServerName].members.forEach((memberUserId) => {
-                const memberSocketId = onlineUsers[memberUserId];         
-                if (memberSocketId) {
-                    io.to(memberSocketId).emit("sendMessageToChatArea", {
-                        serverName,
-                        channelName,
-                        userId,
-                        username,
-                        profilePic,
-                        message,
-                        isImage,
-                        time: new Date().toISOString(),
-                    });
-                }
-            });
-        }
+        console.log(data);
+        
+        const {channelUsers,channelId,chatName, senderId,time, username, profilePic, message,isImage} = data
+        channelUsers.forEach((item)=>{
+            if(onlineUsers[item._id]){
+                io.to(onlineUsers[item._id]).emit("sendMessageToChatArea",({channelId,chatName,senderId,username,profilePic,message,isImage,time}))
+            }
+        })
     });
 
-    socket.on("joinVoiceRoom", (data) => {
-        const { serverName, roomName, userId } = data;
-        const uniqueServerName = serverNamesWithUUID[serverName];
-    
-        if (!uniqueServerName || !servers[uniqueServerName]) {
-            console.log(`Server "${serverName}" not found.`);
-            socket.emit("serverError", `Server "${serverName}" not found.`);
-            return;
-        }
-    
-        const voiceRooms = servers[uniqueServerName]?.voiceRoom || [];
-        const voiceRoom = voiceRooms.find((room) => room.voiceRoomName === roomName);
-    
-        if (voiceRoom) {
-            if (!voiceRoom.voiceUsers) {
-                voiceRoom.voiceUsers = [];
-            }
-    
-            if (!voiceRoom.voiceUsers.includes(userId)) {
-                voiceRoom.voiceUsers.push(userId);
-                console.log(`User ${userId} joined voice room "${roomName}" in server "${uniqueServerName}"`);
-                saveDataToFile(); 
-            } 
-        } else {
-            console.log(`Voice room "${roomName}" not found in server "${uniqueServerName}"`);
-            socket.emit("serverError", `Voice room "${roomName}" not found.`);
-        }
-    });
-    
+   
 
     socket.on("sendVoiceJoinedUser",(data)=>{
-        const {serverName,username,profilePic,_id,roomName} = data;
-        const uniqueServerName = serverNamesWithUUID[serverName];
-        if (!uniqueServerName || !servers[uniqueServerName]) {
-            console.log(`Server "${serverName}" not found.`);
-            socket.emit("serverError", `Server "${serverName}" not found.`);
-            return;
-        }
-
-        const findServerUsers = servers[uniqueServerName].members;
-        findServerUsers.forEach((memberUserId)=>{
-            const memberSocketId = onlineUsers[memberUserId];
-            if (memberSocketId && memberUserId !== _id && memberSocketId !== socket.id) {
-                io.to(memberSocketId).emit("userJoinedVoiceRoom", {
-                  username,
-                  profilePic,
-                  _id,
-                  roomName,
-                });
-              }
+        const {channelUsers,channelId,roomName,username,profilePic,_id} = data;
+        channelUsers.forEach((user)=>{
+            if(onlineUsers[user._id] && onlineUsers[user._id]!==socket.id){
+                io.to(onlineUsers[user._id]).emit("userJoinedVoiceRoom",({channelId,roomName,username,profilePic,_id}))
+            }
         })
+
     })
 
     socket.on("sendVoiceLeftUser",(data)=>{
-        const {serverName,username,profilePic,_id,roomName} = data;
-        const uniqueServerName = serverNamesWithUUID[serverName];
-
-        if (!uniqueServerName || !servers[uniqueServerName]) {
-            console.log(`Server "${serverName}" not found.`);
-            socket.emit("serverError", `Server "${serverName}" not found.`);
-            return;
+       const {channelUsers,channelId,roomName,username,profilePic,_id} = data;
+       channelUsers.forEach((user)=>{
+        if(onlineUsers[user._id] && onlineUsers[user._id]!==socket.id){
+            io.to(onlineUsers[user._id]).emit("userLeftVoiceRoom",({channelId,roomName,username,profilePic,_id}))
         }
-        const findServerUsers = servers[uniqueServerName].members;
-        findServerUsers.forEach((memberUserId)=>{
-            const memberSocketId = onlineUsers[memberUserId];
-            if (memberSocketId && memberUserId !== _id && memberSocketId !== socket.id) {
-                io.to(memberSocketId).emit("userLeftVoiceRoom", {
-                  _id,
-                  roomName,
-                });
-              }
-        })
+    })
     })
 
-    socket.on("leaveVoiceRoom", (data) => {
-        const { serverName, roomName, userId } = data;
-        const uniqueServerName = serverNamesWithUUID[serverName];
-    
-        if (!uniqueServerName || !servers[uniqueServerName]) {
-            console.log(`Server "${serverName}" not found.`);
-            socket.emit("serverError", `Server "${serverName}" not found.`);
-            return;
-        }
-        const voiceRooms = servers[uniqueServerName]?.voiceRoom || [];
-    
-        const voiceRoom = voiceRooms.find((room) => room.voiceRoomName === roomName);
-    
-        if (voiceRoom) {
-            if (!voiceRoom.voiceUsers) {
-                voiceRoom.voiceUsers = [];
-            }
-            if (voiceRoom.voiceUsers.includes(userId)) {
-                voiceRoom.voiceUsers = voiceRoom.voiceUsers.filter((id) => id !== userId);
-                console.log(`User ${userId} left voice room "${roomName}" in server "${uniqueServerName}"`);
-                saveDataToFile(); 
-                voiceRoom.voiceUsers.forEach((memberUserId) => {
-                    const memberSocketId = onlineUsers[memberUserId];
-                    if (memberSocketId) {
-                        io.to(memberSocketId).emit("userLeftVoiceRoom", { roomName, userId });
-                    }
-                });
-            } else {
-                console.log(`User ${userId} is not in voice room "${roomName}"`);
-            }
-        } else {
-            console.log(`Voice room "${roomName}" not found in server "${uniqueServerName}"`);
-            socket.emit("serverError", `Voice room "${roomName}" not found.`);
-        }
-    });
+  
 
     socket.on("userChangedRoom",(data)=>{
-        const {serverName,roomName,_id} = data;
-
-        const uniqueServerName = serverNamesWithUUID[serverName];
-
-        if (!uniqueServerName || !servers[uniqueServerName]) {
-            console.log(`Server "${serverName}" not found.`);
-            socket.emit("serverError", `Server "${serverName}" not found.`);
-            return;
-        }
-
-        servers[uniqueServerName].members.forEach((memberUserId)=>{
-            const memberSocketId = onlineUsers[memberUserId];
-            if (memberSocketId && memberSocketId!==socket.id) {
-                io.to(memberSocketId).emit("sendUserChangedRoom",{_id,roomName});
+        const {channelUsers,channelId,roomName,_id} = data;
+        channelUsers.forEach((user)=>{
+            if(onlineUsers[user._id] && onlineUsers[user._id]!==socket.id){
+                io.to(onlineUsers[user._id]).emit("sendUserChangedRoom",({channelId,roomName,_id}))
             }
         })
     })
-    socket.on("userDisconnected",({userIds,senderId})=>{
-        
-        userIds.forEach((user)=>{
+    socket.on("userDisconnected",({allUser,senderId})=>{
+        allUser.forEach((user)=>{
             if(onlineUsers[user._id]){             
                 io.to(onlineUsers[user._id]).emit("userThatDisconnected",(senderId))
             }
         })
     })
 
-    socket.on("toggleCamera",({userIdCameraToSend,senderId,isCameraOn})=>{
-        userIdCameraToSend.forEach((id)=>{
-            io.to(onlineUsers[id]).emit("cameraToggled",({senderId,isCameraOn}))
-        })
-    })
-
     socket.on("userKickedFromChannel",(data)=>{
-        console.log("userkick worked?");
         
-        const {channelId,kickUserId,channelName} = data;
-        const uniqueServerName = serverNamesWithUUID[channelName];
-        const updatedChannelUsers=servers[uniqueServerName].members.filter((item)=>item!==kickUserId);
-        servers[uniqueServerName].members =updatedChannelUsers
-        saveDataToFile();
-        io.to(onlineUsers[kickUserId]).emit("kickedFromChannel",(channelId))
+        const {channelId,kickUserId,channelUsers} = data;
+        io.to(onlineUsers[kickUserId]).emit("kickedFromChannel",({channelId}))
     })
 
     socket.on("userLeftChannel",(data)=>{
-        const {userId,channelName} = data;
-        console.log("userId",userId);
-        console.log("channelName",channelName);
-        
-        
-        const uniqueServerName = serverNamesWithUUID[channelName];
-        const updatedChannelUsers=servers[uniqueServerName].members.filter((item)=>item!==userId);
-        servers[uniqueServerName].members =updatedChannelUsers;
-        servers[uniqueServerName].members.forEach((user)=>{
-            const memberSocketId = onlineUsers[user];
-            if(memberSocketId){
-                io.to(memberSocketId).emit("userLeftChannel",(userId))
+        const {channelId,channelUsers,userId} = data;
+        channelUsers.forEach((user)=>{
+            if(onlineUsers[user._id]){             
+                io.to(onlineUsers[user._id]).emit("userLeftChannel",(userId,channelId))
             }
         })
-        saveDataToFile();
         
     })
 

@@ -7,7 +7,7 @@ interface Message {
   receiverId: string | null;
   message: string;
   time: string;
-  isImage:boolean
+  isImage: boolean;
 }
 
 interface PrivateChatProps {
@@ -20,12 +20,11 @@ interface Channel {
 }
 
 const PrivateChat = ({ item }: PrivateChatProps) => {
-  const { user, setChannels, getSingleChannel, singleChannel, socket,url } =
+  const { user, setChannels, getSingleChannel, singleChannel, socket, url } =
     useUserContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tokenForInv, setTokenForInv] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-
 
   const initials = singleChannel?.channelName
     .split(" ")
@@ -76,16 +75,23 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
           },
         }
       );
-      if (response.status === 200) {     
+      if (response.status === 200) {
+        console.log("response data :",response.data);
+        
         setChannels((prev: Channel[]) => {
           return [...prev, response.data];
         });
         setIsModalOpen(false);
+        const userData ={
+          _id:user?.userId,
+          username:user?.username,
+          profilePic:user?.profilePic
+        }
         socket.emit("joinServer", {
-          serverName:singleChannel?.channelName, userId:user?.userId ,username:user?.username,profilePic:user?.profilePic
+          channelId:singleChannel?._id,
+          channelUsers:singleChannel?.channelUsers,
+          userData
         });
-        
-
       }
     } catch (error) {
       console.log(error);
@@ -94,42 +100,50 @@ const PrivateChat = ({ item }: PrivateChatProps) => {
     }
   };
 
-  const isOwnUser = user?.userId === item.senderId
-
-
+  const isOwnUser = user?.userId === item.senderId;
 
   return (
-    <div className={`flex items-start gap-4 mb-4`}>
-  <img
-    className="w-10 h-10 rounded-full object-cover"
-    src={isOwnUser ? `${url}${user?.profilePic}` : `${url}${localStorage.getItem("profilePic")}`}
-    alt="Sender"
-  />
+    <div onClick={()=>console.log(singleChannel)} className={`flex items-start gap-4 mb-4`}>
+      <img
+        className="w-10 h-10 rounded-full object-cover"
+        src={
+          isOwnUser
+            ? `${url}${user?.profilePic}`
+            : `${url}${localStorage.getItem("profilePic")}`
+        }
+        alt="Sender"
+      />
 
-  <div className={`flex flex-col w-full`}>
-    <div className="flex items-center gap-2 mb-1">
-      <p className="font-semibold text-gray-200">{isOwnUser ? user?.username : localStorage.getItem("username")}</p>
-      <span className="text-xs text-gray-400 mt-1">{item.time}</span>
-    </div>
+      <div className={`flex flex-col w-full`}>
+        <div className="flex items-center gap-2 mb-1">
+          <p className="font-semibold text-gray-200">
+            {isOwnUser ? user?.username : localStorage.getItem("username")}
+          </p>
+          <span className="text-xs text-gray-400 mt-1">{item.time}</span>
+        </div>
 
-    <div
-      className={`rounded-lg max-w-lg text-white  relative`}
-      style={{
-        wordWrap: "break-word",
-        whiteSpace: "pre-wrap",
-        overflowWrap: "break-word",
-      }}
-    >
-      {
-        !item.isImage ? 
-        <p className="text-sm text-[#A6A9AC]">{parseMessage(item.message)}</p> :
-        <img src={item.message} alt="sent" className="w-40 h-auto rounded-lg" />
-      }
-    </div>
+        <div
+          className={`rounded-lg max-w-lg text-white  relative`}
+          style={{
+            wordWrap: "break-word",
+            whiteSpace: "pre-wrap",
+            overflowWrap: "break-word",
+          }}
+        >
+          {!item.isImage ? (
+            <p className="text-sm text-[#A6A9AC]">
+              {parseMessage(item.message)}
+            </p>
+          ) : (
+            <img
+              src={item.message}
+              alt="sent"
+              className="w-40 h-auto rounded-lg"
+            />
+          )}
+        </div>
+      </div>
 
-   
-  </div>
-      
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60">
           <div className="bg-[#2F3136] p-6 rounded-lg shadow-lg w-[400px]">

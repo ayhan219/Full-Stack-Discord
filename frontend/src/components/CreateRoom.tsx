@@ -65,8 +65,9 @@ const CreateRoom = () => {
         setChatRoomName("");
         setOpenCreateRoom(false);
         socket.emit("sendDataToChannelUsers", {
-          serverName: singleChannel?.channelName,
+          channelId: singleChannel?._id,
           chatRoom: newChatRoom,
+          channelUsers:singleChannel?.channelUsers
         });
       }
     } catch (error) {

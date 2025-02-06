@@ -6,13 +6,13 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 interface Message {
-  channelName: string;
+  channelId: string;
+  chatName:string,
   message: string;
-  serverName: string;
   username: string;
   profilePic: string;
   time: string;
-  userId: string;
+  senderId: string;
   isImage: boolean;
 }
 
@@ -60,12 +60,14 @@ const ChatArea = () => {
   const handleSend = async () => {
     if (message.trim() !== "") {
       socket.emit("sendMessageToChat", {
-        serverName: singleChannel?.channelName,
-        channelName: selectedChatRoom,
-        userId: user?.userId,
+        channelUsers:singleChannel?.channelUsers,
+        channelId:singleChannel?._id,
+        chatName: selectedChatRoom,
+        senderId: user?.userId,
         username: user?.username,
         profilePic: user?.profilePic,
         message: message,
+        time:new Date().toISOString(),
         isImage: false,
       });
       try {
@@ -96,10 +98,12 @@ const ChatArea = () => {
     reader.onloadend = async () => {
       const base64Image = reader.result as string;
       socket.emit("sendMessageToChat", {
-        serverName: singleChannel?.channelName,
-        channelName: selectedChatRoom,
-        userId: user?.userId,
+        channelUsers:singleChannel?.channelUsers,
+        channelId:singleChannel?._id,
+        chatName: selectedChatRoom,
+        senderId: user?.userId,
         username: user?.username,
+        time:new Date().toISOString(),
         profilePic: user?.profilePic,
         message: base64Image,
         isImage: true,
@@ -127,8 +131,8 @@ const ChatArea = () => {
   useEffect(() => {
     socket.on("sendMessageToChatArea", (newMessage) => {
       if (
-        newMessage.channelName === selectedChatRoom &&
-        newMessage.serverName === singleChannel?.channelName
+        newMessage.chatName === selectedChatRoom &&
+        newMessage.channelId === singleChannel?._id
       ) {
         setMessages((prevMessages) => [...prevMessages, newMessage]);
       }
@@ -162,7 +166,7 @@ const ChatArea = () => {
             chatName: selectedChatRoom,
           },
         }
-      );
+      );  
       setMessages(response.data);
     }finally {
       setLoadingForChat(false);

@@ -11,7 +11,7 @@ import { useUserContext } from "../context/UserContext";
 import { useRoomContext } from "@livekit/components-react";
 
 const BottomProfile = () => {
-  const { user, socket,url } = useUserContext();
+  const { user, socket,url,allUser } = useUserContext();
   const { turnMicOff, setTurnMicOff, turnHeadOff, setTurnHeadOff } =
     useUserContext();
   const [openSettings, setOpenSettings] = useState<boolean>(false);
@@ -32,7 +32,7 @@ const BottomProfile = () => {
         const userIds = user?.friends.map((friend: any) => friend);
 
         socket.emit("userDisconnected", {
-          userIds: userIds,
+          allUser,
           senderId: user?.userId,
         });
         setUser(null);

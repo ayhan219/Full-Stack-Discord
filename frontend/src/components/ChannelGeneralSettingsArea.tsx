@@ -171,7 +171,7 @@ const ChannelGeneralSettingsArea = ({
         socket.emit("userKickedFromChannel", {
           channelId,
           kickUserId,
-          channelName: singleChannel?.channelName,
+          channelUsers:singleChannel?.channelUsers
         });
       }
     } catch (error) {

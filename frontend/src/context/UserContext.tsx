@@ -82,9 +82,17 @@ interface UserContextType {
   setActiveMenuFriend: (activeMenuFriend: string) => void;
   url:string,
   setUrl:(url:string)=>void;
+  channelUsers:ChannelUser[];
+  setChannelUsers:(channelUsers:ChannelUser[])=>void;
 }
 
 interface Friend {
+  username: string;
+  _id: string;
+  profilePic: string;
+}
+
+interface ChannelUser{
   username: string;
   _id: string;
   profilePic: string;
@@ -135,7 +143,7 @@ type UserProviderProps = {
   children: ReactNode;
 };
 
-const socket = io("https://full-stack-discord-socket.onrender.com"); // Socket.IO client instance
+const socket = io("http://localhost:3001"); // Socket.IO client instance
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -171,7 +179,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   >([]);
   const [chattingFriend, setChattingFriend] = useState<string>("");
   const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
-  const [url,setUrl] = useState<string>("https://full-stack-discord.onrender.com")
+  const [channelUsers,setChannelUsers] = useState<ChannelUser[]>([]);
+  const [url,setUrl] = useState<string>("http://localhost:5000")
 
   const getCurrentUser = async () => {
     try {
@@ -389,34 +398,7 @@ const handleUserRefreshPage = async () => {
           }
         }
       );
-      socket.on("dataToServer", (data) => {
-        const { roomName } = data;
-        setSingleChannel((prev: SingleChannel | null) => {
-          if (!prev) {
-            return prev;
-          }
-          const fixedChatRoom = {
-            ...roomName,
-            roomName: roomName,
-          };
-          return {
-            ...prev,
-            chatChannel: [...prev.chatChannel, fixedChatRoom],
-          };
-        });
-      });
-      socket.on("dataToServerVoice", (voiceRoom) => {
-
-        setSingleChannel((prev: SingleChannel | null) => {
-          if (!prev) {
-            return prev;
-          }
-          return {
-            ...prev,
-            voiceChannel: [...prev.voiceChannel, voiceRoom],
-          };
-        });
-      });
+  
       socket.on("onlineFriends", (onlineFriendsFromSocket) => {
         setOnlineFriends(onlineFriendsFromSocket);
       });
@@ -464,7 +446,8 @@ const handleUserRefreshPage = async () => {
       }
     });
 
-    socket.on("kickedFromChannel", (channelId) => {
+    socket.on("kickedFromChannel", (data) => {
+      const {channelId} = data
       setChannels((prev) => {
         if (!prev) {
           return prev;
@@ -472,17 +455,26 @@ const handleUserRefreshPage = async () => {
         const filteredChannel = prev.filter((data) => data._id !== channelId);
         return filteredChannel;
       });
+      setActiveChannel("");
+        setActiveRoom("");
+        setConnectedToVoice(false);
+        setActiveRoom("");
     });
 
-    socket.on("userJoinedChannel", (data) => {
+    socket.on("addToAllUser", (data) => {
+      console.log("is adding to AllUser?");
+      
+      const {userData} = data;
       setAllUser((prev) => {
         if (!prev) {
-          return [data];
+          return [prev];
         }
-        if (prev.some((user) => user === data.id)) {
+        if (prev.some((user:any) => user._id === userData.id)) {
           return prev;
         }
-        return [...prev, data];
+        console.log("after allUser",allUser);
+        
+        return [...prev, userData];
       });
     });
 
@@ -491,13 +483,11 @@ const handleUserRefreshPage = async () => {
       if (socket) {
         socket.off("friendRequestNotification");
         socket.off("sendReceiverIdToUser");
-        socket.off("dataToServer");
-        socket.off("dataToServerVoice");
         socket.off("onlineFriends");
         socket.off("ImOnline");
         socket.off("userThatDisconnected");
         socket.off("messageNotification");
-        socket.off("userJoinedChannel");
+        socket.off("addToAllUser");
       }
     };
   }, [socket, user, onlineFriends, chattingFriend]);
@@ -564,7 +554,9 @@ const handleUserRefreshPage = async () => {
         activeMenuFriend,
         setActiveMenuFriend,
         url,
-        setUrl
+        setUrl,
+        channelUsers,
+        setChannelUsers
       }}
     >
       {children}

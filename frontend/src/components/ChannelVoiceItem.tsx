@@ -70,7 +70,8 @@ const ChannelVoiceItem = ({
       room.disconnect();
       setConnectedToVoice(false);
       socket.emit("userChangedRoom",{
-        serverName: singleChannel?.channelName,
+        channelUsers:singleChannel.channelUsers,
+        channelId:singleChannel._id,
           roomName: voiceRoomName,
           _id: user?.userId,
       })
@@ -116,13 +117,9 @@ const ChannelVoiceItem = ({
           };
         });
 
-        socket.emit("joinVoiceRoom", {
-          serverName: singleChannel?.channelName,
-          roomName: item.voiceRoomName,
-          userId: user?.userId,
-        });
         socket.emit("sendVoiceJoinedUser", {
-          serverName: singleChannel?.channelName,
+          channelUsers:singleChannel?.channelUsers,
+          channelId:singleChannel?._id,
           roomName: item.voiceRoomName,
           username: user?.username,
           profilePic: user?.profilePic,

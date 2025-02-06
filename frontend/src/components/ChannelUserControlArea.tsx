@@ -72,14 +72,10 @@ const ChannelUserControlArea = ({isCameraOn,setIsCameraOn}:ChannelProps) => {
           return { ...prev, voiceChannel: updatedVoiceChannels };
         });
 
-        socket.emit("leaveVoiceRoom", {
-          serverName: singleChannel?.channelName,
-          voiceRoomName,
-          userId: user?.userId,
-        });
 
         socket.emit("sendVoiceLeftUser", {
-          serverName: singleChannel?.channelName,
+          channelUsers:singleChannel?.channelUsers,
+          channelId: singleChannel?._id,
           roomName: voiceRoomName,
           username: user?.username,
           profilePic: user?.profilePic,

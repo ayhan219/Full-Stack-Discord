@@ -23,6 +23,33 @@ interface ChannelProps {
   setIsAreaOpen:(isAreaOpen:boolean)=>void;
 }
 
+
+type VoiceUser = {
+  _id: string;
+  username: string;
+  profilePic: string;
+};
+
+interface VoiceChannel {
+  voiceRoomName: string;
+  voiceUsers: VoiceUser[];
+  _id: string;
+}
+
+interface SingleChannel {
+  _id: string;
+  channelName: string;
+  chatChannel: ChatChannel[];
+  voiceChannel: VoiceChannel[];
+  admin: string[];
+  channelUsers: VoiceUser[];
+  channelPic: string;
+}
+interface ChatChannel {
+  roomName: string;
+  messages: string[];
+}
+
 const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
   const {
     user,
@@ -51,85 +78,91 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
 
   useEffect(() => {
     socket.on("userJoinedVoiceRoom", (data) => {
-      const { username, profilePic, _id, roomName } = data;
-
-      setSingleChannel((prev) => {
-        if (!prev) {
-          return prev;
-        }
-        const updatedVoiceChannels = prev.voiceChannel.map((channel) => {
-          if (channel.voiceRoomName === roomName) {
-            return {
-              ...channel,
-              voiceUsers: [
-                ...channel.voiceUsers,
-                { username, profilePic, _id },
-              ],
-            };
+      const { username, profilePic, _id, channelId,roomName } = data;
+      if(channelId === singleChannel?._id){
+        setSingleChannel((prev) => {
+          if (!prev) {
+            return prev;
           }
-          return channel;
+          const updatedVoiceChannels = prev.voiceChannel.map((channel) => {
+            if (channel.voiceRoomName === roomName) {
+              return {
+                ...channel,
+                voiceUsers: [
+                  ...channel.voiceUsers,
+                  { username, profilePic, _id },
+                ],
+              };
+            }
+            return channel;
+          });
+  
+          return {
+            ...prev,
+            voiceChannel: updatedVoiceChannels,
+          };
         });
-
-        return {
-          ...prev,
-          voiceChannel: updatedVoiceChannels,
-        };
-      });
+      }
+     
     });
 
     socket.on("userLeftVoiceRoom", (data) => {
-      const { _id, roomName } = data;
-      setSingleChannel((prev) => {
-        if (!prev) {
-          return prev;
-        }
-        const updatedChannel = prev.voiceChannel.map((channel) => {
-          if (channel.voiceRoomName === roomName) {
-            const updatedVoiceChannel = channel.voiceUsers.filter(
-              (item) => item._id !== _id
-            );
-            return {
-              ...channel,
-              voiceUsers: updatedVoiceChannel,
-            };
+      const { channelId,roomName,_id } = data;
+      if(channelId === singleChannel?._id){
+        setSingleChannel((prev) => {
+          if (!prev) {
+            return prev;
           }
-          return channel;
+          const updatedChannel = prev.voiceChannel.map((channel) => {
+            if (channel.voiceRoomName === roomName) {
+              const updatedVoiceChannel = channel.voiceUsers.filter(
+                (item) => item._id !== _id
+              );
+              return {
+                ...channel,
+                voiceUsers: updatedVoiceChannel,
+              };
+            }
+            return channel;
+          });
+  
+          return {
+            ...prev,
+            voiceChannel: updatedChannel,
+          };
         });
-
-        return {
-          ...prev,
-          voiceChannel: updatedChannel,
-        };
-      });
+      }
     });
 
     socket.on("sendUserChangedRoom", (data) => {
-      const { _id, roomName } = data;
+      const {channelId, _id, roomName } = data;
 
-      setSingleChannel((prev) => {
-        if (!prev) {
-          return prev;
-        }
-
-        const updatedChannel = prev.voiceChannel.map((voiceRoom) => {
-          if (voiceRoom.voiceRoomName === roomName) {
-            const updatedVoiceChannel = voiceRoom.voiceUsers.filter(
-              (item) => item._id !== _id
-            );
-
-            return {
-              ...voiceRoom,
-              voiceUsers: updatedVoiceChannel,
-            };
+      if(channelId === singleChannel?._id){
+        setSingleChannel((prev) => {
+          if (!prev) {
+            return prev;
           }
-          return voiceRoom;
+  
+          const updatedChannel = prev.voiceChannel.map((voiceRoom) => {
+            if (voiceRoom.voiceRoomName === roomName) {
+              const updatedVoiceChannel = voiceRoom.voiceUsers.filter(
+                (item) => item._id !== _id
+              );
+  
+              return {
+                ...voiceRoom,
+                voiceUsers: updatedVoiceChannel,
+              };
+            }
+            return voiceRoom;
+          });
+  
+          return {
+            ...prev,
+            voiceChannel: updatedChannel,
+          };
         });
-
-        return {
-          ...prev,
-          voiceChannel: updatedChannel,
-        };
-      });
+      }
     });
 
     socket.on("onlineChannelUsers", (senderId) => {
@@ -147,6 +180,7 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
     });
 
     socket.on("onlineAllChannelUsers", (onlineChannelUserFromSocket) => {
+      
       const filteredUsers = onlineChannelUserFromSocket.filter((user: any) =>
         singleChannel?.channelUsers.some((item: any) => item._id === user._id)
       );
@@ -165,54 +199,95 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
     });
 
 
-    socket.on("kickedFromChannel", (channelId) => {
-      setChannels((prev) => {
-        if (!prev) {
-          return prev;
-        }
-        const filteredChannel = prev.filter((data) => data._id !== channelId);
-        return filteredChannel;
-      });
-      setActiveChannel("");
-      setActiveRoom("");
-      setConnectedToVoice(false);
-      setActiveRoom("");
-      navigate("/home");
+    socket.on("kickedFromChannel", (data) => {
+      const {channelId} =data;
+
+      if(channelId === singleChannel?._id){
+        setChannels((prev) => {
+          if (!prev) {
+            return prev;
+          }
+          const filteredChannel = prev.filter((data) => data._id !== channelId);
+          return filteredChannel;
+        });
+        setActiveChannel("");
+        setActiveRoom("");
+        setConnectedToVoice(false);
+        setActiveRoom("");
+        navigate("/home");
+      }
     });
 
     socket.on("userJoinedChannel", (data) => {
-    
-      setOnlineChannelUsers((prev) => {
-        if (!prev) {
-          return [data];
-        }
-        if (prev.some(user => user._id === data.id)) {
-          return prev;
-        }
-        return [...prev, data];
-      });
-    
-      setAllUser((prev) => {
-        if (!prev) {
-          return [data];
-        }
-        if (prev.some(user => user === data.id)) {
-          return prev;
-        }
-        return [...prev, data];
-      });
+      console.log("userjoinedchannel work on channel");
+      
+      const {channelId,userData} = data;   
+      if(singleChannel?._id === channelId){
+        setOnlineChannelUsers((prev) => {
+          if (!prev){
+            return prev;
+          } 
+          if (prev.some(user => user._id === userData._id)) return prev;
+          return [...prev, userData];
+        });
+        setSingleChannel((prev:any)=>{
+          if(!prev){
+            return prev;
+          }
+          return {
+            ...prev,
+            channelUsers: [...prev.channelUsers, userData], 
+          };
+        })
+       
+      }
     });
 
-    socket.on("userLeftChannel",(userId)=>{   
-      setSingleChannel((prev)=>{
-        if(!prev){
-          return prev;
-        }
-        const filteredUser = prev.channelUsers.filter((item)=>item._id !==userId);
-        return {
-          ...prev,channelUsers:filteredUser
-        }
-      })
+    socket.on("userLeftChannel",(data)=>{ 
+      const {userId,channelId} = data;  
+      if(channelId === singleChannel?._id){
+        setSingleChannel((prev)=>{
+          if(!prev){
+            return prev;
+          }
+          const filteredUser = prev.channelUsers.filter((item)=>item._id !==userId);
+          return {
+            ...prev,channelUsers:filteredUser
+          }
+        })
+      }
+    })
+    socket.on("chatChannelInfo",(data)=>{
+      const {channelId,chatRoom} = data;
+      if(singleChannel?._id === channelId){
+        setSingleChannel((prev: SingleChannel | null) => {
+              if (!prev) {
+                return prev;
+              }
+              const fixedChatRoom = {
+                ...chatRoom,
+                roomName: chatRoom,
+              };
+              return {
+                ...prev,
+                chatChannel: [...prev.chatChannel, fixedChatRoom],
+              };
+            });
+          }
+    })
+    socket.on("chatVoiceInfo",(data)=>{
+      const {channelId,voiceRoomName} = data;
+      if(singleChannel?._id === channelId){
+        setSingleChannel((prev: SingleChannel | null) => {
+              if (!prev) {
+                return prev;
+              }
+              return {
+                ...prev,
+                voiceChannel: [...prev.voiceChannel, voiceRoomName],
+              };
+            });
+      }
     })
 
     return () => {
@@ -223,6 +298,8 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
         socket.off("onlineChannelUsers");
         socket.off("onlineAllChannelUsers");
         // socket.off("userThatDisconnected");
+        socket.off("chatVoiceInfo");
+        socket.off("chatChannelInfo");
         socket.off("kickedFromChannel");
         socket.off("userJoinedChannel");
         socket.off("userLeftChannel");
@@ -231,9 +308,11 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
   }, [socket, user, singleChannel, onlineChannelUsers,allUser]);
 
   useEffect(() => {
+  console.log("allUser",allUser);
+  
     socket.emit("sendChannelUsers", { allUser, senderId: user?.userId });
+  
   }, [singleChannel]);
-
   function MyVideoConference() {
     // `useTracks` returns all camera and screen share tracks. If a user
     // joins without a published camera track, a placeholder track is returned.

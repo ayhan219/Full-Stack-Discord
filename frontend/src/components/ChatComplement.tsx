@@ -2,19 +2,14 @@ import { useUserContext } from "../context/UserContext";
 
 interface ChatComplementProps {
   item: {
-    channelName: string;
-    message: string;
-    serverName: string;
-    username: string;
-    profilePic: string;
-    time: string;
-    userId: string;
-    senderId?:{
-      _id:string,
-      username:string,
-      profilePic:string
-    }
-    isImage:boolean
+    channelId: string;
+  chatName:string,
+  message: string;
+  username: string;
+  profilePic: string;
+  time: string;
+  senderId: string | {_id:string,username:string,profilePic:string};
+  isImage: boolean;
   };
 }
 
@@ -30,7 +25,7 @@ const ChatComplement = ({ item }: ChatComplementProps) => {
     <div className={`flex items-center `}>
       <img
         className="w-10 h-10 rounded-full object-cover border border-gray-500"
-        src={`${item.senderId ? `${url}${item.senderId.profilePic}` :`${url}${item.profilePic}`} `}
+        src={`${typeof item.senderId ==="string" ? `${url}${item.profilePic}` :`${url}${item.senderId.profilePic}`}`}
         alt="Avatar"
       />
 
@@ -39,15 +34,15 @@ const ChatComplement = ({ item }: ChatComplementProps) => {
           {
             <h3
             className={`font-medium text-sm ${
-              singleChannel?.admin.includes(item.userId) || singleChannel?.admin.includes(item.senderId?._id || "") 
+              singleChannel?.admin.includes(typeof item.senderId === "string" ? item.senderId : item.senderId._id) 
                 ? "text-red-500" 
                 : "text-gray-400"
             }`}
           >
-            {item.senderId ? item.senderId.username : item.username}
+            {typeof item.senderId ==="string" ? item.username : item.senderId.username}
           </h3>
           }
-          <p className="text-xs text-gray-400">{item.senderId ? item.time : formatTime(item.time)}</p>
+          <p className="text-xs text-gray-400">{typeof item.senderId==="string" ? formatTime(item.time): item.time }</p>
         </div>
         {item.isImage? (
           <img src={item.message} alt="sent" className="w-40 h-auto rounded-lg" />

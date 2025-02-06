@@ -74,7 +74,7 @@ const ChannelMenu = ({
           const filteredChannel = prev.filter((item:any)=>item._id !== channelId)
           return filteredChannel;
         })
-        socket.emit("userLeftChannel",({userId,channelName}))
+        socket.emit("userLeftChannel",({userId,channelId,channelUsers:singleChannel?.channelUsers}))
         setActiveChannel("");
         setActiveRoom("");
         setConnectedToVoice(false);
