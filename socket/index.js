@@ -1,9 +1,6 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const { v4: uuidv4 } = require('uuid');
-const path = './serverData.json';
-const fs = require('fs').promises;
 
 const app = express();
 const server = http.createServer(app);
@@ -15,52 +12,12 @@ const io = socketIo(server, {
 });
 
 let onlineUsers = {};
-let servers = {};   
-let serverNamesWithUUID = {}; 
-
-
-
-async function loadDataFromFile() {
-    try {
-        await fs.access(path); // Check if the file exists
-        const data = await fs.readFile(path, 'utf-8');
-        const parsedData = JSON.parse(data);
-        servers = parsedData.servers || {};
-        serverNamesWithUUID = parsedData.serverNamesWithUUID || {};
-        console.log('Data loaded from file');
-    } catch (err) {
-        if (err.code === 'ENOENT') {
-            console.log('File not found, creating a new one.');
-            await fs.writeFile(path, JSON.stringify({ onlineUsers: {}, servers: {}, serverNamesWithUUID: {} }, null, 2), 'utf-8');
-        } else {
-            console.error('Error reading file:', err);
-        }
-    }
-}
-
-  async function saveDataToFile() {
-    const data = {
-      servers,
-      serverNamesWithUUID
-    };
-  
-    try {
-      await fs.writeFile(path, JSON.stringify(data, null, 2), 'utf-8');
-      console.log('Data saved to file');
-    } catch (err) {
-      console.error('Error saving data:', err);
-    }
-  }
 
 
 io.on('connection', (socket) => {
-    console.log('A user connected:', socket.id);
 
- 
     socket.on('userOnline', (userId) => {
-        onlineUsers[userId] = socket.id;  
-  
-               
+        onlineUsers[userId] = socket.id;        
     });
 
     socket.on("getOnlineUser", ({userIds,senderId}) => {
@@ -77,9 +34,6 @@ io.on('connection', (socket) => {
             }
             io.to(onlineUsers[user._id]).emit("ImOnline",(senderId))
             onlineFriendsFromSocket.push(data);
-        }
-        else{
-            console.log(`${user?._id} is not online`);
         }
        })
          io.to(socket.id).emit("onlineFriends",onlineFriendsFromSocket)
@@ -137,26 +91,17 @@ io.on('connection', (socket) => {
                 io.to(onlineUsers[item._id]).emit("addToAllUser",({userData}));
             }
         })
-        
-        
       
     });
-
-
     socket.on('friendRequest', (senderId, receiverId, username, profilePic) => {
       if (onlineUsers[receiverId]) {
           io.to(onlineUsers[receiverId]).emit('friendRequestNotification', senderId, username, profilePic);
-      } else {
-          console.log(`${receiverId} is offline. The notification will be sent after they reconnect.`);
       }
     });
 
     socket.on("sendAcceptOrDecNotificationToUser", (senderId, receiverId, selectedValue, username, profilePic) => {
       if (onlineUsers[receiverId]) {
           io.to(onlineUsers[receiverId]).emit("sendReceiverIdToUser", senderId, selectedValue, username, profilePic);
-          console.log(`Notification sent to ${receiverId}`);
-      } else {
-          console.log(`${receiverId} is offline.`);
       }
     });
 
@@ -171,8 +116,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on("sendMessageToChat", (data) => {
-        console.log(data);
-        
         const {channelUsers,channelId,chatName, senderId,time, username, profilePic, message,isImage} = data
         channelUsers.forEach((item)=>{
             if(onlineUsers[item._id]){
@@ -240,7 +183,6 @@ io.on('connection', (socket) => {
         for (let userId in onlineUsers) {
             if (onlineUsers[userId] === socket.id) {
                 delete onlineUsers[userId];
-                console.log(`${userId} has disconnected`);
                 break;
             }
         }
@@ -249,5 +191,4 @@ io.on('connection', (socket) => {
 
 server.listen(3001, () => {
     console.log('running on port 3001');
-    loadDataFromFile();
 });
