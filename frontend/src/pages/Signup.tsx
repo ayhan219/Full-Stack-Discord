@@ -46,14 +46,11 @@ const Signup = () => {
     setIsUsernameValid(hasValidInput1 && hasValidInput2);
   };
 
-  const handlePassword = (passwordInput: string) => {
-    setPassword(passwordInput);
-    const hasValidPassword =
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&*!])[A-Za-z\d@#$%^&*!]{8,}$/.test(
-        passwordInput
-      );
-    setIsPasswordValid(hasValidPassword);
-  };
+ const handlePassword = (passwordInput: string) => {
+  setPassword(passwordInput);
+  const hasValidPassword = passwordInput.length > 5; 
+  setIsPasswordValid(hasValidPassword);
+};
 
   const handleRePassword = (rePasswordInput: string) => {
     setRePassword(rePasswordInput);
