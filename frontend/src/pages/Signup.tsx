@@ -271,7 +271,7 @@ const Signup = () => {
             <button
               onClick={() => handleSubmit()}
               disabled={isCreating}
-              className="w-[85%] h-8 md:h-12 bg-blue-500 text-white !text-sm !md:text-base rounded-sm hover:bg-blue-600 transition duration-300"
+              className="w-[85%] h-8 md:h-12 bg-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed text-white !text-sm !md:text-base rounded-sm hover:bg-blue-600 transition duration-300"
             >
               Sign Up
             </button>
