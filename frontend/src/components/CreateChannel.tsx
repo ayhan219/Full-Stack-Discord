@@ -22,9 +22,13 @@ const CreateChannel = () => {
     url
   } = useUserContext();
   const [channelName, setChannelName] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const handleCreateChannel = async () => {
+    if (loading) return; 
+    setLoading(true); 
+    
     try {
       const response = await axios.post(
         `${url}/api/channel/createchannel`,
@@ -49,6 +53,8 @@ const CreateChannel = () => {
       navigate(`/channel/${response.data._id}`);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,6 +85,7 @@ const CreateChannel = () => {
               value={channelName}
               className="w-full px-4 py-2 rounded-lg bg-[#23272a] text-white border border-[#202225] focus:ring-2 focus:ring-blue-500 outline-none"
               placeholder="Enter the server name"
+              disabled={loading}
             />
           </div>
         </div>
@@ -88,14 +95,20 @@ const CreateChannel = () => {
           <button
             className="px-4 py-2 text-sm font-medium text-gray-300 bg-gray-600 rounded-lg hover:bg-gray-500"
             onClick={() => setOpenCreateChannel(!openCreateChannel)}
+            disabled={loading}
           >
             Cancel
           </button>
           <button
-            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-500"
+            className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition ${
+              loading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-500"
+            }`}
             onClick={handleCreateChannel}
+            disabled={loading} 
           >
-            Create
+            {loading ? "Creating..." : "Create"}
           </button>
         </div>
       </div>
