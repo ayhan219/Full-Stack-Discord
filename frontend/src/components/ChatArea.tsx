@@ -151,10 +151,6 @@ const ChatArea = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages]);
 
-  useEffect(() => {
-    setSelectedChatRoom("");
-  }, []);
-
   const getChannelMessages = async () => {
     setLoadingForChat(true);
     try {
