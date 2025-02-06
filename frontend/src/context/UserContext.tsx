@@ -143,7 +143,7 @@ type UserProviderProps = {
   children: ReactNode;
 };
 
-const socket = io("http://localhost:3001"); // Socket.IO client instance
+const socket = io("https://full-stack-discord-socket.onrender.com"); // Socket.IO client instance
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -180,7 +180,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [chattingFriend, setChattingFriend] = useState<string>("");
   const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
   const [channelUsers,setChannelUsers] = useState<ChannelUser[]>([]);
-  const [url,setUrl] = useState<string>("http://localhost:5000")
+  const [url,setUrl] = useState<string>("https://full-stack-discord.onrender.com")
 
   const getCurrentUser = async () => {
     try {
