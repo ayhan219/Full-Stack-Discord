@@ -1,5 +1,5 @@
-import { ReactNode, useState } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import Home from "./pages/Home";
 import Sidebar from "./components/Sidebar";
 import Channel from "./pages/Channel";
@@ -11,23 +11,8 @@ import Profile from "./pages/Profile";
 import { LiveKitRoom, RoomAudioRenderer } from "@livekit/components-react";
 import { ToastContainer } from "react-toastify";
 
-interface PrivateRouteProps {
-  children: ReactNode;
-}
 
-const PrivateRoute = ({ children }: PrivateRouteProps) => {
-  const { user } = useUserContext();
-  return user ? <>{children}</> : <Navigate to="/login" replace />;
-};
 
-interface PublicRouteProps {
-  children: ReactNode;
-}
-
-const PublicRoute = ({ children }: PublicRouteProps) => {
-  const { user } = useUserContext();
-  return user ? <Navigate to="/home" replace /> : <>{children}</>;
-};
 
 function App() {
   const { user, token} =
@@ -56,17 +41,13 @@ function App() {
             <Route
               path="/signup"
               element={
-                <PublicRoute>
                   <Signup />
-                </PublicRoute>
               }
             />
             <Route
               path="/login"
               element={
-                <PublicRoute>
                   <Login />
-                </PublicRoute>
               }
             />
             <Route path="/" element={<Navigate to="/login" replace />} />
@@ -74,39 +55,31 @@ function App() {
             <Route
               path="/channel/:id"
               element={
-                <PrivateRoute>
                   <Channel
                     isAreaOpen={isAreaOpen}
                     setIsAreaOpen={setIsAreaOpen}
                   />
-                </PrivateRoute>
               }
             />
             <Route
               path="/home"
               element={
-                <PrivateRoute>
                   <Home isAreaOpen={isAreaOpen} setIsAreaOpen={setIsAreaOpen} />
-                </PrivateRoute>
               }
             />
             <Route
               path="/friendchat/:id"
               element={
-                <PrivateRoute>
                   <FriendChat
                     isAreaOpen={isAreaOpen}
                     setIsAreaOpen={setIsAreaOpen}
                   />
-                </PrivateRoute>
               }
             />
             <Route
               path="/profile"
               element={
-                <PrivateRoute>
                   <Profile />
-                </PrivateRoute>
               }
             />
           </Routes>

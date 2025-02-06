@@ -29,7 +29,7 @@ const BottomProfile = () => {
         }
       );
       if (response.status === 200) {
-        const userIds = user?.friends.map((friend: any) => friend);
+        // const userIds = user?.friends.map((friend: any) => friend);
 
         socket.emit("userDisconnected", {
           allUser,

@@ -57,7 +57,6 @@ const Channel = ({isAreaOpen,setIsAreaOpen}:ChannelProps) => {
     setSingleChannel,
     singleChannel,
     allUser,
-    setAllUser,
     isCameraOn,
     setIsCameraOn,
     connectedToVoice,

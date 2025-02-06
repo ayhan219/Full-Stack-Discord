@@ -55,7 +55,7 @@ const ChannelMenu = ({
   const handleLeaveChannel = async () => {
     const userId = user?.userId;
     const channelId = singleChannel?._id;
-    const channelName = singleChannel?.channelName
+    // const channelName = singleChannel?.channelName
     try {
       const response = await axios.delete(
         `${url}/api/channel/leavechannel`,
