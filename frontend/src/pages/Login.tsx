@@ -8,12 +8,15 @@ import {toast } from 'react-toastify';
 const Login = () => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isCreating,setIsCreating] = useState<boolean>(false);
 
   const navigate = useNavigate();
 
   const { setUser, url, socket } = useUserContext();
 
   const handleLogin = async () => {
+    if(isCreating) return;
+    setIsCreating(true);
     try {
       const response = await axios.post(
         `${url}/api/auth/login`,
@@ -44,6 +47,8 @@ const Login = () => {
     } catch (error) {
       toast.error("Error while login")
       console.log(error);
+    }finally{
+      setIsCreating(false);
     }
   };
 
@@ -65,6 +70,7 @@ const Login = () => {
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
+                disabled={isCreating}
               />
             </div>
           </div>
@@ -77,6 +83,7 @@ const Login = () => {
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
+                disabled={isCreating}
               />
             </div>
           </div>
@@ -84,6 +91,7 @@ const Login = () => {
           <div className="w-full h-auto flex justify-center py-4">
             <button
               onClick={() => handleLogin()}
+              disabled={isCreating}
               className="w-[90%] h-12 bg-blue-500 text-white rounded-sm !text-sm !md:text-base hover:bg-blue-600 transition duration-300"
             >
               Login

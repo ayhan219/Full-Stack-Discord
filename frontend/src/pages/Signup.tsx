@@ -11,6 +11,7 @@ const Signup = () => {
   const {url} = useUserContext();
   const [email, setEmail] = useState<string>("");
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
+  const [isCreating,setIsCreating] = useState<boolean>(false);
 
   const [displayName, setDisplayName] = useState<string>("");
   const [isDisplayNameValid, setIsDisplayNameValid] = useState<boolean>(true);
@@ -75,6 +76,8 @@ const Signup = () => {
       isTermsChecked
     ) {
       try {
+        if(isCreating) return;
+        setIsCreating(true);
         const response = await axios.post(
           `${url}/api/auth/signup`,
           {
@@ -91,6 +94,9 @@ const Signup = () => {
       } catch (error) {
         toast.error("error while signup");
         console.log(error);
+      }
+      finally{
+        setIsCreating(false);
       }
     } else {
       toast.error("Fill all area!");
@@ -264,6 +270,7 @@ const Signup = () => {
           <div className="w-full h-auto flex justify-center py-4">
             <button
               onClick={() => handleSubmit()}
+              disabled={isCreating}
               className="w-[85%] h-8 md:h-12 bg-blue-500 text-white !text-sm !md:text-base rounded-sm hover:bg-blue-600 transition duration-300"
             >
               Sign Up
