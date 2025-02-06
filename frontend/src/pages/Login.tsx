@@ -94,7 +94,7 @@ const Login = () => {
               disabled={isCreating}
               className="w-[90%] h-12 bg-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-sm !text-sm !md:text-base hover:bg-blue-600 transition duration-300"
             >
-              Login
+              {isCreating ? "Logging in..." : "Sign in"}
             </button>
           </div>
 
