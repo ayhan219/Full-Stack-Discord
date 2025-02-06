@@ -20,7 +20,6 @@ const ChatArea = () => {
   const {
     singleChannel,
     selectedChatRoom,
-    setSelectedChatRoom,
     socket,
     user,
     loading,
