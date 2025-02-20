@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "https://full-stack-discord-frontend.onrender.com", 
+    origin: "http://localhost:5173", 
     methods: ['GET', 'POST'],
   }
 });

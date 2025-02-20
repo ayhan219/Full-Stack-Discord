@@ -143,7 +143,7 @@ type UserProviderProps = {
   children: ReactNode;
 };
 
-const socket = io("https://full-stack-discord-socket.onrender.com"); // Socket.IO client instance
+const socket = io("http://localhost:3001"); // Socket.IO client instance
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -180,7 +180,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
   const [chattingFriend, setChattingFriend] = useState<string>("");
   const [activeMenuFriend, setActiveMenuFriend] = useState<string>("");
   const [channelUsers,setChannelUsers] = useState<ChannelUser[]>([]);
-  const [url,setUrl] = useState<string>("https://full-stack-discord.onrender.com")
+  const [url,setUrl] = useState<string>("http://localhost:5000")
 
   const getCurrentUser = async () => {
     try {
@@ -204,8 +204,8 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
 const handleUserRefreshPage = async () => {
   if(localStorage.getItem("whichChannelConnected")!==""){
-    let getChannelId = localStorage.getItem("whichChannelConnected");
-    let getUserId = localStorage.getItem("userId");
+    const getChannelId = localStorage.getItem("whichChannelConnected");
+    const getUserId = localStorage.getItem("userId");
     try {
       await axios.delete(
           `${url}/api/channel/deleteuserfromvoicechannel`,
@@ -217,6 +217,8 @@ const handleUserRefreshPage = async () => {
           }
       );
   } catch (error) {
+    console.log(error);
+    
   }finally{
     localStorage.removeItem("whichChannelConnected")
   }
