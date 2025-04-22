@@ -114,7 +114,6 @@ Using **Socket.IO**, the app constantly tracks which users are currently online 
 
 ![image](https://github.com/user-attachments/assets/fafbc1ea-ccd4-4c9a-9ece-ffffefe040fe)
 
-
 #### Channel settings area
 
 ![image](https://github.com/user-attachments/assets/d5a306eb-e32a-48b2-9605-988808d16fe4)
