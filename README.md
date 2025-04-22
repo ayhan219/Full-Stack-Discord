@@ -97,7 +97,6 @@ Using **Socket.IO**, the app constantly tracks which users are currently online 
 - Receive immediate feedback when their status changes, such as when they log in or out.
 
 
-
 <br>
 
 ## Project Images
